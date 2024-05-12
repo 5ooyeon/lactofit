@@ -20,7 +20,7 @@
     <nav class="nav-right-menu">
       <ul>
 
-        <li><RouterLink to="/signin">로그인</RouterLink></li>
+        <li><RouterLink :to="{name: 'LoginComponent'}">로그인</RouterLink></li>
       </ul>
     </nav>
   </header>
@@ -28,7 +28,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import LoginField from '../login/LoginField.vue';
+import LoginComponent from '../user/LoginComponent.vue';
 
 const running2 = ref(null);
 

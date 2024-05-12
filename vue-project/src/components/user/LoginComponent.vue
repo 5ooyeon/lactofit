@@ -1,3 +1,6 @@
+<script setup lang="ts">
+</script>
+
 <template>
     <div>
         <div class="info">
@@ -5,16 +8,18 @@
             <p>로그인 후 이용하실 수 있습니다.</p>
         </div>
         <div class="loginField">
-            <div>
-                <input type="email" name="userEmail" v-model="email" placeholder="이메일">   
+            <div class="custom-floating">
+                <input type="email" name="userEmail" v-model="email" placeholder=" " class="floating-input">   
+                <label for="userEmail" class="floating-label">이메일</label>
             </div>
-            <div>
-                <input type="password" name="userpw" v-model="password" placeholder="비밀번호">
+            <div class="custom-floating">
+                <input type="password" name="userpw" v-model="password" placeholder=" " class="floating-input">
+                <label for="userpw" class="floating-label">비밀번호</label>
             </div>
             <button>로그인</button>
         </div>
         <div class="signUp">
-            <span style="font-weight: 300; color: darkgray;">SSAFIT이 처음이라면?</span><RouterLink to="/">회원가입 하러가기</RouterLink>
+            <span style="font-weight: 300; color: darkgray;">SSAFIT이 처음이라면?</span><RouterLink :to="{name: 'SignupComponent'}">회원가입 하러가기</RouterLink>
         </div>
         <div class="socialLogin">
             <p>또는 SNS로 로그인하기</p>
@@ -66,4 +71,42 @@
 .info span {
     font-size: 30px;
 }
+
+.custom-floating {
+  position: relative;
+  margin: 20px 0;
+}
+
+.floating-input {
+  width: 100%;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  /* background-color: white; */
+  transition: border-color 0.3s;
+}
+
+.floating-input:focus {
+  border-color: dodgerblue;
+}
+
+.floating-input:not(:placeholder-shown) + .floating-label,
+.floating-input:focus + .floating-label {
+  transform: translateY(-26px);
+  font-size: 12px;
+  color: dodgerblue;
+}
+
+.floating-label {
+  position: absolute;
+  pointer-events: none;
+  left: 10px;
+  top: 12px;
+  transition: 0.3s;
+  /* background-color: white; */
+  padding: 0 4px;
+}
+
 </style>

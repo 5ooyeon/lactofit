@@ -15,10 +15,10 @@ import headerNav from "@/components/common/headerNav.vue";
   margin: 0;
   padding: 0;
   text-decoration: none;
-  background-color: #1a1a1c;
+  /* background-color: #1a1a1c; */
   font-family: 'Pretendard';
   font-weight: 400;
-  color: white
+  /* color: white */
 }
 @font-face {
   font-family: 'jua';
