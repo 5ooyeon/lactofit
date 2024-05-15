@@ -5,7 +5,7 @@
 ## MEMBERS
 
 ![S](https://img.shields.io/badge/-%23FFC0CB?style=flat-square&logo=sega&logoColor=white)![O](https://img.shields.io/badge/-%23FF69B4?style=flat-square&logo=opera&logoColor=white)![O](https://img.shields.io/badge/-%23FF1493?style=flat-square&logo=operagx&logoColor=white)![Y](https://img.shields.io/badge/-%23DB7093?style=flat-square&logo=ycombinator&logoColor=white)![E](https://img.shields.io/badge/-%23C71585?style=flat-square&logo=etsy&logoColor=white)![O](https://img.shields.io/badge/-%23FFB6C1?style=flat-square&logo=osano&logoColor=white)![N](https://img.shields.io/badge/-%23FF00FF?style=flat-square&logo=netflix&logoColor=white)
-
+👑
 
 ![D](https://img.shields.io/badge/-%231E90FF?style=flat-square&logo=d&logoColor=white)![O](https://img.shields.io/badge/-%231A74D3?style=flat-square&logo=opera&logoColor=white)![N](https://img.shields.io/badge/-%231563A9?style=flat-square&logo=naver&logoColor=white)![G](https://img.shields.io/badge/-%2312428E?style=flat-square&logo=google&logoColor=white)![Y](https://img.shields.io/badge/-%230F3074?style=flat-square&logo=yubico&logoColor=white)![E](https://img.shields.io/badge/-%230B1E5A?style=flat-square&logo=erlang&logoColor=white)![O](https://img.shields.io/badge/-%23000080?style=flat-square&logo=operagx&logoColor=white)![P](https://img.shields.io/badge/-%23000040?style=flat-square&logo=planet&logoColor=white)
 
