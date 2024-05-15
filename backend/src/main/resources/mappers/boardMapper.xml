@@ -12,12 +12,12 @@
 		#{boardViewCnt}, NOW(), NOW(), #{boardVisibility})
 	</insert>
 
-	<select id="getBoardById" resultType="com.example.model.Board">
+	<select id="getBoardById" resultType="com.ssafit.model.dto.Board">
 		SELECT * FROM Board WHERE
 		board_id = #{boardId}
 	</select>
 
-	<select id="getAllBoards" resultType="com.example.model.Board">
+	<select id="getAllBoards" resultType="com.ssafit.model.dto.Board">
 		SELECT * FROM Board
 	</select>
 

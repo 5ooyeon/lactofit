@@ -8,12 +8,12 @@
 	</insert>
 
 	<select id="getNotificationById"
-		resultType="com.example.model.Notification">
+		resultType="com.ssafit.model.dto.Notification">
 		SELECT * FROM Notification WHERE notification_id = #{notificationId}
 	</select>
 
 	<select id="getNotificationsByUserId"
-		resultType="com.example.model.Notification">
+		resultType="com.ssafit.model.dto.Notification">
 		SELECT * FROM Notification WHERE user_id = #{userId}
 	</select>
 

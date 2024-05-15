@@ -9,7 +9,7 @@
 		#{userStreakColor}, #{userStreakPrice}, NOW())
 	</insert>
 
-	<select id="getUserById" resultType="com.example.model.User">
+	<select id="getUserById" resultType="com.ssafit.model.dto.User">
 		SELECT * FROM User WHERE user_id = #{userId}
 	</select>
 
