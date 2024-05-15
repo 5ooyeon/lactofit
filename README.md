@@ -9,9 +9,6 @@
 
 ![D](https://img.shields.io/badge/-%231E90FF?style=flat-square&logo=d&logoColor=white)![O](https://img.shields.io/badge/-%231A74D3?style=flat-square&logo=opera&logoColor=white)![N](https://img.shields.io/badge/-%231563A9?style=flat-square&logo=naver&logoColor=white)![G](https://img.shields.io/badge/-%2312428E?style=flat-square&logo=google&logoColor=white)![Y](https://img.shields.io/badge/-%230F3074?style=flat-square&logo=yubico&logoColor=white)![E](https://img.shields.io/badge/-%230B1E5A?style=flat-square&logo=erlang&logoColor=white)![O](https://img.shields.io/badge/-%23000080?style=flat-square&logo=operagx&logoColor=white)![P](https://img.shields.io/badge/-%23000040?style=flat-square&logo=planet&logoColor=white)
 
-## PROJECT DESCRIPTION
-
-
 ## BUILT WITH
 
 ![Java](https://img.shields.io/badge/Java-000000?style=flat-square&logo=openjdk&logoColor=white)
@@ -28,3 +25,8 @@
 ![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white) 
 ![Notion](https://img.shields.io/badge/Notion-000000?style=flat-square&logo=notion&logoColor=white)
 ![Mattermost](https://img.shields.io/badge/Mattermost-0058CC?style=flat-square&logo=mattermost&logoColor=white)<br>
+
+
+## PROJECT DESCRIPTION
+
+## REVIEW
