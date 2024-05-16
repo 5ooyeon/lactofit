@@ -1,30 +1,23 @@
 package com.ssafit.model.dto;
 
 import java.sql.Timestamp;
+import java.sql.Date;
 
 public class User {
-
 	private int userId;
-
 	private String userTag;
-
 	private String userNickname;
-
-	private String userBirth;
-
+	private Date userBirth;
 	private String userProfileImage;
-
 	private Timestamp userRegDate;
-
 	private String userStreakColor;
-
-	private Integer userStreakPrice;
+	private int userStreakPrice;
 
 	public User() {
-	};
+	}
 
-	public User(int userId, String userTag, String userNickname, String userBirth, String userProfileImage,
-			Timestamp userRegDate, String userStreakColor, Integer userStreakPrice) {
+	public User(int userId, String userTag, String userNickname, Date userBirth, String userProfileImage,
+			Timestamp userRegDate, String userStreakColor, int userStreakPrice) {
 		this.userId = userId;
 		this.userTag = userTag;
 		this.userNickname = userNickname;
@@ -59,11 +52,11 @@ public class User {
 		this.userNickname = userNickname;
 	}
 
-	public String getUserBirth() {
+	public Date getUserBirth() {
 		return userBirth;
 	}
 
-	public void setUserBirth(String userBirth) {
+	public void setUserBirth(Date userBirth) {
 		this.userBirth = userBirth;
 	}
 
@@ -91,7 +84,7 @@ public class User {
 		this.userStreakColor = userStreakColor;
 	}
 
-	public Integer getUserStreakPrice() {
+	public int getUserStreakPrice() {
 		return userStreakPrice;
 	}
 

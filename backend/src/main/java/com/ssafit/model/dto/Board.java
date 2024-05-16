@@ -3,22 +3,15 @@ package com.ssafit.model.dto;
 import java.sql.Timestamp;
 
 public class Board {
+	
 	private int boardId;
-
 	private int userId;
-
 	private int routineId;
-
 	private String boardContent;
-
 	private String boardImgUrl;
-
 	private int boardViewCnt;
-
 	private Timestamp boardRegDate;
-
 	private Timestamp boardUpdateDate;
-
 	private boolean boardVisibility;
 
 	public Board() {

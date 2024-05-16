@@ -17,9 +17,11 @@ import com.ssafit.model.dto.Follow;
 import com.ssafit.model.service.FollowService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/follows")
+@Tag(name = "followRestController", description = "팔로우/언팔로우 컨트롤러")
 public class FollowRestController {
 
     @Autowired
