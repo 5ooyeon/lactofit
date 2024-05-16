@@ -15,7 +15,7 @@
               </li>
             </ul>
             <div class="d-lg-flex col-lg-3 justify-content-lg-end">
-              <button class="signin">
+              <button class="signin" @click="loginWithGoogle">
                 <svg
                   class="svg__google"
                   viewBox="0 0 256 262"
@@ -48,14 +48,34 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue'
+import { useAuthStore } from '../../stores/auth.js'
+import { useRoute } from 'vue-router'
 
+const authStore = useAuthStore()
+const route = useRoute()
+
+const loginWithGoogle = () => {
+  authStore.loginWithGoogle()
+}
+ 
+onMounted(() => {
+  const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const code = urlParams.get('code');
+      console.log('Authorization code:', code);
+      if(code) {
+        authStore.fetchUserOpenId(code)
+      }
+})
 </script>
+
 
 
 
 <style scoped>
 .navbar {
-    position:fixed;
+    position:sticky;
     top: 0;
     left: 0;
     width: 100%;
