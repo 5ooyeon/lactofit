@@ -60,7 +60,7 @@
                 <p class="routine__description">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, hic ad adipisci dolores debitis eligendi asperiores earum perferendis deserunt repellendus eveniet, laborum magnam mollitia animi quia velit, enim sapiente. Inventore!
                 </p>
-                <button class="youtube__button">영상 찾아보기</button>
+                <button class="youtube__button"><RouterLink :to="{name:'YoutubeMainComponent'}">영상 찾아보기</RouterLink></button>
               </div>
               <div class="routine__image">
                 <img src="https://images.squarespace-cdn.com/content/v1/6581fd2d9a7c875e912e0907/19116ab1-4f67-4632-851b-8f0cf510b417/Sleek+Objects+1.jpg?format=2500w" alt="new image" />
@@ -144,8 +144,6 @@
   </script>
   
   <style scoped>
-/*=============== GOOGLE FONTS ===============*/
-
 
 /* Video and Overlay Styling */
 .home {
