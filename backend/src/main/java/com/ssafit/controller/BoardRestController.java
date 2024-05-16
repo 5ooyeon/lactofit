@@ -17,50 +17,57 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafit.model.dto.Board;
 import com.ssafit.model.service.BoardService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/boards")
+@Tag(name = "boardRestController", description = "게시판(오.운.완)CRUD")
 public class BoardRestController {
 
 	@Autowired
 	private BoardService boardService;
 
-	@PostMapping
+	@PostMapping("/")
+	@Operation(summary = "게시물을 등록합니다.")
 	public ResponseEntity<Board> createBoard(@RequestBody Board board) {
 		boardService.createBoard(board);
 		return new ResponseEntity<>(board, HttpStatus.CREATED);
 	}
 
 	@GetMapping("/{board_id}")
+	@Operation(summary = "ID로 게시물을 조회합니다.")
 	public ResponseEntity<Board> getBoardById(@PathVariable("board_id") int boardId) {
 		Board board = boardService.getBoardById(boardId);
 		if (board != null) {
 			return new ResponseEntity<>(board, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
-	@GetMapping
+	@GetMapping("/")
+	@Operation(summary = "모든 게시물을 조회합니다.")
 	public ResponseEntity<List<Board>> getAllBoards() {
 		List<Board> boards = boardService.getAllBoards();
 		return new ResponseEntity<>(boards, HttpStatus.OK);
 	}
 
 	@PutMapping("/{board_id}")
+	@Operation(summary = "게시물을 수정합니다.")
 	public ResponseEntity<Board> updateBoard(@PathVariable("board_id") int boardId, @RequestBody Board board) {
 		board.setBoardId(boardId);
 		boardService.updateBoard(board);
 		Board updatedBoard = boardService.getBoardById(boardId);
 		if (updatedBoard != null) {
 			return new ResponseEntity<>(updatedBoard, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
 	@DeleteMapping("/{board_id}")
-	public ResponseEntity<String> deleteBoard(@PathVariable("board_id") int boardId) {
+	@Operation(summary = "게시물을 삭제합니다.")
+	public ResponseEntity<?> deleteBoard(@PathVariable("board_id") int boardId) {
 		boardService.deleteBoard(boardId);
-		return new ResponseEntity<>("{\"msg\": \"게시글이 삭제되었습니다.\"}", HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

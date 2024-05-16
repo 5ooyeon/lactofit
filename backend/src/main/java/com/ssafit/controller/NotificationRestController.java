@@ -24,7 +24,7 @@ public class NotificationRestController {
 	@Autowired
 	private NotificationService notificationService;
 
-	@PostMapping
+	@PostMapping("/")
 	public ResponseEntity<Notification> createNotification(@RequestBody Notification notification) {
 		notificationService.createNotification(notification);
 		return new ResponseEntity<>(notification, HttpStatus.CREATED);
