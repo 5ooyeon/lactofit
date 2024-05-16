@@ -10,7 +10,10 @@
         <div class="comment-section">
             <p class="border-bottom pb-2 mb-0">Comments ( {{ store.commentList.length }} )</p>
             <div class="comment-write-form">
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" v-model="myComment"></textarea>
+                <button class="write-comment btn btn-primary" @click="writeComment()">
+                    입력
+                </button>
             </div>
             <CommentList v-for="comment in store.commentList" :key="comment.id" :comment="comment"/>
         </div>
@@ -19,11 +22,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useYoutubeStore } from '@/stores/youtube';
 import CommentList from './CommentList.vue';
 
 const store = useYoutubeStore();
+const myComment = ref()
 
 // Computed property to get the last video from history
 const lastVideo = computed(() => {
@@ -33,6 +37,13 @@ const lastVideo = computed(() => {
     return null;  // Return null to handle checks more consistently
 });
 
+const writeComment = () => {
+  if (myComment.value.trim() === '') {
+    return; // Do not allow empty comments
+  }
+  console.log('댓글다는 로직: '+myComment.value)
+  myComment.value = '';
+}
 </script>
 
 <style scoped>
