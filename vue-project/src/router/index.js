@@ -7,6 +7,7 @@ import UserDetailComponent from '@/components/user/UserDetailComponent.vue'
 import SearchResultComponent from '@/components/youtube/SearchResultComponent.vue'
 import YoutubeView from '@/views/YoutubeView.vue'
 import YoutubeMainComponent from '@/components/youtube/YoutubeMainComponent.vue'
+import VideoDetail from '@/components/youtube/VideoDetail.vue'
 
 const router = createRouter({
   history: createWebHashHistory(), // 변경된 부분: createWebHistory -> createWebHashHistory
@@ -54,9 +55,9 @@ const router = createRouter({
           component: SearchResultComponent
         },
         {
-          path: "mypage",
-          name: "UserDetailComponent",
-          component: UserDetailComponent
+          path: "detail",
+          name: "VideoDetail",
+          component: VideoDetail
         },
       ]
     },

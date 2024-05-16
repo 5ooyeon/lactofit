@@ -1,63 +1,21 @@
-// import { ref, computed } from 'vue'
-// import { defineStore } from 'pinia'
-// import axios from 'axios'
-
-// export const useYoutubeStore = defineStore('youtube', () => {
-//   const weaknessVideos = ref(null)
-//   const searchedVideos = ref(null)
-//   const keyword = ref(null);
-
-
-// const getVideosBySearchWord = (keyword, link) => {
-//     const URL = 'https://www.googleapis.com/youtube/v3/search'
-//     const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY
-
-//     console.log(link)
-
-//     axios({
-//       url: URL,
-//       method: 'GET',
-//       params: {
-//         key: API_KEY,
-//         part: 'snippet',
-//         maxResults: 30,
-//         q: keyword+'운동',
-//         type: 'video'
-//       }
-//     })
-//     .then((response)=>{
-//         if (link) {  // 검색
-//             searchedVideos.value = response.data.items
-//             keyword.value = this.keyword
-//             router.push({ name: 'SearchResultComponent' });  // result 경로로 이동
-//         } else { //weaknessVideos
-//             weaknessVideos.value = response.data.items
-//         }
-//         console.log(response.data)
-//     })
-//     .catch(()=>{})
-
-
-
-// }
-
-//   return { weaknessVideos, getVideosBySearchWord,searchedVideos,keyword }
-// })
-
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
+const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
+const CommentURL = 'https://www.googleapis.com/youtube/v3/commentThreads';
+
 export const useYoutubeStore = defineStore('youtube', () => {
   const weaknessVideos = ref([])
   const searchedVideos = ref([])
-  const searchWord = ref(null);
-  const isLoading = ref(false);
+  const searchWord = ref(null)
+  const videoHistory = ref([])
+  const commentList = ref([])
+//   const isLoading = ref(false);
 
   const getVideosBySearchWord = async (keyword, mode) => {
-    isLoading.value = true;
     const URL = 'https://www.googleapis.com/youtube/v3/search';
-    const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
+
 
     console.log('start--')
 
@@ -83,11 +41,28 @@ export const useYoutubeStore = defineStore('youtube', () => {
       console.log(response.data);
     } catch (error) {
         console.log('error')
-      console.error('Error fetching videos:', error);
+        console.error('Error fetching videos:', error);
     } finally {
-      isLoading.value = false;
+    //   isLoading.value = false;
     }
   }
 
-  return { weaknessVideos, searchedVideos, getVideosBySearchWord, isLoading, searchWord };
+  const addToHistory = (video) => {
+    console.log("1231231231232123")
+    videoHistory.value.push(video);
+    console.log(video.id.videoId)
+
+    axios.get(CommentURL, {
+        params: {
+          part: 'snippet',
+          videoId: video.id.videoId,
+          key: API_KEY
+        }
+      }).then((response) => {
+        commentList.value = response.data.items
+        console.log(commentList.value)
+      })
+  }
+
+  return { weaknessVideos, searchedVideos, getVideosBySearchWord, searchWord, addToHistory, videoHistory, commentList  };
 });
