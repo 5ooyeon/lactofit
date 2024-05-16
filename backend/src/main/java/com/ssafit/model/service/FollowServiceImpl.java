@@ -2,6 +2,7 @@ package com.ssafit.model.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +16,18 @@ public class FollowServiceImpl implements FollowService {
 	private FollowDao followDao;
 
 	@Override
-	public void followUser(Follow follow) {
-		followDao.createFollow(follow);
+	public void toggleFollow(Follow follow) {
+		Follow existingFollow = followDao.getFollowByUsers(follow.getUserId(), follow.getFollowingUserId());
+		if (existingFollow != null) {
+			followDao.deleteFollow(existingFollow.getFollowId(), follow.getUserId());
+		} else {
+			followDao.createFollow(follow);
+		}
 	}
 
 	@Override
-	public void unfollowUser(int followId) {
-		followDao.deleteFollow(followId);
+	public void deleteFollow(int followId, int userId) {
+		followDao.deleteFollow(followId, userId);
 	}
 
 	@Override

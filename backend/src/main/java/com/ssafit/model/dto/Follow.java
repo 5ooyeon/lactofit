@@ -4,11 +4,8 @@ import java.sql.Timestamp;
 
 public class Follow {
 	private int followId;
-
 	private int userId;
-
 	private int followingUserId;
-
 	private Timestamp followRegDate;
 
 	public Follow() {

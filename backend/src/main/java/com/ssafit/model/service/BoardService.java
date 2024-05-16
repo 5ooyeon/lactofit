@@ -11,6 +11,10 @@ public interface BoardService {
 
 	public List<Board> getAllBoards();
 
+	public List<Board> getBoardByUserId(int userId);
+
+	public List<Board> getFollowingBoardByUserId(int userId);
+
 	public void updateBoard(Board board);
 
 	public void deleteBoard(int boardId);

@@ -35,7 +35,7 @@ public class BoardRestController {
 		return new ResponseEntity<>(board, HttpStatus.CREATED);
 	}
 
-	@GetMapping("/{board_id}")
+	@GetMapping("/{board_id}")// ㅇㄴ
 	@Operation(summary = "ID로 게시물을 조회합니다.")
 	public ResponseEntity<Board> getBoardById(@PathVariable("board_id") int boardId) {
 		Board board = boardService.getBoardById(boardId);
@@ -49,6 +49,26 @@ public class BoardRestController {
 	@Operation(summary = "모든 게시물을 조회합니다.")
 	public ResponseEntity<List<Board>> getAllBoards() {
 		List<Board> boards = boardService.getAllBoards();
+		return new ResponseEntity<>(boards, HttpStatus.OK);
+	}
+
+	@GetMapping("/user/{user_id}") //ㅇㄴ
+	@Operation(summary = "UserId로 게시물 조회.")
+	public ResponseEntity<List<Board>> getBoardByUserId(@PathVariable("user_id") int userId) {
+		List<Board> boards = boardService.getBoardByUserId(userId);
+		if (boards.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(boards, HttpStatus.OK);
+	}
+
+	@GetMapping("/following/{user_id}")
+	@Operation(summary = "팔로잉 유저 게시물 조회.")
+	public ResponseEntity<List<Board>> getFollowingBoardByUserId(@PathVariable("user_id") int userId) {
+		List<Board> boards = boardService.getFollowingBoardByUserId(userId);
+		if (boards.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 		return new ResponseEntity<>(boards, HttpStatus.OK);
 	}
 
