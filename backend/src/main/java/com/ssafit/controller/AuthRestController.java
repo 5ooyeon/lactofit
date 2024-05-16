@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -35,10 +37,11 @@ public class AuthRestController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/callback")
-    public ResponseEntity<Map<String, String>> googleCallback(@RequestBody Map<String, String> requestBody, HttpSession session) {
-        String code = requestBody.get("code");
-        String redirectUri = requestBody.get("redirect_uri");
+    @GetMapping("/callback")
+    public ResponseEntity<Map<String, String>> googleCallback(@RequestParam("code") String code,
+            @RequestParam(value = "scope", required = false) String scope, HttpSession session) {
+    	System.out.println(code);
+    	System.out.println(redirectUri);
         RestTemplate restTemplate = new RestTemplate();
 
         // Exchange the authorization code for an access token

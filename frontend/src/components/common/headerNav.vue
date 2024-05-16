@@ -2,7 +2,7 @@
   <header class="navbar navbar-expand-lg rounded">
         <nav class="container">
           <div class="navbar-collapse d-lg-flex" id="navbarsExample11">
-            <a class="navbar-brand col-lg-3 me-0" href="#">SSAFIT</a>
+            <RouterLink class="navbar-brand col-lg-3 me-0" :to="{name:'Main'}">SSAFIT</RouterLink>
             <ul class="navbar-nav col-lg-6 justify-content-lg-center">
               <li class="nav-item">
                 <a class="nav-link" href="#routine">운동백과</a>
@@ -15,7 +15,7 @@
               </li>
             </ul>
             <div class="d-lg-flex col-lg-3 justify-content-lg-end">
-              <button class="signin" @click="loginWithGoogle">
+              <button class="signin" @click="loginWithGoogle()">
                 <svg
                   class="svg__google"
                   viewBox="0 0 256 262"
@@ -48,9 +48,12 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue';
 import { useAuthStore } from '../../stores/auth.js'
 import { useRoute } from 'vue-router'
+import axios from 'axios';
+
+const user = ref(null);
 
 const authStore = useAuthStore()
 const route = useRoute()
@@ -58,7 +61,7 @@ const route = useRoute()
 const loginWithGoogle = () => {
   authStore.loginWithGoogle()
 }
- 
+
 onMounted(() => {
   const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
@@ -68,6 +71,8 @@ onMounted(() => {
         authStore.fetchUserOpenId(code)
       }
 })
+
+
 </script>
 
 

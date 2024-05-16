@@ -5,6 +5,8 @@ import axios from 'axios'
 export const useAuthStore = defineStore('auth', () => {
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
   const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URL
+  const clientSecret = import.meta.env.VITE_GOOGLE_CLIENT_SECRET
+
   const user = ref(null)
 
   function loginWithGoogle() {
@@ -16,7 +18,7 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const response = await axios.post('http://localhost:8080/oauth2/callback', {
         code: code,
-        redirect_uri: redirectUri
+        redirect_uri: import.meta.env.VITE_BASE_URL
       }, {
         withCredentials: true // 세션 정보를 주고 받기 위해 설정
       });
@@ -27,6 +29,7 @@ export const useAuthStore = defineStore('auth', () => {
       console.error('Failed to fetch user OpenID:', error);
     }
   }
+
 
   return { loginWithGoogle, fetchUserOpenId, user }
 })
