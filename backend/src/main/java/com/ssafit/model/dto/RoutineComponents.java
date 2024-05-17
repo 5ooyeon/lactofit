@@ -4,19 +4,19 @@ public class RoutineComponents {
 	private int routineComponentsId;
 	private int exerciseId;
 	private int routineId;
-	private int routineComponetsReps;
-	private int routineComponetsWeight;
+	private int routineComponentsReps;
+	private int routineComponentsWeight;
 
 	public RoutineComponents() {
-	}
+	};
 
-	public RoutineComponents(int routineComponentsId, int exerciseId, int routineId, int routineComponetsReps,
-			int routineComponetsWeight) {
+	public RoutineComponents(int routineComponentsId, int exerciseId, int routineId, int routineComponentsReps,
+			int routineComponentsWeight) {
 		this.routineComponentsId = routineComponentsId;
 		this.exerciseId = exerciseId;
 		this.routineId = routineId;
-		this.routineComponetsReps = routineComponetsReps;
-		this.routineComponetsWeight = routineComponetsWeight;
+		this.routineComponentsReps = routineComponentsReps;
+		this.routineComponentsWeight = routineComponentsWeight;
 	}
 
 	public int getRoutineComponentsId() {
@@ -43,27 +43,27 @@ public class RoutineComponents {
 		this.routineId = routineId;
 	}
 
-	public int getRoutineComponetsReps() {
-		return routineComponetsReps;
+	public int getRoutineComponentsReps() {
+		return routineComponentsReps;
 	}
 
-	public void setRoutineComponetsReps(int routineComponetsReps) {
-		this.routineComponetsReps = routineComponetsReps;
+	public void setRoutineComponentsReps(int routineComponentsReps) {
+		this.routineComponentsReps = routineComponentsReps;
 	}
 
-	public int getRoutineComponetsWeight() {
-		return routineComponetsWeight;
+	public int getRoutineComponentsWeight() {
+		return routineComponentsWeight;
 	}
 
-	public void setRoutineComponetsWeight(int routineComponetsWeight) {
-		this.routineComponetsWeight = routineComponetsWeight;
+	public void setRoutineComponentsWeight(int routineComponentsWeight) {
+		this.routineComponentsWeight = routineComponentsWeight;
 	}
 
 	@Override
 	public String toString() {
 		return "RoutineComponents [routineComponentsId=" + routineComponentsId + ", exerciseId=" + exerciseId
-				+ ", routineId=" + routineId + ", routineComponetsReps=" + routineComponetsReps
-				+ ", routineComponetsWeight=" + routineComponetsWeight + "]";
+				+ ", routineId=" + routineId + ", routineComponentsReps=" + routineComponentsReps
+				+ ", routineComponentsWeight=" + routineComponentsWeight + "]";
 	}
 
 }
