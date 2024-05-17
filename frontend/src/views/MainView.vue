@@ -95,7 +95,7 @@
           </div>
   
           <div class="social__button-container container">
-            <a href="#" class="social__button">더 많은 게시글 보러가기</a>
+            <RouterLink :to="{name: 'SocialMainComponent'}" class="social__button">더 많은 게시글 보러가기</RouterLink>
           </div>
         </section>
       </main>

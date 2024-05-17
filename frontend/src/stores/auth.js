@@ -8,7 +8,7 @@ import axios from 'axios'
 export const useAuthStore = defineStore('auth', () => {
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
   const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URL
-  const user = ref(JSON.parse(sessionStorage.getItem('user')) || null)
+  const user = ref(JSON.parse(sessionStorage.getItem('user')))
   const router = useRouter()
 
   function loginWithGoogle() {
@@ -24,11 +24,12 @@ export const useAuthStore = defineStore('auth', () => {
       }, {
         withCredentials: true // 세션 정보를 주고 받기 위해 설정
       }).then((response) => {
+        sessionStorage.setItem('user', JSON.stringify(response.data));
         user.value = response.data
         router.push("/")
       })
       // user.value = response.data;
-      // sessionStorage.setItem('user', JSON.stringify(user.value));
+
       console.log(" 성공!!!@@@@@@@@@@@@@@@@@")
     } catch (error) {
       console.error('Failed to fetch user OpenID:', error);

@@ -41,9 +41,18 @@
                 </svg>
                 Google 로그인
               </button>
-              <button v-if="authStore.user" @click="logout">
+              <div class="dropstart" v-if="authStore.user" style="display: flex;">
+                <img :src="`${ authStore.user.userProfileImage }`" class="user-profile-img" data-bs-toggle="dropdown">
+                <ul class="dropdown-menu dropdown-menu-lg-start">
+                  <li><p class="user-profile-nickname dropdown-item"><em class="nickname">{{ authStore.user.userNickname }}</em> 님</p></li>
+                  <li class="dropdown-item" @click="logout">로그아웃</li>
+                  <li>  </li>
+                </ul>
+                
+              </div>
+              <!-- <button v-if="authStore.user" @click="logout">
                 로그아웃
-              </button>
+              </button> -->
             </div>
           </div>
         </nav>
@@ -67,7 +76,7 @@ const logout = () => {
 }
  
 onMounted(() => {
-  console.log(authStore.user)
+  console.log(authStore.user.user_id)
   const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const code = urlParams.get('code');
@@ -137,5 +146,9 @@ onMounted(() => {
     width: auto;
 }
 
+.user-profile-img {
+  width: 2.5rem;
+  border-radius: 50%;
+}
 
 </style>

@@ -7,7 +7,9 @@ import SearchResultComponent from '@/components/youtube/SearchResultComponent.vu
 import YoutubeView from '@/views/YoutubeView.vue'
 import YoutubeMainComponent from '@/components/youtube/YoutubeMainComponent.vue'
 import VideoDetail from '@/components/youtube/VideoDetail.vue'
-import TempComponent from '@/components/user/tempComponent.vue'
+import SocialView from '@/views/SocialView.vue'
+import SocialMainComponent from '@/components/social/SocialMainComponent.vue'
+import MyPageView from '@/views/MyPageView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,11 +24,10 @@ const router = createRouter({
       name: "User",
       component: UserView,
       children: [
-
         {
-          path: "loading",
-          name: "TempComponent",
-          component: TempComponent
+          path: ':id',
+          name: "MyPageView",
+          component: MyPageView
         },
       ]
     },
@@ -49,6 +50,23 @@ const router = createRouter({
           path: "detail",
           name: "VideoDetail",
           component: VideoDetail
+        },
+      ]
+    },
+    {
+      path: "/social",
+      name: "Social",
+      component: SocialView,
+      children: [
+        {
+          path: "",
+          name: "SocialMainComponent",
+          component: SocialMainComponent
+        },
+        {
+          path: "",
+          name: "SocialMainComponent",
+          component: SocialMainComponent
         },
       ]
     },
