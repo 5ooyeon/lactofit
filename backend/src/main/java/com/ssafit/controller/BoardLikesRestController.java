@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/board-likes")
-@Tag(name = "BoardLikesRestController", description = "게시글 좋아요/좋아요 취소 컨트롤러")
+@Tag(name = "boardLikesRestController", description = "게시글 좋아요/좋아요 취소 컨트롤러")
 public class BoardLikesRestController {
 
     @Autowired

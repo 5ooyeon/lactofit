@@ -27,7 +27,7 @@ public class FollowServiceImpl implements FollowService {
 			followDao.createFollow(follow);
 			Notification notification = new Notification();
 			notification.setUserId(follow.getFollowingUserId());
-			notification.setNotificationContent("User " + follow.getUserId() + " has followed you.");
+			notification.setNotificationContent(follow.getUserId() + "가 팔로우 하였습니다.");
 			notification.setNotificationRead(false);
 			notificationService.createNotification(notification);
 		}
@@ -47,4 +47,14 @@ public class FollowServiceImpl implements FollowService {
 	public List<Follow> getFollowing(int followingUserId) {
 		return followDao.getFollowingByUserId(followingUserId);
 	}
+	
+	@Override
+    public int countFollowers(int userId) {
+        return followDao.countFollowers(userId);
+    }
+
+    @Override
+    public int countFollowing(int userId) {
+        return followDao.countFollowing(userId);
+    }
 }
