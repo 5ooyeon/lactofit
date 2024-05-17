@@ -2,7 +2,7 @@
   <header class="navbar navbar-expand-lg rounded">
         <nav class="container">
           <div class="navbar-collapse d-lg-flex" id="navbarsExample11">
-            <RouterLink class="navbar-brand col-lg-3 me-0" :to="{name:'Main'}">SSAFIT</RouterLink>
+            <RouterLink :to="{name: 'Main'}" class="navbar-brand col-lg-3 me-0">SSAFIT</RouterLink>
             <ul class="navbar-nav col-lg-6 justify-content-lg-center">
               <li class="nav-item">
                 <a class="nav-link" href="#routine">운동백과</a>
@@ -15,7 +15,7 @@
               </li>
             </ul>
             <div class="d-lg-flex col-lg-3 justify-content-lg-end">
-              <button class="signin" @click="loginWithGoogle()">
+              <button class="signin" @click="loginWithGoogle" v-if="!authStore.user">
                 <svg
                   class="svg__google"
                   viewBox="0 0 256 262"
@@ -41,6 +41,9 @@
                 </svg>
                 Google 로그인
               </button>
+              <button v-if="authStore.user" @click="logout">
+                로그아웃
+              </button>
             </div>
           </div>
         </nav>
@@ -48,12 +51,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { onMounted } from 'vue'
 import { useAuthStore } from '../../stores/auth.js'
 import { useRoute } from 'vue-router'
-import axios from 'axios';
-
-const user = ref(null);
 
 const authStore = useAuthStore()
 const route = useRoute()
@@ -62,7 +62,12 @@ const loginWithGoogle = () => {
   authStore.loginWithGoogle()
 }
 
+const logout = () => {
+  authStore.logout()
+}
+ 
 onMounted(() => {
+  console.log(authStore.user)
   const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const code = urlParams.get('code');
@@ -71,8 +76,6 @@ onMounted(() => {
         authStore.fetchUserOpenId(code)
       }
 })
-
-
 </script>
 
 
