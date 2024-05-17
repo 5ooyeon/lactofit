@@ -15,4 +15,8 @@ public interface FollowService {
 	List<Follow> getFollowers(int userId);
 
 	List<Follow> getFollowing(int followingUserId);
+
+	public int countFollowers(int userId);
+
+	public int countFollowing(int userId);
 }

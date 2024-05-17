@@ -24,34 +24,41 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "followRestController", description = "팔로우/언팔로우 컨트롤러")
 public class FollowRestController {
 
-    @Autowired
-    private FollowService followService;
+	@Autowired
+	private FollowService followService;
 
-    @PostMapping("/")
-    @Operation(summary = "사용자를 팔로우 또는 언팔로우합니다.")
-    public ResponseEntity<Void> toggleFollow(@RequestBody Follow follow) {
-        followService.toggleFollow(follow);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+	@PostMapping("/")
+	@Operation(summary = "사용자를 팔로우 또는 언팔로우합니다.")
+	public ResponseEntity<Void> toggleFollow(@RequestBody Follow follow) {
+		followService.toggleFollow(follow);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 
-    @DeleteMapping("/{followId}/{user_Id}")
-    @Operation(summary = "팔로우 관계를 삭제합니다.")
-    public ResponseEntity<Void> deleteFollow(@PathVariable("follow_Id") int followId, @PathVariable("user_Id") int userId) {
-        followService.deleteFollow(followId, userId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+	@GetMapping("/followers/{user_Id}")
+	@Operation(summary = "특정 사용자의 팔로워 목록을 조회합니다.")
+	public ResponseEntity<List<Follow>> getFollowers(@PathVariable("user_Id") int userId) {
+		List<Follow> followers = followService.getFollowers(userId);
+		return new ResponseEntity<>(followers, HttpStatus.OK);
+	}
 
-    @GetMapping("/followers/{user_Id}")
-    @Operation(summary = "특정 사용자의 팔로워 목록을 조회합니다.")
-    public ResponseEntity<List<Follow>> getFollowers(@PathVariable("user_Id") int userId) {
-        List<Follow> followers = followService.getFollowers(userId);
-        return new ResponseEntity<>(followers, HttpStatus.OK);
-    }
-
-    @GetMapping("/following/{user_Id}")
-    @Operation(summary = "특정 사용자가 팔로우하는 사용자 목록을 조회합니다.")
-    public ResponseEntity<List<Follow>> getFollowing(@PathVariable("user_Id") int userId) {
-        List<Follow> following = followService.getFollowing(userId);
+	@GetMapping("/following/{user_Id}")
+	@Operation(summary = "특정 사용자가 팔로우하는 사용자 목록을 조회합니다.")
+	public ResponseEntity<List<Follow>> getFollowing(@PathVariable("user_Id") int userId) {
+		List<Follow> following = followService.getFollowing(userId);
 		return new ResponseEntity<>(following, HttpStatus.OK);
+	}
+
+	@GetMapping("/count/followers/{user_Id}")
+	@Operation(summary = "특정 사용자의 팔로워 수를 조회합니다.")
+	public ResponseEntity<Integer> countFollowers(@PathVariable("user_Id") int userId) {
+		int count = followService.countFollowers(userId);
+		return new ResponseEntity<>(count, HttpStatus.OK);
+	}
+
+	@GetMapping("/count/following/{user_Id}")
+	@Operation(summary = "특정 사용자가 팔로우하는 수를 조회합니다.")
+	public ResponseEntity<Integer> countFollowing(@PathVariable("user_Id") int userId) {
+		int count = followService.countFollowing(userId);
+		return new ResponseEntity<>(count, HttpStatus.OK);
 	}
 }
