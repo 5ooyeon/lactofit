@@ -31,3 +31,4 @@
 		WHERE user_id = #{followingUserId}
 	</select>
 </mapper>
+

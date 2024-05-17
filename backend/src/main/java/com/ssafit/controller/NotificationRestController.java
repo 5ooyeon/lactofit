@@ -17,20 +17,26 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafit.model.dto.Notification;
 import com.ssafit.model.service.NotificationService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/notifications")
+@Tag(name = "notificationRestController", description = "알림 컨트롤러")
 public class NotificationRestController {
 
 	@Autowired
 	private NotificationService notificationService;
 
 	@PostMapping("/")
+	@Operation(summary = "알림을 생성합니다.")
 	public ResponseEntity<Notification> createNotification(@RequestBody Notification notification) {
 		notificationService.createNotification(notification);
 		return new ResponseEntity<>(notification, HttpStatus.CREATED);
 	}
 
 	@GetMapping("/{notification_id}")
+	@Operation(summary = "상세 알림을 조회합니다.")
 	public ResponseEntity<Notification> getNotificationById(@PathVariable("notification_id") Integer notificationId) {
 		Notification notification = notificationService.getNotificationById(notificationId);
 		if (notification != null) {
@@ -41,26 +47,16 @@ public class NotificationRestController {
 	}
 
 	@GetMapping("/user/{user_id}")
+	@Operation(summary = "전체 알림을 조회합니다..")
 	public ResponseEntity<List<Notification>> getNotificationsByUserId(@PathVariable("user_id") Integer userId) {
 		List<Notification> notifications = notificationService.getNotificationsByUserId(userId);
 		return new ResponseEntity<>(notifications, HttpStatus.OK);
 	}
 
-	@PutMapping("/{notification_id}")
-	public ResponseEntity<Notification> updateNotification(@PathVariable("notification_id") Integer notificationId,
-			@RequestBody Notification notification) {
-		notification.setNotificationId(notificationId);
-		notificationService.updateNotification(notification);
-		Notification updatedNotification = notificationService.getNotificationById(notificationId);
-		if (updatedNotification != null) {
-			return new ResponseEntity<>(updatedNotification, HttpStatus.OK);
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	}
-
 	@DeleteMapping("/{notification_id}")
-	public ResponseEntity<String> deleteNotification(@PathVariable("notification_id") Integer notificationId) {
+	@Operation(summary = "알림을 삭제합니다.")
+	public ResponseEntity<?> deleteNotification(@PathVariable("notification_id") Integer notificationId) {
 		notificationService.deleteNotification(notificationId);
-		return new ResponseEntity<>("{\"msg\": \"알림이 삭제되었습니다.\"}", HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

@@ -1,11 +1,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssafit.model.dao.PointDao">
-	<insert id="addPoint" parameterType="com.ssafit.model.dto.Point">
-		INSERT INTO Point (user_id, point_amount, point_desc, point_regDate)
-		VALUES (#{user_id}, #{point_amount}, #{point_desc}, NOW())
-	</insert>
-
-	<insert id="usePoint" parameterType="com.ssafit.model.dto.Point">
+	<insert id="trackPoint" parameterType="com.ssafit.model.dto.Point">
 		INSERT INTO Point (user_id, point_amount, point_desc, point_regDate)
 		VALUES (#{user_id}, #{point_amount}, #{point_desc}, NOW())
 	</insert>

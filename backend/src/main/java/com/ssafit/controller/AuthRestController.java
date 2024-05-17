@@ -40,7 +40,7 @@ public class AuthRestController {
 
 	@PostMapping("/callback")
 	@Operation(summary = "Front-End에서 받은 구글로그인 유저의 정보를 DB와 세션에 저장하고 다시 Front-End로 보냅니다.")
-	public ResponseEntity<Map<String, String>> googleCallback(@RequestBody Map<String, String> requestBody,
+	public ResponseEntity<Map<String, Object>> googleCallback(@RequestBody Map<String, String> requestBody,
 			HttpSession session) {
 		String code = requestBody.get("code");
 		String redirectUri = requestBody.get("redirect_uri");
@@ -88,7 +88,8 @@ public class AuthRestController {
 		session.setAttribute("user", user);
 
 		// 프론트로 유저 정보 response
-		Map<String, String> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>();
+		response.put("userId", user.getUserId());
 		response.put("userTag", user.getUserTag());
 		response.put("userNickname", user.getUserNickname());
 		response.put("userProfileImage", user.getUserProfileImage());

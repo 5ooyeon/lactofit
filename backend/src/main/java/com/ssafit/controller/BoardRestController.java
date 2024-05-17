@@ -44,7 +44,7 @@ public class BoardRestController {
                                              @RequestParam("routineId") int routineId,
                                              @RequestParam("boardContent") String boardContent,
                                              @RequestParam("boardVisibility") boolean boardVisibility) {
-
+    	// 파일업로드
     	String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         try {
             Path path = Paths.get(UPLOAD_DIR + fileName);
@@ -62,7 +62,7 @@ public class BoardRestController {
         board.setBoardImgUrl(UPLOAD_DIR + fileName);
         board.setBoardViewCnt(0);
         board.setBoardVisibility(boardVisibility);
-
+        // 게시글 등록
         boardService.createBoard(board);
         return new ResponseEntity<>(board, HttpStatus.CREATED);
     }

@@ -23,15 +23,9 @@ public class PointRestController {
 	private PointService pointService;
 
 	@PostMapping("/")
-	@Operation(summary = "포인트를 획득을 기록합니다.")
+	@Operation(summary = "포인트 획득/사용을 기록합니다.")
 	public void addPoint(@RequestBody Point point) {
-		pointService.addPoint(point);
-	}
-
-	@PostMapping("/use")
-	@Operation(summary = "포인트를 사용을 기록합니다.")
-	public void usePoint(@RequestBody Point point) {
-		pointService.usePoint(point);
+		pointService.trackPoint(point);
 	}
 
 	@GetMapping("/{user_id}")
