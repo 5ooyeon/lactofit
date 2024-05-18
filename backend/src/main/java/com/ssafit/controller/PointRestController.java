@@ -30,7 +30,7 @@ public class PointRestController {
 
 	@GetMapping("/{user_id}")
 	@Operation(summary = "포인트를 총량을 출력합니다.")
-	public int getPointsSumByUserId(@PathVariable int user_id) {
+	public int getPointsSumByUserId(@PathVariable("user_id") int user_id) {
 		return pointService.getPointsSumByUserId(user_id);
 	}
 }

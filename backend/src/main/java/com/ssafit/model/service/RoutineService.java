@@ -7,6 +7,11 @@ import com.ssafit.model.dto.Routine;
 import com.ssafit.model.dto.RoutineComponents;
 
 public interface RoutineService {
+	
+	public Exercise getExerciseById(int exerciseId);
+
+	public List<Exercise> getAllExercises();
+	
 	public int createRoutine(Routine routine);
 
 	public void updateRoutine(Routine routine);

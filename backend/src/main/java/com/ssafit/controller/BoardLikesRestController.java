@@ -12,24 +12,24 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/board-likes")
+@RequestMapping("/boardlikes")
 @Tag(name = "boardLikesRestController", description = "게시글 좋아요/좋아요 취소 컨트롤러")
 public class BoardLikesRestController {
 
-    @Autowired
-    private BoardLikesService boardLikesService;
+	@Autowired
+	private BoardLikesService boardLikesService;
 
-    @PostMapping("/")
-    @Operation(summary = "게시글을 좋아요/취소합니다.")
-    public ResponseEntity<Void> toggleLike(@RequestBody BoardLikes boardLikes) {
-        boardLikesService.toggleLike(boardLikes);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+	@PostMapping("/")
+	@Operation(summary = "게시글을 좋아요/취소합니다.")
+	public ResponseEntity<Void> toggleLike(@RequestBody BoardLikes boardLikes) {
+		boardLikesService.toggleLike(boardLikes);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 
-    @GetMapping("/{boardId}")
-    @Operation(summary = "특정 게시글의 좋아요 수를 조회합니다.")
-    public ResponseEntity<Integer> getLikesCountByBoardId(@PathVariable int boardId) {
-        int likesCount = boardLikesService.getLikesCountByBoardId(boardId);
-        return new ResponseEntity<>(likesCount, HttpStatus.OK);
-    }
+	@GetMapping("/{board_Id}")
+	@Operation(summary = "특정 게시글의 좋아요 수를 조회합니다.")
+	public ResponseEntity<Integer> getLikesCountByBoardId(@PathVariable("board_Id") int boardId) {
+		int likesCount = boardLikesService.getLikesCountByBoardId(boardId);
+		return new ResponseEntity<>(likesCount, HttpStatus.OK);
+	}
 }

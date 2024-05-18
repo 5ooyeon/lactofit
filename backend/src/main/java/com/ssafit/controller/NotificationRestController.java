@@ -46,7 +46,7 @@ public class NotificationRestController {
 
 	}
 
-	@GetMapping("/user/{user_id}")
+	@GetMapping("/{user_id}")
 	@Operation(summary = "전체 알림을 조회합니다..")
 	public ResponseEntity<List<Notification>> getNotificationsByUserId(@PathVariable("user_id") Integer userId) {
 		List<Notification> notifications = notificationService.getNotificationsByUserId(userId);

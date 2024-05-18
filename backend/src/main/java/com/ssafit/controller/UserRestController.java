@@ -1,5 +1,8 @@
 package com.ssafit.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +19,6 @@ import com.ssafit.model.dto.User;
 import com.ssafit.model.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -36,7 +38,7 @@ public class UserRestController {
 
 	@GetMapping("/{user_id}")
 	@Operation(summary = "유저 정보를 불러옵니다.")
-	public ResponseEntity<User> getUserProfile(@PathVariable("user_id") int userId) {
+	public ResponseEntity<?> getUserProfile(@PathVariable("user_id") int userId) {
 		User user = userService.getUserById(userId);
 		if (user != null) {
 			return new ResponseEntity<>(user, HttpStatus.OK);
