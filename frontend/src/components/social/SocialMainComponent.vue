@@ -1,198 +1,402 @@
 <template>
-    <div class="container">
-      <div class="menu">
-        <span class="select-menu" @click="getAllPost">전체</span>
-        <span class="select-menu" @click="getFollowingPost">팔로잉</span>
-      </div>
-      <div class="content-area">
-        <ul v-if="store.returnBoardList.length != 0">
-            <li v-for="board in store.returnBoardList" :key="board.id">
-                <h2>{{ board.title }}</h2>
-                <p>{{ board.content }}</p>
-            </li>
-        </ul>
-        <p v-if="store.returnBoardList.length == 0">게시물이 없습니다.</p>
-      </div>
-      <button type="button" class="btn btn-primary" @click="showModal">작성하기</button>
-  
-      <!-- Modal -->
-      <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="uploadModalLabel">Upload Image</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-                    <label class="form-check-label" for="flexSwitchCheckChecked">공개</label>
-                </div>
-                <select v-model="selectedRoutine" class="form-select select-routine" aria-label="루틴 선택">
-                    <option disabled value="">루틴 선택</option>
-                    <option value="24.04.13 루틴">24.04.13 루틴</option>
-                    <option value="Two">Two</option>
-                    <option value="Three">Three</option>
-                </select>
-              <div class="mb-3">
-                <div class="file-upload-wrapper">
-                  <input type="file" id="formFile" @change="onFileChange" class="file-input">
-                  <label for="formFile" class="file-upload-label">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                  </label>
-                </div>
-              </div>
-              <div v-if="imageUrl">
-                <img :src="imageUrl" class="img-fluid" alt="Image preview">
-              </div>
+  <div class="container">
+    <div class="menu">
+      <span class="select-menu" @click="getAllPost">전체</span>
+      <span class="select-menu" @click="getFollowingPost">팔로잉</span>
+    </div>
+    <div class="content-area">
+      <ul v-if="store.returnBoardList.length != 0" class="board-list">
+        <li v-for="board in store.returnBoardList" :key="board.id" class="board-item">
+          <img class="board-thumbnail" :src="board.boardImgUrl" @click="showBoardDetail(board)">
+        </li>
+      </ul>
+      <p v-if="store.returnBoardList.length == 0">게시물이 없습니다.</p>
+    </div>
+    <button type="button" class="btn btn-primary" @click="showUploadModal">작성하기</button>
 
-              <div class="write-form">
-                <textarea v-model="comment" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+    <!-- Upload Modal -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="uploadModalLabel">Upload Image</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" v-model="writeBoard.boardVisibility">
+              <label class="form-check-label" for="flexSwitchCheckChecked">공개</label>
+            </div>
+            <select v-model="writeBoard.routineId" class="form-select select-routine" aria-label="루틴 선택">
+              <option disabled value="">루틴 선택</option>
+              <option value="1">24.04.13 루틴</option>
+              <option value="2">Two</option>
+              <option value="3">Three</option>
+            </select>
+            <div class="mb-3">
+              <div class="file-upload-wrapper">
+                <input type="file" id="formFile" @change="onFileChange" class="file-input">
+                <label for="formFile" class="file-upload-label">
+                  <i class="fas fa-cloud-upload-alt"></i>
+                </label>
               </div>
-              <button type="submit" class="btn btn-primary mt-3" @click="registPost">등록</button>
+            </div>
+            <div v-if="imageUrl">
+              <img :src="imageUrl" class="img-fluid" alt="Image preview">
+            </div>
+            <div class="write-form">
+              <textarea v-model="writeBoard.boardContent" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+            </div>
+            <button class="btn btn-primary mt-3" @click="registPost">등록</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Board Detail Modal -->
+    <div class="modal fade" id="boardDetailModal" tabindex="-1" aria-labelledby="boardDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="boardDetailModalLabel">Board Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fshop1.phinf.naver.net%2F20240409_165%2F1712589691802pbsAg_JPEG%2F113725580504775095_1890594520.jpeg&type=sc960_832" class="img-fluid" alt="Board Image">
+            <p>{{ selectedBoard?.boardContent }}</p>
+            <p class="board-detail-regdate">{{ selectedBoard?.boardRegDate }}</p>
+          </div>
+          <div class="board-like">
+            <div title="Like" class="heart-container">
+              <input id="Give-It-An-Id" class="checkbox" type="checkbox" :checked="hasUserLiked" @click="boardLike(selectedBoard?.boardId)">
+              <div class="svg-container">
+                <svg xmlns="http://www.w3.org/2000/svg" class="svg-outline" viewBox="0 0 24 24">
+                  <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z">
+                  </path>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="svg-filled" viewBox="0 0 24 24">
+                  <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z">
+                  </path>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" class="svg-celebrate">
+                  <polygon points="10,10 20,20"></polygon>
+                  <polygon points="10,50 20,50"></polygon>
+                  <polygon points="20,80 30,70"></polygon>
+                  <polygon points="90,10 80,20"></polygon>
+                  <polygon points="90,50 80,50"></polygon>
+                  <polygon points="80,80 70,70"></polygon>
+                </svg>
+              </div>
+              <p class="board-like-count">{{ boardLikes.length }}</p>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </template>
-  
+  </div>
+</template>
+
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { Modal } from 'bootstrap';
 import axios from 'axios';
 import { useSocialStore } from '@/stores/social';
+import { useAuthStore } from '@/stores/auth'; // Assuming you have an auth store
 
 const store = useSocialStore();
+const authStore = useAuthStore();
 
 onMounted(() => {
   store.getAllBoardList();
 });
 
-  
-  const file = ref(null);
-  const imageUrl = ref(null);
-  const selectedRoutine = ref('');
-  const comment = ref('');
-  let uploadModal = null;
-  
-  const onFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile && selectedFile.type.startsWith('image/')) {
-      file.value = selectedFile;
-      imageUrl.value = URL.createObjectURL(selectedFile);
-    } else {
-      file.value = null;
-      imageUrl.value = null;
-    }
-  };
-  
-  const registPost = async () => {
-    if (!file.value) {
-      alert('Please select an image file to upload.');
-      return;
-    }
-  
-    if (!selectedRoutine.value) {
-      alert('Please select a routine.');
-      return;
-    }
-  
-    if (!comment.value) {
-      alert('Please enter a comment.');
-      return;
-    }
-  
-    const formData = new FormData();
-    formData.append('image', file.value);
-    formData.append('routine', selectedRoutine.value);
-    formData.append('comment', comment.value);
-  
-    try {
-      const response = await axios.post('/api/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log('Post registered successfully:', response.data);
-      // Clear the form after successful upload
-      file.value = null;
-      imageUrl.value = null;
-      selectedRoutine.value = '';
-      comment.value = '';
-      hideModal();
-    } catch (error) {
-      console.error('Error registering post:', error);
-    }
-  };
-  
-  const showModal = () => {
-    if (!uploadModal) {
-      const modalElement = document.getElementById('uploadModal');
-      uploadModal = new Modal(modalElement);
-    }
-    uploadModal.show();
-  };
-  
-  const hideModal = () => {
-    if (uploadModal) {
-      uploadModal.hide();
-    }
-  };
+const file = ref(null);
+const imageUrl = ref(null);
+let uploadModal = null;
+let boardDetailModal = null;
+const selectedBoard = ref(null);
+const boardLikes = ref([]);
+const userId = authStore.user.userId
+const writeBoard = ref({
+  userId: userId,
+  routineId: 0,
+  boardContent: '',
+  boardVisibility: false
+})
 
-  const getAllPost = () => {
-      store.getAllBoardList();
+const onFileChange = (e) => {
+  const selectedFile = e.target.files[0];
+  if (selectedFile && selectedFile.type.startsWith('image/')) {
+    file.value = selectedFile;
+    imageUrl.value = URL.createObjectURL(selectedFile);
+  } else {
+    file.value = null;
+    imageUrl.value = null;
+  }
+};
+
+const registPost = () => {
+  console.log(writeBoard.value);
+
+  const formData = new FormData();
+  formData.append('file', file.value);
+  formData.append('userId', writeBoard.value.userId);
+  formData.append('routineId', writeBoard.value.routineId);
+  formData.append('boardContent', writeBoard.value.boardContent);
+  formData.append('boardVisibility', writeBoard.value.boardVisibility);
+
+  axios.post('http://localhost:8080/boards/', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+  .then((response) => {
+    console.log('Post registered successfully:', response.data);
+    // 업로드 후 상태 초기화
+    file.value = null;
+    imageUrl.value = null;
+    writeBoard.value.routineId = 0;
+    writeBoard.value.boardContent = '';
+    writeBoard.value.boardVisibility = false;
+    hideUploadModal();
+  })
+  .catch((err) => {
+    console.error('Error registering post:', err);
+  });
+};
+
+const showUploadModal = () => {
+  if (!uploadModal) {
+    const modalElement = document.getElementById('uploadModal');
+    uploadModal = new Modal(modalElement);
+  }
+  uploadModal.show();
+};
+
+const hideUploadModal = () => {
+  if (uploadModal) {
+    uploadModal.hide();
+  }
+};
+
+const showBoardDetail = async (board) => {
+  selectedBoard.value = board;
+  try {
+    const response = await axios.get(`http://localhost:8080/board-likes/${board.boardId}`);
+    boardLikes.value = response.data;
+  } catch (error) {
+    console.error('Error fetching board likes:', error);
   }
 
-  const getFollowingPost = () => {
-    store.getFollowingBoardList();
+  if (!boardDetailModal) {
+    const modalElement = document.getElementById('boardDetailModal');
+    boardDetailModal = new Modal(modalElement);
+  }
+  boardDetailModal.show();
+};
+
+const getAllPost = () => {
+  store.getAllBoardList();
+};
+
+const getFollowingPost = () => {
+  store.getFollowingBoardList();
+};
+
+const boardLike = (boardId) => {
+  const userId = authStore.user.userId;
+
+  axios({
+    url: `http://localhost:8080/board-likes/`,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: { boardId, userId }
+  })
+    .then((response) => {
+      const liked = response.data.liked;
+      if (liked) {
+        boardLikes.value.push({ user_id: userId });
+      } else {
+        boardLikes.value = boardLikes.value.filter(like => like.user_id !== userId);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+const hasUserLiked = computed(() => {
+  return boardLikes.value.some(like => like.user_id === authStore.user.userId);
+});
+</script>
+
+<style scoped>
+.container {
+  margin-top: 20px;
+}
+
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+.file-upload-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.file-input {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.file-upload-label {
+  display: inline-block;
+  cursor: pointer;
+  font-size: 1.25rem;
+  color: #007bff;
+  background-color: #fff;
+  border: 2px solid #007bff;
+  padding: 10px 20px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.file-upload-label:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.file-upload-label i {
+  margin-right: 10px;
+}
+
+.board-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.board-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.board-thumbnail {
+  width: 100%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.menu {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.select-menu {
+  margin: 0 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.heart-container {
+  --heart-color: rgb(91, 173, 255);
+  position: relative;
+  width: 50px;
+  height: 50px;
+  transition: .3s;
+  display: flex;
+}
+
+.heart-container .checkbox {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 20;
+  cursor: pointer;
+}
+
+.heart-container .svg-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.heart-container .svg-outline,
+.heart-container .svg-filled {
+  fill: var(--heart-color);
+  position: absolute;
+}
+
+.heart-container .svg-filled {
+  animation: keyframes-svg-filled 1s;
+  display: none;
+}
+
+.heart-container .svg-celebrate {
+  position: absolute;
+  animation: keyframes-svg-celebrate .5s;
+  animation-fill-mode: forwards;
+  display: none;
+  stroke: var(--heart-color);
+  fill: var(--heart-color);
+  stroke-width: 2px;
+}
+
+.heart-container .checkbox:checked~.svg-container .svg-filled {
+  display: block;
+}
+
+.heart-container .checkbox:checked~.svg-container .svg-celebrate {
+  display: block;
+}
+
+@keyframes keyframes-svg-filled {
+  0% {
+    transform: scale(0);
   }
 
-  </script>
-  
-  <style scoped>
-  .container {
-    margin-top: 20px;
+  25% {
+    transform: scale(1.2);
   }
-  
-  .img-fluid {
-    max-width: 100%;
-    height: auto;
+
+  50% {
+    transform: scale(1);
+    filter: brightness(1.5);
   }
-  
-  .file-upload-wrapper {
-    position: relative;
-    display: inline-block;
+}
+
+@keyframes keyframes-svg-celebrate {
+  0% {
+    transform: scale(0);
   }
-  
-  .file-input {
-    width: 0.1px;
-    height: 0.1px;
+
+  50% {
+    opacity: 1;
+    filter: brightness(1.5);
+  }
+
+  100% {
+    transform: scale(1.4);
     opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    z-index: -1;
+    display: none;
   }
-  
-  .file-upload-label {
-    display: inline-block;
-    cursor: pointer;
-    font-size: 1.25rem;
-    color: #007bff;
-    background-color: #fff;
-    border: 2px solid #007bff;
-    padding: 10px 20px;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-  }
-  
-  .file-upload-label:hover {
-    background-color: #007bff;
-    color: #fff;
-  }
-  
-  .file-upload-label i {
-    margin-right: 10px;
-  }
-  </style>
-  
+}
+
+.board-like-count {
+  margin: auto;
+}
+</style>

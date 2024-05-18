@@ -24,9 +24,11 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useYoutubeStore } from '@/stores/youtube';
+import { useAuthStore } from '@/stores/auth';
 import CommentList from './CommentList.vue';
 
 const store = useYoutubeStore();
+const authStore = useAuthStore()
 const myComment = ref()
 
 // Computed property to get the last video from history
@@ -41,7 +43,10 @@ const writeComment = () => {
   if (myComment.value.trim() === '') {
     return; // Do not allow empty comments
   }
-  console.log('댓글다는 로직: '+myComment.value)
+  store.writeComment(myComment.value, lastVideo.value.id.videoId)
+//   console.log('댓글: '+myComment.value)
+//   console.log(lastVideo.value.id.videoId)
+//   console.log('user access token: '+authStore.user.accessToken)
   myComment.value = '';
 }
 </script>

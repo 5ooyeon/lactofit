@@ -12,7 +12,7 @@ export const useAuthStore = defineStore('auth', () => {
   const router = useRouter()
 
   function loginWithGoogle() {
-    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=openid email profile`;
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=openid email profile https://www.googleapis.com/auth/youtube.force-ssl`;
     window.location.href = url;
   }
 
@@ -26,6 +26,7 @@ export const useAuthStore = defineStore('auth', () => {
       }).then((response) => {
         sessionStorage.setItem('user', JSON.stringify(response.data));
         user.value = response.data
+        console.log(user.value)
         router.push("/")
       })
       // user.value = response.data;

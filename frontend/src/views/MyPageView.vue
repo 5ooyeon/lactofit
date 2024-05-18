@@ -1,6 +1,6 @@
 <template>
     <div class="profile-page container">
-      <div class="tabs" v-if="authStore.user.user_id == route.params.id">
+      <div class="tabs" v-if="authStore.user.userId == route.params.id">
         <span :class="['tab', { active: selectedTab === 'feed' }]" @click="selectTab('feed')">피드</span>
         <span :class="['tab', { active: selectedTab === 'analysis' }]" @click="selectTab('analysis')">분석</span>
         <span :class="['tab', { active: selectedTab === 'setting' }]" @click="selectTab('setting')">내정보수정</span>
@@ -26,7 +26,7 @@
 
                     <div class="my-routine">
                         <h3>운동 루틴</h3>
-                        <div style="justify-content: end;" v-if="authStore.user.user_id == route.params.id">
+                        <div style="justify-content: end;" v-if="authStore.user.userId == route.params.id">
                             <button class="see-all-routi">더보기</button>
                             <button class="add-routine">운동 추가하기</button>
                         </div>
@@ -98,6 +98,8 @@ import RoutineComponent from '@/components/info/RoutineComponent.vue';
 import SocialPostComponent from '@/components/social/SocialPostComponent.vue';
 import router from '@/router';
 
+
+
   const route = useRoute()
   const selectedTab = ref('feed');
   const selectTab = (tab) => {
@@ -106,6 +108,9 @@ import router from '@/router';
   
   const socialStore = useSocialStore();
   const authStore = useAuthStore();
+
+  console.log(route.params.id)
+  console.log(authStore.user.userId)
   </script>
   
   

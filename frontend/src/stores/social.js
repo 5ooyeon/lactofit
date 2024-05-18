@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { ref } from 'vue';
 
-const REST_BOARD_API = `http://localhost:8080/boards`
+const REST_BOARD_API = `http://localhost:8080/boards/`
 
 export const useSocialStore = defineStore('social', () => {
     const returnBoardList = ref([])
@@ -21,6 +21,13 @@ export const useSocialStore = defineStore('social', () => {
       axios.get(REST_BOARD_API+`/following/`+user.user_id)
       .then((response) => {
         returnBoardList.value = response.data
+      })
+    }
+
+    const getBoardLikeCnt = (boardId) => {
+      axios.get(`http://localhost:8080/board-likes/${boardId}`)
+      .then((response) => {
+        
       })
     }
 

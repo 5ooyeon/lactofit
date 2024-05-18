@@ -10,6 +10,9 @@ import VideoDetail from '@/components/youtube/VideoDetail.vue'
 import SocialView from '@/views/SocialView.vue'
 import SocialMainComponent from '@/components/social/SocialMainComponent.vue'
 import MyPageView from '@/views/MyPageView.vue'
+import RoutineView from '@/views/RoutineView.vue'
+import RoutineInfoComponent from '@/components/routine/RoutineInfoComponent.vue'
+import CreateRoutineComponent from '@/components/routine/CreateRoutineComponent.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -67,6 +70,23 @@ const router = createRouter({
           path: "",
           name: "SocialMainComponent",
           component: SocialMainComponent
+        },
+      ]
+    },
+    {
+      path: "/routine",
+      name: "RoutineView",
+      component: RoutineView,
+      children: [
+        {
+          path: "myroutine",
+          name: "RoutineInfoComponent",
+          component: RoutineInfoComponent
+        },
+        {
+          path: "create",
+          name: "CreateRoutineComponent",
+          component: CreateRoutineComponent
         },
       ]
     },

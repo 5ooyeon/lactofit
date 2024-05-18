@@ -25,7 +25,7 @@
               운동 고민 끝
             </p>
             <button class="cssbuttons-io">
-              <span> 시작하기 </span>
+              <RouterLink class="make-routine" :to="{name: 'RoutineInfoComponent'}">시작하기</RouterLink>
             </button>
           </div>
         </section>
@@ -375,7 +375,7 @@ video {
     margin-right: 0.5em;
   }
   
-  .cssbuttons-io span {
+  .make-routine {
     position: relative;
     z-index: 10;
     transition: color 0.4s;

@@ -2,6 +2,7 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { setCookie, getCookie } from '@/utils/cookies';
+import { useAuthStore } from './auth';
 
 const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 const CommentURL = 'https://www.googleapis.com/youtube/v3/commentThreads';
@@ -76,6 +77,40 @@ export const useYoutubeStore = defineStore('youtube', () => {
     });
   };
 
+
+  const writeComment = async (comment, videoId) => {
+    try {
+      const accessToken = useAuthStore().user.accessToken;
+      console.log(accessToken)
+      if (!accessToken) {
+        throw new Error('No access token found');
+      }
+
+      const response = await axios.post('https://www.googleapis.com/youtube/v3/commentThreads', {
+        snippet: {
+          videoId: videoId,
+          topLevelComment: {
+            snippet: {
+              textOriginal: comment,
+            },
+          },
+        },
+      }, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Accept: 'application/json',
+        },
+        params: {
+          part: 'snippet',
+        },
+      });
+
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error inserting comment thread:', error);
+    }
+  };
+
   return {
     weaknessVideos,
     searchedVideos,
@@ -83,6 +118,7 @@ export const useYoutubeStore = defineStore('youtube', () => {
     searchWord,
     addToHistory,
     videoHistory,
-    commentList
+    commentList,
+    writeComment
   };
 });

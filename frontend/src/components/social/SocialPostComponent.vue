@@ -1,7 +1,7 @@
 <template>
     <div class="col-4 post-container" @click="viewPost">
       <!-- Placeholder image source or move the image to public directory and update path accordingly -->
-      <img src='C:\Users\symel\Downloads\www.youtube.com_.png'>
+      <img :src=authStore.user.userProfileImage>
     </div>
   
     <div class="modal-dialog modal-lg" v-if="isModalVisible">
@@ -39,7 +39,7 @@
     board_id: 1,
     board_content: 'abc',
     user_nickname: 'writer',
-    board_imgUrl: 'C:\Users\symel\Downloads\www.youtube.com_.png' 
+    board_imgUrl: null
   });
   
   const isModalVisible = ref(false);
