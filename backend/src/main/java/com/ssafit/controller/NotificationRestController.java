@@ -35,9 +35,9 @@ public class NotificationRestController {
 		return new ResponseEntity<>(notification, HttpStatus.CREATED);
 	}
 
-	@GetMapping("/{notification_id}")
+	@GetMapping("/detail/{notification_id}")
 	@Operation(summary = "상세 알림을 조회합니다.")
-	public ResponseEntity<Notification> getNotificationById(@PathVariable("notification_id") Integer notificationId) {
+	public ResponseEntity<Notification> getNotificationById(@PathVariable("notification_id") int notificationId) {
 		Notification notification = notificationService.getNotificationById(notificationId);
 		if (notification != null) {
 			return new ResponseEntity<>(notification, HttpStatus.OK);
@@ -47,15 +47,15 @@ public class NotificationRestController {
 	}
 
 	@GetMapping("/{user_id}")
-	@Operation(summary = "전체 알림을 조회합니다..")
-	public ResponseEntity<List<Notification>> getNotificationsByUserId(@PathVariable("user_id") Integer userId) {
+	@Operation(summary = "전체 알림을 조회합니다.")
+	public ResponseEntity<List<Notification>> getNotificationsByUserId(@PathVariable("user_id") int userId) {
 		List<Notification> notifications = notificationService.getNotificationsByUserId(userId);
 		return new ResponseEntity<>(notifications, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{notification_id}")
 	@Operation(summary = "알림을 삭제합니다.")
-	public ResponseEntity<?> deleteNotification(@PathVariable("notification_id") Integer notificationId) {
+	public ResponseEntity<?> deleteNotification(@PathVariable("notification_id") int notificationId) {
 		notificationService.deleteNotification(notificationId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

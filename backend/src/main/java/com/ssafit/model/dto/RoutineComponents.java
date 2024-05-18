@@ -6,17 +6,19 @@ public class RoutineComponents {
 	private int routineId;
 	private int routineComponentsReps;
 	private int routineComponentsWeight;
+	private Exercise exercise;
 
 	public RoutineComponents() {
 	};
 
 	public RoutineComponents(int routineComponentsId, int exerciseId, int routineId, int routineComponentsReps,
-			int routineComponentsWeight) {
+			int routineComponentsWeight, Exercise exercise) {
 		this.routineComponentsId = routineComponentsId;
 		this.exerciseId = exerciseId;
 		this.routineId = routineId;
 		this.routineComponentsReps = routineComponentsReps;
 		this.routineComponentsWeight = routineComponentsWeight;
+		this.exercise = exercise;
 	}
 
 	public int getRoutineComponentsId() {
@@ -63,7 +65,7 @@ public class RoutineComponents {
 	public String toString() {
 		return "RoutineComponents [routineComponentsId=" + routineComponentsId + ", exerciseId=" + exerciseId
 				+ ", routineId=" + routineId + ", routineComponentsReps=" + routineComponentsReps
-				+ ", routineComponentsWeight=" + routineComponentsWeight + "]";
+				+ ", routineComponentsWeight=" + routineComponentsWeight + ", exercise=" + exercise + "]";
 	}
 
 }

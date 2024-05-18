@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafit.model.dto.Board;
+import com.ssafit.model.dto.RoutineComponents;
+import com.ssafit.model.dto.User;
 import com.ssafit.model.service.BoardService;
+import com.ssafit.model.service.RoutineService;
+import com.ssafit.model.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,11 +44,16 @@ public class BoardRestController {
 	@Autowired
 	private BoardService boardService;
 
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private RoutineService routineService;
+
 	@PostMapping("/")
 	@Operation(summary = "게시물을 등록합니다.")
-	public ResponseEntity<Board> createBoard(@RequestParam("file") MultipartFile file,
-			@RequestParam("userId") int userId, @RequestParam("routineId") int routineId,
-			@RequestParam("boardContent") String boardContent,
+	public ResponseEntity<?> createBoard(@RequestParam("file") MultipartFile file, @RequestParam("userId") int userId,
+			@RequestParam("routineId") int routineId, @RequestParam("boardContent") String boardContent,
 			@RequestParam("boardVisibility") boolean boardVisibility) {
 		// 파일업로드
 		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
@@ -64,44 +76,117 @@ public class BoardRestController {
 
 		// 게시글 등록
 		boardService.createBoard(board);
-		return new ResponseEntity<>(board, HttpStatus.CREATED);
+
+		User writer = userService.getUserById(userId);
+		List<RoutineComponents> routines = routineService.getRoutineComponentsByRoutineId(routineId);
+
+		Map<String, Object> map = new HashMap<>();
+
+		map.put("userId", userId);
+		map.put("userTag", writer.getUserTag());
+		map.put("userNickname", writer.getUserNickname());
+		map.put("board", board);
+		map.put("RoutineComponents", routines);
+
+		return new ResponseEntity<>(map, HttpStatus.CREATED);
 	}
 
 	@GetMapping("/{board_id}")
 	@Operation(summary = "ID로 게시물을 조회합니다.")
-	public ResponseEntity<Board> getBoardById(@PathVariable("board_id") int boardId) {
+	public ResponseEntity<?> getBoardById(@PathVariable("board_id") int boardId) {
 		Board board = boardService.getBoardById(boardId);
+
 		if (board != null) {
-			return new ResponseEntity<>(board, HttpStatus.OK);
+			Map<String, Object> map = new HashMap<>();
+			User writer = userService.getUserById(board.getUserId());
+			List<RoutineComponents> routines = routineService.getRoutineComponentsByRoutineId(board.getRoutineId());
+
+			map.put("userId", writer.getUserId());
+			map.put("userTag", writer.getUserTag());
+			map.put("userNickname", writer.getUserNickname());
+			map.put("board", board);
+			map.put("RoutineComponents", routines);
+
+			return new ResponseEntity<>(map, HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
 	@GetMapping("/")
 	@Operation(summary = "모든 게시물을 조회합니다.")
-	public ResponseEntity<List<Board>> getAllBoards() {
+	public ResponseEntity<?> getAllBoards() {
 		List<Board> boards = boardService.getAllBoards();
-		return new ResponseEntity<>(boards, HttpStatus.OK);
-	}
-
-	@GetMapping("/{user_id}")
-	@Operation(summary = "UserId로 게시물 조회.")
-	public ResponseEntity<List<Board>> getBoardByUserId(@PathVariable("user_id") int userId) {
-		List<Board> boards = boardService.getBoardByUserId(userId);
-		if (boards.isEmpty()) {
+		if (boards.isEmpty() || boards == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<>(boards, HttpStatus.OK);
+
+		List<Map<String, Object>> list = new ArrayList<>();
+		for (Board b : boards) {
+			Map<String, Object> map = new HashMap<>();
+			User writer = userService.getUserById(b.getUserId());
+			List<RoutineComponents> routines = routineService.getRoutineComponentsByRoutineId(b.getRoutineId());
+
+			map.put("userId", writer.getUserId());
+			map.put("userTag", writer.getUserTag());
+			map.put("userNickname", writer.getUserNickname());
+			map.put("board", b);
+			map.put("RoutineComponents", routines);
+
+			list.add(map);
+		}
+
+		return new ResponseEntity<>(list, HttpStatus.OK);
+	}
+
+	@GetMapping("/user/{user_id}")
+	@Operation(summary = "UserId로 게시물 조회.")
+	public ResponseEntity<?> getBoardByUserId(@PathVariable("user_id") int userId) {
+		List<Board> boards = boardService.getBoardByUserId(userId);
+		if (boards.isEmpty() || boards == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		List<Map<String, Object>> list = new ArrayList<>();
+		for (Board b : boards) {
+			Map<String, Object> map = new HashMap<>();
+			User writer = userService.getUserById(b.getUserId());
+			List<RoutineComponents> routines = routineService.getRoutineComponentsByRoutineId(b.getRoutineId());
+
+			map.put("userId", writer.getUserId());
+			map.put("userTag", writer.getUserTag());
+			map.put("userNickname", writer.getUserNickname());
+			map.put("board", b);
+			map.put("RoutineComponents", routines);
+
+			list.add(map);
+		}
+
+		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 
 	@GetMapping("/following/{user_id}")
 	@Operation(summary = "팔로잉 유저 게시물 조회.")
-	public ResponseEntity<List<Board>> getFollowingBoardByUserId(@PathVariable("user_id") int userId) {
+	public ResponseEntity<?> getFollowingBoardByUserId(@PathVariable("user_id") int userId) {
 		List<Board> boards = boardService.getFollowingBoardByUserId(userId);
-		if (boards.isEmpty()) {
+		if (boards.isEmpty() || boards == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<>(boards, HttpStatus.OK);
+		List<Map<String, Object>> list = new ArrayList<>();
+		for (Board b : boards) {
+			Map<String, Object> map = new HashMap<>();
+			User writer = userService.getUserById(b.getUserId());
+			List<RoutineComponents> routines = routineService.getRoutineComponentsByRoutineId(b.getRoutineId());
+
+			map.put("userId", writer.getUserId());
+			map.put("userTag", writer.getUserTag());
+			map.put("userNickname", writer.getUserNickname());
+			map.put("board", b);
+			map.put("RoutineComponents", routines);
+
+			list.add(map);
+		}
+
+		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 
 	@PutMapping("/{board_id}")

@@ -5,7 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafit.model.dto.Exercise;
 import com.ssafit.model.dto.Routine;
@@ -31,11 +38,17 @@ public class RoutineRestController {
 		return new ResponseEntity<>(routine, HttpStatus.CREATED);
 	}
 
-	@PutMapping("/")
+	@PutMapping("/{routine_Id}")
 	@Operation(summary = "루틴을 수정합니다.")
-	public ResponseEntity<Void> updateRoutine(@RequestBody Routine routine) {
+	public ResponseEntity<Routine> updateRoutine(@PathVariable("routine_Id") int routineId,
+			@RequestBody Routine routine) {
+		routine.setRoutineId(routineId);
 		routineService.updateRoutine(routine);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		Routine updatedRoutine = routineService.getRoutineById(routineId);
+		if (updatedRoutine != null) {
+			return new ResponseEntity<>(updatedRoutine, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
 	@DeleteMapping("/{routine_Id}")
@@ -46,7 +59,7 @@ public class RoutineRestController {
 	}
 
 	@GetMapping("/{routine_Id}")
-	@Operation(summary = "루틴을 조회합니다.")
+	@Operation(summary = "루틴(이름, 설명 등)을 조회합니다.")
 	public ResponseEntity<Routine> getRoutineById(@PathVariable("routine_Id") int routineId) {
 		Routine routine = routineService.getRoutineById(routineId);
 		if (routine != null) {
@@ -54,6 +67,16 @@ public class RoutineRestController {
 		}
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
+
+//	@GetMapping("/{routine_Id}/exercises")
+//	@Operation(summary = "루틴(운동)을 조회합니다.")
+//	public ResponseEntity<List<RoutineComponents>> getExercisesByRoutineId(@PathVariable("routine_Id") int routineId) {
+//		List<RoutineComponents> exercises = routineService.getExercisesByRoutineId(routineId);
+//		if (exercises == null || exercises.isEmpty()) {
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//		}
+//		return new ResponseEntity<>(exercises, HttpStatus.OK);
+//	}
 
 	@GetMapping("/")
 	@Operation(summary = "모든 루틴을 조회합니다.")
@@ -69,19 +92,27 @@ public class RoutineRestController {
 		return new ResponseEntity<>(exercises, HttpStatus.OK);
 	}
 
-	@PostMapping("/exercises/{routine_Id}")
-	@Operation(summary = "루틴에 운동을 추가합니다.")
-	public ResponseEntity<Void> addExercisesToRoutine(@PathVariable("routine_Id") int routineId,
-			@RequestBody List<Exercise> exercises) {
-		routineService.addExercisesToRoutine(routineId, exercises);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	}
+//	@PostMapping("/exercises/{routine_Id}")
+//	@Operation(summary = "루틴에 운동을 추가합니다.")
+//	public ResponseEntity<Void> addExercisesToRoutine(@PathVariable("routine_Id") int routineId,
+//			@RequestBody List<Exercise> exercises) {
+//		routineService.addExercisesToRoutine(routineId, exercises);
+//		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//	}
 
-	@PutMapping("/routinecomponents")
+	@PutMapping("/routinecomponents/{routineComponents_Id}")
 	@Operation(summary = "루틴 컴포넌트를 수정합니다.")
-	public ResponseEntity<Void> updateRoutineComponent(@RequestBody RoutineComponents routineComponents) {
+	public ResponseEntity<RoutineComponents> updateRoutineComponent(
+			@PathVariable("routineComponents_Id") int routineComponentsId,
+			@RequestBody RoutineComponents routineComponents) {
+		routineComponents.setRoutineComponentsId(routineComponentsId);
 		routineService.updateRoutineComponent(routineComponents);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		RoutineComponents updated = routineService.getRoutineComponentById(routineComponentsId);
+
+		if (updated != null) {
+			return new ResponseEntity<>(updated, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
 	@DeleteMapping("/routinecomponents/{routineComponents_Id}")
@@ -102,7 +133,7 @@ public class RoutineRestController {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
-	@GetMapping("/routinecomponents/{routine_Id}")
+	@GetMapping("/routinecomponents/routine/{routine_Id}")
 	@Operation(summary = "루틴 ID로 루틴 컴포넌트를 조회합니다.")
 	public ResponseEntity<List<RoutineComponents>> getRoutineComponentsByRoutineId(
 			@PathVariable("routine_Id") int routineId) {

@@ -18,6 +18,9 @@ public class FollowServiceImpl implements FollowService {
 	@Autowired
 	private NotificationService notificationService;
 
+	@Autowired
+	private UserService userService;
+
 	@Override
 	public void toggleFollow(Follow follow) {
 		Follow alreadyFollow = followDao.getFollowByUsers(follow.getUserId(), follow.getFollowingUserId());
@@ -27,7 +30,8 @@ public class FollowServiceImpl implements FollowService {
 			followDao.createFollow(follow);
 			Notification notification = new Notification();
 			notification.setUserId(follow.getFollowingUserId());
-			notification.setNotificationContent(follow.getUserId() + "가 팔로우 하였습니다.");
+			notification.setNotificationContent(
+					userService.getUserById(follow.getUserId()).getUserNickname() + "(이)가 팔로우 하였습니다.");
 			notification.setNotificationRead(false);
 			notificationService.createNotification(notification);
 		}
@@ -47,14 +51,14 @@ public class FollowServiceImpl implements FollowService {
 	public List<Follow> getFollowing(int followingUserId) {
 		return followDao.getFollowingByUserId(followingUserId);
 	}
-	
-	@Override
-    public int countFollowers(int userId) {
-        return followDao.countFollowers(userId);
-    }
 
-    @Override
-    public int countFollowing(int userId) {
-        return followDao.countFollowing(userId);
-    }
+	@Override
+	public int countFollowers(int userId) {
+		return followDao.countFollowers(userId);
+	}
+
+	@Override
+	public int countFollowing(int userId) {
+		return followDao.countFollowing(userId);
+	}
 }

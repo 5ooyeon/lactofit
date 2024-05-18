@@ -54,14 +54,14 @@ public class RoutineServiceImpl implements RoutineService {
 		return routineDao.getAllRoutines();
 	}
 
-	public void addExercisesToRoutine(int routineId, List<Exercise> exercises) {
-		for (Exercise exercise : exercises) {
-			RoutineComponents routineComponent = new RoutineComponents();
-			routineComponent.setExerciseId(exercise.getExerciseId());
-			routineComponent.setRoutineId(routineId);
-			routineComponentsDao.insertRoutineComponent(routineComponent);
-		}
-	}
+//	public void addExercisesToRoutine(int routineId, List<Exercise> exercises) {
+//		for (Exercise exercise : exercises) {
+//			RoutineComponents routineComponent = new RoutineComponents();
+//			routineComponent.setExerciseId(exercise.getExerciseId());
+//			routineComponent.setRoutineId(routineId);
+//			routineComponentsDao.insertRoutineComponent(routineComponent);
+//		}
+//	}
 
 	public void updateRoutineComponent(RoutineComponents routineComponents) {
 		routineComponentsDao.updateRoutineComponent(routineComponents);
@@ -82,5 +82,9 @@ public class RoutineServiceImpl implements RoutineService {
 	public List<RoutineComponents> getAllRoutineComponents() {
 		return routineComponentsDao.getAllRoutineComponents();
 	}
+
+//	public List<RoutineComponents> getExercisesByRoutineId(int routineId) {
+//		return routineDao.getExercisesByRoutineId(routineId);
+//	}
 
 }
