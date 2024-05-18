@@ -32,94 +32,94 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "boardRestController", description = "게시판(오.운.완)CRUD")
 public class BoardRestController {
 
-    private static final String UPLOAD_DIR = "C:/uploads/";
+	private static final String UPLOAD_DIR = "C:/uploads/";
 
-    @Autowired
-    private BoardService boardService;
+	@Autowired
+	private BoardService boardService;
 
-    @PostMapping("/")
-    @Operation(summary = "게시물을 등록합니다.")
-    public ResponseEntity<Board> createBoard(@RequestParam("file") MultipartFile file,
-                                             @RequestParam("userId") int userId,
-                                             @RequestParam("routineId") int routineId,
-                                             @RequestParam("boardContent") String boardContent,
-                                             @RequestParam("boardVisibility") boolean boardVisibility) {
-    	// 파일업로드
-    	String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        try {
-            Path path = Paths.get(UPLOAD_DIR + fileName);
-            Files.createDirectories(path.getParent());
-            Files.write(path, file.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+	@PostMapping("/")
+	@Operation(summary = "게시물을 등록합니다.")
+	public ResponseEntity<Board> createBoard(@RequestParam("file") MultipartFile file,
+			@RequestParam("userId") int userId, @RequestParam("routineId") int routineId,
+			@RequestParam("boardContent") String boardContent,
+			@RequestParam("boardVisibility") boolean boardVisibility) {
+		// 파일업로드
+		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+		try {
+			Path path = Paths.get(UPLOAD_DIR + fileName);
+			Files.createDirectories(path.getParent());
+			Files.write(path, file.getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 
-        Board board = new Board();
-        board.setUserId(userId);
-        board.setRoutineId(routineId);
-        board.setBoardContent(boardContent);
-        board.setBoardImgUrl(UPLOAD_DIR + fileName);
-        board.setBoardViewCnt(0);
-        board.setBoardVisibility(boardVisibility);
-        // 게시글 등록
-        boardService.createBoard(board);
-        return new ResponseEntity<>(board, HttpStatus.CREATED);
-    }
+		Board board = new Board();
+		board.setUserId(userId);
+		board.setRoutineId(routineId);
+		board.setBoardContent(boardContent);
+		board.setBoardImgUrl(UPLOAD_DIR + fileName);
+		board.setBoardViewCnt(0);
+		board.setBoardVisibility(boardVisibility);
 
-    @GetMapping("/{board_id}")
-    @Operation(summary = "ID로 게시물을 조회합니다.")
-    public ResponseEntity<Board> getBoardById(@PathVariable("board_id") int boardId) {
-        Board board = boardService.getBoardById(boardId);
-        if (board != null) {
-            return new ResponseEntity<>(board, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+		// 게시글 등록
+		boardService.createBoard(board);
+		return new ResponseEntity<>(board, HttpStatus.CREATED);
+	}
 
-    @GetMapping("/")
-    @Operation(summary = "모든 게시물을 조회합니다.")
-    public ResponseEntity<List<Board>> getAllBoards() {
-        List<Board> boards = boardService.getAllBoards();
-        return new ResponseEntity<>(boards, HttpStatus.OK);
-    }
+	@GetMapping("/{board_id}")
+	@Operation(summary = "ID로 게시물을 조회합니다.")
+	public ResponseEntity<Board> getBoardById(@PathVariable("board_id") int boardId) {
+		Board board = boardService.getBoardById(boardId);
+		if (board != null) {
+			return new ResponseEntity<>(board, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
 
-    @GetMapping("/user/{user_id}")
-    @Operation(summary = "UserId로 게시물 조회.")
-    public ResponseEntity<List<Board>> getBoardByUserId(@PathVariable("user_id") int userId) {
-        List<Board> boards = boardService.getBoardByUserId(userId);
-        if (boards.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(boards, HttpStatus.OK);
-    }
+	@GetMapping("/")
+	@Operation(summary = "모든 게시물을 조회합니다.")
+	public ResponseEntity<List<Board>> getAllBoards() {
+		List<Board> boards = boardService.getAllBoards();
+		return new ResponseEntity<>(boards, HttpStatus.OK);
+	}
 
-    @GetMapping("/following/{user_id}")
-    @Operation(summary = "팔로잉 유저 게시물 조회.")
-    public ResponseEntity<List<Board>> getFollowingBoardByUserId(@PathVariable("user_id") int userId) {
-        List<Board> boards = boardService.getFollowingBoardByUserId(userId);
-        if (boards.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(boards, HttpStatus.OK);
-    }
+	@GetMapping("/{user_id}")
+	@Operation(summary = "UserId로 게시물 조회.")
+	public ResponseEntity<List<Board>> getBoardByUserId(@PathVariable("user_id") int userId) {
+		List<Board> boards = boardService.getBoardByUserId(userId);
+		if (boards.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(boards, HttpStatus.OK);
+	}
 
-    @PutMapping("/{board_id}")
-    @Operation(summary = "게시물을 수정합니다.")
-    public ResponseEntity<Board> updateBoard(@PathVariable("board_id") int boardId, @RequestBody Board board) {
-        board.setBoardId(boardId);
-        boardService.updateBoard(board);
-        Board updatedBoard = boardService.getBoardById(boardId);
-        if (updatedBoard != null) {
-            return new ResponseEntity<>(updatedBoard, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+	@GetMapping("/following/{user_id}")
+	@Operation(summary = "팔로잉 유저 게시물 조회.")
+	public ResponseEntity<List<Board>> getFollowingBoardByUserId(@PathVariable("user_id") int userId) {
+		List<Board> boards = boardService.getFollowingBoardByUserId(userId);
+		if (boards.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(boards, HttpStatus.OK);
+	}
 
-    @DeleteMapping("/{board_id}")
-    @Operation(summary = "게시물을 삭제합니다.")
-    public ResponseEntity<Void> deleteBoard(@PathVariable("board_id") int boardId) {
-        boardService.deleteBoard(boardId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+	@PutMapping("/{board_id}")
+	@Operation(summary = "게시물을 수정합니다.")
+	public ResponseEntity<Board> updateBoard(@PathVariable("board_id") int boardId, @RequestBody Board board) {
+		board.setBoardId(boardId);
+		boardService.updateBoard(board);
+		Board updatedBoard = boardService.getBoardById(boardId);
+		if (updatedBoard != null) {
+			return new ResponseEntity<>(updatedBoard, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+
+	@DeleteMapping("/{board_id}")
+	@Operation(summary = "게시물을 삭제합니다.")
+	public ResponseEntity<Void> deleteBoard(@PathVariable("board_id") int boardId) {
+		boardService.deleteBoard(boardId);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 }
