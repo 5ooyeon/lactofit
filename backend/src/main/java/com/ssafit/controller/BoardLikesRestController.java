@@ -1,5 +1,9 @@
 package com.ssafit.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,20 +20,23 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "boardLikesRestController", description = "게시글 좋아요/좋아요 취소 컨트롤러")
 public class BoardLikesRestController {
 
-	@Autowired
-	private BoardLikesService boardLikesService;
+    @Autowired
+    private BoardLikesService boardLikesService;
 
-	@PostMapping("/")
-	@Operation(summary = "게시글을 좋아요/취소합니다.")
-	public ResponseEntity<Void> toggleLike(@RequestBody BoardLikes boardLikes) {
-		boardLikesService.toggleLike(boardLikes);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
+    @PostMapping("/")
+    @Operation(summary = "게시글을 좋아요/취소합니다.")
+    public ResponseEntity<Map<String, Boolean>> toggleLike(@RequestBody BoardLikes boardLikes) {
+        boolean isLiked = boardLikesService.toggleLike(boardLikes);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("liked", isLiked);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
-	@GetMapping("/{board_Id}")
-	@Operation(summary = "특정 게시글의 좋아요 수를 조회합니다.")
-	public ResponseEntity<Integer> getLikesCountByBoardId(@PathVariable("board_Id") int boardId) {
-		int likesCount = boardLikesService.getLikesCountByBoardId(boardId);
-		return new ResponseEntity<>(likesCount, HttpStatus.OK);
-	}
+
+    @GetMapping("/{boardId}")
+    @Operation(summary = "특정 게시글의 좋아요 수를 조회합니다.")
+    public ResponseEntity<List<Map<String, Object>>> getLikesCountByBoardId(@PathVariable int boardId) {
+        List<Map<String, Object>> likeList = boardLikesService.getLikesCountByBoardId(boardId);
+        return new ResponseEntity<>(likeList, HttpStatus.OK);
+    }
 }

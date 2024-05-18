@@ -23,7 +23,10 @@
 	</select>
 
 	<select id="getLikesCountByBoardId" parameterType="int"
-		resultType="int">
-		SELECT COUNT(*) FROM BoardLikes WHERE board_id = #{boardId}
+		resultType="Map">
+		    SELECT *
+		    FROM boardlikes b
+		    INNER JOIN user u ON b.user_id = u.user_id
+		    WHERE b.board_id = #{boardId}
 	</select>
 </mapper>

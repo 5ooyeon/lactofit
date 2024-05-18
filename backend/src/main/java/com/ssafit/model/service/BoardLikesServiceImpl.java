@@ -1,5 +1,8 @@
 package com.ssafit.model.service;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +25,11 @@ public class BoardLikesServiceImpl implements BoardLikesService {
 	private NotificationService notificationService;
 
 	@Override
-	public void toggleLike(BoardLikes boardLikes) {
+	public boolean toggleLike(BoardLikes boardLikes) {
 		BoardLikes existingLike = boardLikesDao.getLikeByUsers(boardLikes.getUserId(), boardLikes.getBoardId());
 		if (existingLike != null) {
 			boardLikesDao.removeLike(boardLikes.getUserId(), boardLikes.getBoardId());
+			return false;
 		} else {
 			boardLikesDao.addLike(boardLikes);
 
@@ -38,11 +42,13 @@ public class BoardLikesServiceImpl implements BoardLikesService {
 			notification.setNotificationContent(boardLikes.getUserId() + "가 좋아요 하였습니다. : " + board.getBoardId());
 			notification.setNotificationRead(false);
 			notificationService.createNotification(notification);
+			
+			return true;
 		}
 	}
 
 	@Override
-	public int getLikesCountByBoardId(int boardId) {
+	public List<Map<String, Object>> getLikesCountByBoardId(int boardId) {
 		return boardLikesDao.getLikesCountByBoardId(boardId);
 	}
 }

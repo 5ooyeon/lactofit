@@ -1,9 +1,12 @@
 package com.ssafit.model.service;
 
+import java.util.List;
+import java.util.Map;
+
 import com.ssafit.model.dto.BoardLikes;
 
 public interface BoardLikesService {
-	void toggleLike(BoardLikes boardLikes);
+	boolean toggleLike(BoardLikes boardLikes);
 
-	int getLikesCountByBoardId(int boardId);
+	List<Map<String, Object>> getLikesCountByBoardId(int boardId);
 }
