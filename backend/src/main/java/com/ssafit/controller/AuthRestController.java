@@ -94,6 +94,7 @@ public class AuthRestController {
 		response.put("userNickname", user.getUserNickname());
 		response.put("userProfileImage", user.getUserProfileImage());
 		response.put("userBirth", user.getUserBirth() != null ? user.getUserBirth().toString() : null);
+		response.put("accessToken", accessToken);
 
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}

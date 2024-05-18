@@ -1,14 +1,21 @@
 package com.ssafit.model.dao;
 
-import org.apache.ibatis.annotations.Param;
+import java.util.List;
 
 import com.ssafit.model.dto.Routine;
-import com.ssafit.model.dto.RoutineComponents;
 
 public interface RoutineDao {
+	// C
 	void insertRoutine(Routine routine);
 
-	void insertRoutineComponent(@Param("routineComponent") RoutineComponents routineComponent);
+	// R
+	Routine getRoutineById(int routineId);
 
-	Integer getLastInsertedRoutineId();
+	// U
+	void updateRoutine(Routine routine);
+
+	// D
+	void deleteRoutine(int routineId);
+
+	List<Routine> getAllRoutines();
 }

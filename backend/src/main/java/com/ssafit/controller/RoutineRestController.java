@@ -1,17 +1,13 @@
 package com.ssafit.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import com.ssafit.model.dto.Exercise;
 import com.ssafit.model.dto.Routine;
+import com.ssafit.model.dto.RoutineComponents;
 import com.ssafit.model.service.RoutineService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,19 +22,69 @@ public class RoutineRestController {
 	private RoutineService routineService;
 
 	@PostMapping("/")
-	@Operation(summary = "루틴을 생성합니다.")
-	public ResponseEntity<Integer> createRoutine(@RequestBody Routine routine) {
-		int routineId = routineService.createRoutine(routine);
-		return new ResponseEntity<>(routineId, HttpStatus.CREATED);
+	@Operation(summary = "루틴을 등록합니다.")
+	public int createRoutine(@RequestBody Routine routine) {
+		return routineService.createRoutine(routine);
 	}
 
-	@PostMapping("/components")
-	@Operation(summary = "루틴 컴포넌츠를 생성합니다.")
-	public ResponseEntity<Void> addRoutineComponents(@RequestBody Map<String, Object> payload) {
-		int routineId = (int) payload.get("routineId");
-		List<Map<String, Object>> componentsData = (List<Map<String, Object>>) payload.get("components");
+	@PutMapping("/")
+	@Operation(summary = "루틴을 수정합니다.")
+	public void updateRoutine(@RequestBody Routine routine) {
+		routineService.updateRoutine(routine);
+	}
 
-		routineService.addRoutineComponents(routineId, componentsData);
-		return new ResponseEntity<>(HttpStatus.CREATED);
+	@DeleteMapping("/{routine_Id}")
+	@Operation(summary = "루틴을 삭제합니다.")
+	public void deleteRoutine(@PathVariable("routine_Id") int routineId) {
+		routineService.deleteRoutine(routineId);
+	}
+
+	@GetMapping("/{routine_Id}")
+	@Operation(summary = "루틴을 조회합니다.")
+	public Routine getRoutineById(@PathVariable("routine_Id") int routineId) {
+		return routineService.getRoutineById(routineId);
+	}
+
+	@GetMapping("/")
+	@Operation(summary = "모든 루틴을 조회합니다.")
+	public List<Routine> getAllRoutines() {
+		return routineService.getAllRoutines();
+	}
+
+	@PostMapping("/exercises/{routine_Id}")
+	@Operation(summary = "루틴에 운동을 추가합니다.")
+	public void addExercisesToRoutine(@PathVariable("routine_Id") int routineId,
+			@RequestBody List<Exercise> exercises) {
+		routineService.addExercisesToRoutine(routineId, exercises);
+	}
+
+	@PutMapping("/routinecomponent")
+	@Operation(summary = "루틴 컴포넌트를 수정합니다.")
+	public void updateRoutineComponent(@RequestBody RoutineComponents routineComponents) {
+		routineService.updateRoutineComponent(routineComponents);
+	}
+
+	@DeleteMapping("/routinecomponent/{routineComponents_Id}")
+	@Operation(summary = "루틴 컴포넌트를 삭제합니다.")
+	public void deleteRoutineComponent(@PathVariable("routineComponents_Id") int routineComponentsId) {
+		routineService.deleteRoutineComponent(routineComponentsId);
+	}
+
+	@GetMapping("/routinecomponent/{routineComponents_Id}")
+	@Operation(summary = "루틴 컴포넌트를 조회합니다.")
+	public RoutineComponents getRoutineComponentById(@PathVariable("routineComponents_Id") int routineComponentsId) {
+		return routineService.getRoutineComponentById(routineComponentsId);
+	}
+
+	@GetMapping("/routinecomponents/{routine_Id}")
+	@Operation(summary = "루틴 ID로 루틴 컴포넌트를 조회합니다.")
+	public List<RoutineComponents> getRoutineComponentsByRoutineId(@PathVariable("routine_Id") int routineId) {
+		return routineService.getRoutineComponentsByRoutineId(routineId);
+	}
+
+	@GetMapping("/routinecomponents/all")
+	@Operation(summary = "모든 루틴 컴포넌트를 조회합니다.")
+	public List<RoutineComponents> getAllRoutineComponents() {
+		return routineService.getAllRoutineComponents();
 	}
 }
