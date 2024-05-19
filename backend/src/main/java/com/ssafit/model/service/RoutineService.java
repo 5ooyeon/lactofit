@@ -23,7 +23,7 @@ public interface RoutineService {
 
 	public List<Routine> getAllRoutines();
 
-//	public void addExercisesToRoutine(int routineId, List<Exercise> exercises);
+	public void addExercisesToRoutine(int routineId, List<Exercise> exercises);
 
 	public void updateRoutineComponent(RoutineComponents routineComponents);
 
@@ -36,4 +36,6 @@ public interface RoutineService {
 	public List<RoutineComponents> getAllRoutineComponents();
 
 	public List<List<Map<String, Object>>> getExercisesByRoutineId(int routineId);
+
+	public List<List<Map<String, Object>>> getRoutinesByUserId(int userId);
 }

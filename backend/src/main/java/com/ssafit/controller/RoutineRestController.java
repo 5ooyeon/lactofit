@@ -93,13 +93,13 @@ public class RoutineRestController {
 		return new ResponseEntity<>(exercises, HttpStatus.OK);
 	}
 
-//	@PostMapping("/exercises/{routine_Id}")
-//	@Operation(summary = "루틴에 운동을 추가합니다.")
-//	public ResponseEntity<Void> addExercisesToRoutine(@PathVariable("routine_Id") int routineId,
-//			@RequestBody List<Exercise> exercises) {
-//		routineService.addExercisesToRoutine(routineId, exercises);
-//		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//	}
+	@PostMapping("/exercises/{routine_Id}")
+	@Operation(summary = "루틴에 운동을 추가합니다.")
+	public ResponseEntity<Void> addExercisesToRoutine(@PathVariable("routine_Id") int routineId,
+			@RequestBody List<Exercise> exercises) {
+		routineService.addExercisesToRoutine(routineId, exercises);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
 
 	@PutMapping("/routinecomponents/{routineComponents_Id}")
 	@Operation(summary = "루틴 컴포넌트를 수정합니다.")
@@ -147,5 +147,15 @@ public class RoutineRestController {
 	public ResponseEntity<List<RoutineComponents>> getAllRoutineComponents() {
 		List<RoutineComponents> routineComponents = routineService.getAllRoutineComponents();
 		return new ResponseEntity<>(routineComponents, HttpStatus.OK);
+	}
+
+	@GetMapping("/users/{user_Id}")
+	@Operation(summary = "유저ID로 루틴을 조회합니다.")
+	public ResponseEntity<Map<String, Object>> getRoutinesByUserId(@PathVariable("user_Id") int userId) {
+		List<List<Map<String, Object>>> routines = routineService.getRoutinesByUserId(userId);
+		if (routines == null || routines.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity(routines, HttpStatus.OK);
 	}
 }

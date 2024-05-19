@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafit.model.dao.ExerciseDao;
 import com.ssafit.model.dao.RoutineComponentsDao;
@@ -55,14 +54,14 @@ public class RoutineServiceImpl implements RoutineService {
 		return routineDao.getAllRoutines();
 	}
 
-//	public void addExercisesToRoutine(int routineId, List<Exercise> exercises) {
-//		for (Exercise exercise : exercises) {
-//			RoutineComponents routineComponent = new RoutineComponents();
-//			routineComponent.setExerciseId(exercise.getExerciseId());
-//			routineComponent.setRoutineId(routineId);
-//			routineComponentsDao.insertRoutineComponent(routineComponent);
-//		}
-//	}
+	public void addExercisesToRoutine(int routineId, List<Exercise> exercises) {
+		for (Exercise exercise : exercises) {
+			RoutineComponents routineComponent = new RoutineComponents();
+			routineComponent.setExerciseId(exercise.getExerciseId());
+			routineComponent.setRoutineId(routineId);
+			routineComponentsDao.insertRoutineComponent(routineComponent);
+		}
+	}
 
 	public void updateRoutineComponent(RoutineComponents routineComponents) {
 		routineComponentsDao.updateRoutineComponent(routineComponents);
@@ -87,5 +86,9 @@ public class RoutineServiceImpl implements RoutineService {
 	public List<List<Map<String, Object>>> getExercisesByRoutineId(int routineId) {
 		return routineDao.getExercisesByRoutineId(routineId);
 	}
+
+	public List<List<Map<String, Object>>> getRoutinesByUserId(int userId) {
+		return routineDao.getRoutinesByUserId(userId);
+	};
 
 }
