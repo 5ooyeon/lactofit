@@ -119,16 +119,25 @@
   //루틴 저장하기
   const saveRoutine = () => {
     //먼저 루틴 등록하기
-    axios.post('http://localhost:8080/routines/', routine.value, {
-
-    })
-    .then(() => {
-        console.log('yay!')
+    axios.post('http://localhost:8080/routines/', routine.value)
+    .then((response) => {
+        saveExercisesInRoutine(response.data.routineId)
     })
     .catch((err) => {
 
     });
   }
+
+    // 루틴에 운동 저장하기
+    const saveExercisesInRoutine = (routineId) => {
+    axios.post(`http://localhost:8080/exercises/${routineId}`, selectedRoutine.value)
+        .then(() => {
+        console.log("운동이 루틴에 성공적으로 저장되었습니다.");
+        })
+        .catch((err) => {
+        console.log("운동 저장 중 오류 발생:", err);
+        });
+    }
   
   onMounted(() => {
     getAllExercises();

@@ -4,7 +4,7 @@
 
 <mapper namespace="com.ssafit.model.dao.RoutineDao">
 
-	<insert id="insertRoutine">
+	<insert id="insertRoutine" useGeneratedKeys="true" keyProperty="routineId">
 		INSERT INTO Routine (user_id,
 		routine_name,
 		routine_desc)

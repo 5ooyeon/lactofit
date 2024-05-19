@@ -27,12 +27,21 @@
               <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" v-model="writeBoard.boardVisibility">
               <label class="form-check-label" for="flexSwitchCheckChecked">공개</label>
             </div>
-            <select v-model="writeBoard.routineId" class="form-select select-routine" aria-label="루틴 선택">
-              <option disabled value="">루틴 선택</option>
-              <option value="1">24.04.13 루틴</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
-            </select>
+            <div class="routine-list-container">
+              <div class="routine-list">
+                <div v-for="routine in myRoutines" :key="routine.routineId" class="form-check">
+                  <input class="form-check-input" type="radio" name="routine" :id="`routine${routine.routineId}`" :value="routine.routineId" v-model="writeBoard.routineId">
+                  <label class="form-check-label" :for="`routine${routine.routineId}`">
+                    {{ routine.routineName }}
+                    <ul>
+                      <li v-for="exercise in routine.exercises" :key="exercise.exerciseId">
+                        {{ exercise.exerciseName }}
+                      </li>
+                    </ul>
+                  </label>
+                </div>
+              </div>
+            </div>
             <div class="mb-3">
               <div class="file-upload-wrapper">
                 <input type="file" id="formFile" @change="onFileChange" class="file-input">
@@ -71,7 +80,7 @@
             <button class="btn" v-else-if="isFollower && authStore.user.userId != selectedBoard?.writer.userId" @click="followUnfollow(selectedBoard?.writer.userId)">언팔로우</button>
 
             <p class="board-detail-routine-label">{{ selectedBoard?.writer.userNickname }} 님의 운동 루틴</p>
-            <div class="board-detail-routine" v-for="routine in selectedBoard?.RoutineComponents">
+            <div class="board-detail-routine" v-for="routine in selectedBoard?.RoutineComponents" :key="routine.exercise_name">
               <p class="detail-routine-name"><em class="detail-routine-part">[{{ routine.exercise_part }}]</em>{{routine.exercise_name}}</p>
             </div>
             <p>{{ selectedBoard?.board.boardContent }}</p>
@@ -129,6 +138,7 @@ const imageUrl = ref(null);
 let uploadModal = null;
 let boardDetailModal = null;
 const selectedBoard = ref(null);
+const myRoutines = ref([]);
 const boardLikes = ref([]);
 const userId = authStore.user.userId;
 const writeBoard = ref({
@@ -179,11 +189,19 @@ const registPost = () => {
 };
 
 const showUploadModal = () => {
-  if (!uploadModal) {
-    const modalElement = document.getElementById('uploadModal');
-    uploadModal = new Modal(modalElement);
-  }
-  uploadModal.show();
+  axios.get(`http://localhost:8080/routines/users/${userId}`)
+    .then((response) => {
+      console.log(response.data);
+      myRoutines.value = response.data;
+      if (!uploadModal) {
+        const modalElement = document.getElementById('uploadModal');
+        uploadModal = new Modal(modalElement);
+      }
+      uploadModal.show();
+    })
+    .catch((err) => {
+      console.error('Error fetching routines:', err);
+    });
 };
 
 const hideUploadModal = () => {
@@ -260,7 +278,7 @@ const followUnfollow = (writerId) => {
 };
 
 const goProfile = (userId) => {
-  boardDetailModal.hide()
+  boardDetailModal.hide();
   router.push({ name: 'MyPageView', params: { id: userId } });
 };
 </script>
@@ -340,6 +358,18 @@ const goProfile = (userId) => {
   margin: 0 10px;
   cursor: pointer;
   font-weight: bold;
+}
+
+.routine-list-container {
+  max-height: 200px; /* 원하는 높이 설정 */
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.form-check {
+  margin-bottom: 10px;
 }
 
 .heart-container {
