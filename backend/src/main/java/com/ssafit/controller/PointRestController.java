@@ -39,7 +39,8 @@ public class PointRestController {
 		int pointsSum = pointService.getPointsSumByUserId(userId);
 		return new ResponseEntity<>(pointsSum, HttpStatus.OK);
 	}
-	///////////////왜 NULL???
+
+	/////////////// 왜 NULL???
 	@GetMapping("/desc/{user_id}")
 	@Operation(summary = "포인트 기록을 출력합니다.")
 	public ResponseEntity<List<Point>> getPointDescByUserId(@PathVariable("user_id") int userId) {

@@ -3,67 +3,69 @@ package com.ssafit.model.dto;
 import java.sql.Timestamp;
 
 public class Point {
-	private int point_id;
-	private int user_id;
-	private int point_amount;
-	private String point_desc;
-	private Timestamp point_regDate;
+	private int pointId;
+	private int userId;
+	private int pointAmount;
+	private String pointDesc;
+	private Timestamp pointRegDate;
 
 	public Point() {
 	}
 
-	public Point(int point_id, int user_id, int point_amount, String point_desc, Timestamp point_regDate) {
-		this.point_id = point_id;
-		this.user_id = user_id;
-		this.point_amount = point_amount;
-		this.point_desc = point_desc;
-		this.point_regDate = point_regDate;
+	public Point(int pointId, int userId, int pointAmount, String pointDesc, Timestamp pointRegDate) {
+		this.pointId = pointId;
+		this.userId = userId;
+		this.pointAmount = pointAmount;
+		this.pointDesc = pointDesc;
+		this.pointRegDate = pointRegDate;
 	}
 
-	public int getPoint_id() {
-		return point_id;
+	public int getPointId() {
+		return pointId;
 	}
 
-	public void setPoint_id(int point_id) {
-		this.point_id = point_id;
+	public void setPointId(int pointId) {
+		this.pointId = pointId;
 	}
 
-	public int getUser_id() {
-		return user_id;
+	public int getUserId() {
+		return userId;
 	}
 
-	public void setUser_id(int user_id) {
-		this.user_id = user_id;
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 
-	public int getPoint_amount() {
-		return point_amount;
+	public int getPointAmount() {
+		return pointAmount;
 	}
 
-	public void setPoint_amount(int point_amount) {
-		this.point_amount = point_amount;
+	public void setPointAmount(int pointAmount) {
+		this.pointAmount = pointAmount;
 	}
 
-	public String getPoint_desc() {
-		return point_desc;
+	public String getPointDesc() {
+		return pointDesc;
 	}
 
-	public void setPoint_desc(String point_desc) {
-		this.point_desc = point_desc;
+	public void setPointDesc(String pointDesc) {
+		this.pointDesc = pointDesc;
 	}
 
-	public Timestamp getPoint_regDate() {
-		return point_regDate;
+	public Timestamp getPointRegDate() {
+		return pointRegDate;
 	}
 
-	public void setPoint_regDate(Timestamp point_regDate) {
-		this.point_regDate = point_regDate;
+	public void setPointRegDate(Timestamp pointRegDate) {
+		this.pointRegDate = pointRegDate;
 	}
 
 	@Override
 	public String toString() {
-		return "Point [point_id=" + point_id + ", user_id=" + user_id + ", point_amount=" + point_amount
-				+ ", point_desc=" + point_desc + ", point_regDate=" + point_regDate + "]";
-	};
+		return "Point [pointId=" + pointId + ", userId=" + userId + ", pointAmount=" + pointAmount + ", pointDesc="
+				+ pointDesc + ", pointRegDate=" + pointRegDate + "]";
+	}
+
+	
 
 }
