@@ -39,7 +39,7 @@
 	</delete>
 
 	<select id="getExercisesByRoutineId"
-		resultType="RoutineComponents">
+		resultType="map">
 		SELECT rc.routineComponents_id AS routineComponentsId,
 		rc.exercise_id AS exerciseId,
 		rc.routine_id AS routineId,

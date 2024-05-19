@@ -62,9 +62,14 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fshop1.phinf.naver.net%2F20240409_165%2F1712589691802pbsAg_JPEG%2F113725580504775095_1890594520.jpeg&type=sc960_832" class="img-fluid" alt="Board Image">
-            <p>{{ selectedBoard?.boardContent }}</p>
-            <p class="board-detail-regdate">{{ selectedBoard?.boardRegDate }}</p>
+            <img :src="selectedBoard?.board.boardImgUrl" class="img-fluid" alt="Board Image">
+            <p class="board-detail-writer-name">{{selectedBoard?.writer.userNickname}}</p>
+            <p class="board-detail-routine-label">{{ selectedBoard?.writer.userNickname }} 님의 운동 루틴</p>
+            <div class="board-detail-routine" v-for="routine in selectedBoard?.RoutineComponents">
+              <p class="detail-routine-name"><em class="detail-routine-part">[{{ routine.exercise_part }}]</em>{{routine.exercise_name}}</p>
+            </div>
+            <p>{{ selectedBoard?.board.boardContent }}</p>
+            <p class="board-detail-regdate">{{ selectedBoard?.board.boardRegDate }}</p>
           </div>
           <div class="board-like">
             <div title="Like" class="heart-container">
@@ -181,7 +186,7 @@ const hideUploadModal = () => {
 
 const showBoardDetail = async (board) => {
   console.log(board)
-  selectedBoard.value = board.board;
+  selectedBoard.value = board;
   try {
     const response = await axios.get(`http://localhost:8080/boardlikes/${board.board.boardId}`);
     boardLikes.value = response.data;

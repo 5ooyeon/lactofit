@@ -1,6 +1,7 @@
 package com.ssafit.model.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ssafit.model.dto.Routine;
 import com.ssafit.model.dto.RoutineComponents;
@@ -16,5 +17,5 @@ public interface RoutineDao {
 
 	List<Routine> getAllRoutines();
 
-	List<RoutineComponents> getExercisesByRoutineId(int routineId);
+	List<List<Map<String, Object>>> getExercisesByRoutineId(int routineId);
 }

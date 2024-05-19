@@ -71,8 +71,8 @@ public class RoutineRestController {
 
 	@GetMapping("/{routine_Id}/exercises")
 	@Operation(summary = "루틴(운동)을 조회합니다.")
-	public ResponseEntity<List<RoutineComponents>> getExercisesByRoutineId(@PathVariable("routine_Id") int routineId) {
-		List<RoutineComponents> exercises = routineService.getExercisesByRoutineId(routineId);
+	public ResponseEntity<?> getExercisesByRoutineId(@PathVariable("routine_Id") int routineId) {
+		List<List<Map<String, Object>>> exercises = routineService.getExercisesByRoutineId(routineId);
 		if (exercises == null || exercises.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
