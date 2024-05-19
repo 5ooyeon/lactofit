@@ -16,9 +16,7 @@
 
 	<select id="getPointDescByUserId" parameterType="int"
 		resultType="com.ssafit.model.dto.Point">
-		SELECT * FROM Point WHERE user_id =
-		#{userId} ORDER BY
-		point_regDate DESC
+		SELECT * FROM Point WHERE user_id = #{userId} ORDER BY point_regDate DESC
 	</select>
 
 </mapper>
