@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <div class="menu">
-      <span class="select-menu" @click="getAllPost">전체</span>
-      <span class="select-menu" @click="getFollowingPost">팔로잉</span>
+      <span class="select-menu" @click="getAllPost()">전체</span>
+      <span class="select-menu" @click="getFollowingPost()">팔로잉</span>
     </div>
     <div class="content-area">
       <ul v-if="store.returnBoardList.length != 0" class="board-list">
@@ -63,7 +63,13 @@
           </div>
           <div class="modal-body">
             <img :src="selectedBoard?.board.boardImgUrl" class="img-fluid" alt="Board Image">
+            <img :src="selectedBoard?.writer.userProfileImage" @click="goProfile(selectedBoard?.writer.userId)" alt="" sizes="1.5rem">
             <p class="board-detail-writer-name">{{selectedBoard?.writer.userNickname}}</p>
+
+            <!-- 해당 유저를 팔로우 중이 아니라면 팔로우 버튼 보여주기 -->
+            <button class="btn" v-if="!isFollower && authStore.user.userId != selectedBoard?.writer.userId" @click="followUnfollow(selectedBoard?.writer.userId)">팔로우</button>
+            <button class="btn" v-else-if="isFollower && authStore.user.userId != selectedBoard?.writer.userId" @click="followUnfollow(selectedBoard?.writer.userId)">언팔로우</button>
+
             <p class="board-detail-routine-label">{{ selectedBoard?.writer.userNickname }} 님의 운동 루틴</p>
             <div class="board-detail-routine" v-for="routine in selectedBoard?.RoutineComponents">
               <p class="detail-routine-name"><em class="detail-routine-part">[{{ routine.exercise_part }}]</em>{{routine.exercise_name}}</p>
@@ -73,7 +79,7 @@
           </div>
           <div class="board-like">
             <div title="Like" class="heart-container">
-              <input id="Give-It-An-Id" class="checkbox" type="checkbox" :checked="hasUserLiked" @click="boardLike(selectedBoard?.boardId)">
+              <input id="Give-It-An-Id" class="checkbox" type="checkbox" :checked="hasUserLiked" @click="boardLike(selectedBoard?.board.boardId)">
               <div class="svg-container">
                 <svg xmlns="http://www.w3.org/2000/svg" class="svg-outline" viewBox="0 0 24 24">
                   <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z">
@@ -107,12 +113,15 @@ import { Modal } from 'bootstrap';
 import axios from 'axios';
 import { useSocialStore } from '@/stores/social';
 import { useAuthStore } from '@/stores/auth'; // Assuming you have an auth store
+import { useRouter } from 'vue-router';
 
 const store = useSocialStore();
 const authStore = useAuthStore();
+const router = useRouter();
 
 onMounted(() => {
   store.getAllBoardList();
+  myFollowingList();
 });
 
 const file = ref(null);
@@ -121,13 +130,15 @@ let uploadModal = null;
 let boardDetailModal = null;
 const selectedBoard = ref(null);
 const boardLikes = ref([]);
-const userId = authStore.user.userId
+const userId = authStore.user.userId;
 const writeBoard = ref({
   userId: userId,
   routineId: 0,
   boardContent: '',
   boardVisibility: false
-})
+});
+const myFollowing = ref(null);
+const isFollower = ref(false);
 
 const onFileChange = (e) => {
   const selectedFile = e.target.files[0];
@@ -141,8 +152,6 @@ const onFileChange = (e) => {
 };
 
 const registPost = () => {
-  console.log(writeBoard.value);
-
   const formData = new FormData();
   formData.append('file', file.value);
   formData.append('userId', writeBoard.value.userId);
@@ -156,7 +165,6 @@ const registPost = () => {
     },
   })
   .then((response) => {
-    console.log('Post registered successfully:', response.data);
     // 업로드 후 상태 초기화
     file.value = null;
     imageUrl.value = null;
@@ -185,7 +193,6 @@ const hideUploadModal = () => {
 };
 
 const showBoardDetail = async (board) => {
-  console.log(board)
   selectedBoard.value = board;
   try {
     const response = await axios.get(`http://localhost:8080/boardlikes/${board.board.boardId}`);
@@ -193,6 +200,8 @@ const showBoardDetail = async (board) => {
   } catch (error) {
     console.error('Error fetching board likes:', error);
   }
+
+  isFollower.value = myFollowing.value.some(following => following.followingUserId === selectedBoard.value.writer.userId);
 
   if (!boardDetailModal) {
     const modalElement = document.getElementById('boardDetailModal');
@@ -212,14 +221,7 @@ const getFollowingPost = () => {
 const boardLike = (boardId) => {
   const userId = authStore.user.userId;
 
-  axios({
-    url: `http://localhost:8080/boardlikes/`,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: { boardId, userId }
-  })
+  axios.post('http://localhost:8080/boardlikes/', { boardId, userId })
     .then((response) => {
       const liked = response.data.liked;
       if (liked) {
@@ -236,6 +238,31 @@ const boardLike = (boardId) => {
 const hasUserLiked = computed(() => {
   return boardLikes.value.some(like => like.user_id === authStore.user.userId);
 });
+
+const myFollowingList = () => {
+  axios.get(`http://localhost:8080/follows/following/${authStore.user.userId}`)
+    .then((response) => {
+      myFollowing.value = response.data;
+    });
+};
+
+const followUnfollow = (writerId) => {
+  const userId = authStore.user.userId;
+  const followingUserId = writerId;
+
+  axios.post('http://localhost:8080/follows/', { followingUserId, userId })
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+const goProfile = (userId) => {
+  boardDetailModal.hide()
+  router.push({ name: 'MyPageView', params: { id: userId } });
+};
 </script>
 
 <style scoped>

@@ -42,7 +42,9 @@
               <li class="dropdown-item-text">{{ authStore.user.userNickname }}님</li>
               <li><a class="dropdown-item" href="#" @click.prevent="goToProfilePage">마이페이지</a></li>
             </ul>
+            <button @click="logout()">로그아웃</button>
           </div>
+
         </div>
       </div>
     </nav>

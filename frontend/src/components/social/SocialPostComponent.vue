@@ -1,7 +1,7 @@
 <template>
     <div class="col-4 post-container" @click="viewPost">
       <!-- Placeholder image source or move the image to public directory and update path accordingly -->
-      <img :src=authStore.user.userProfileImage>
+      <img :src=post.boardImgUrl>
     </div>
   
     <div class="modal-dialog modal-lg" v-if="isModalVisible">
@@ -34,14 +34,16 @@
   import { useAuthStore } from '@/stores/auth';
   
   const authStore = useAuthStore();
-  
-  const post = reactive({
-    board_id: 1,
-    board_content: 'abc',
-    user_nickname: 'writer',
-    board_imgUrl: null
-  });
-  
+
+  const props = defineProps({
+    post: {
+      type: Object,
+      required: true
+    }
+  })
+
+  // console.log(post)
+
   const isModalVisible = ref(false);
   const isFollowing = ref(false); // Example state
   

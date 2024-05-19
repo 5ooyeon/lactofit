@@ -7,9 +7,9 @@
       </div>
       <div class="main-content">
         <aside class="profile">
-          <img :src="authStore.user.userProfileImage" alt="Profile Picture" class="profile-picture" />
-          <h2 class="nickname">{{ authStore.user.userNickname }}</h2>
-          <p>팔로잉 288 | 팔로워 277</p>
+          <img :src="userInfo.user?.userProfileImage" alt="Profile Picture" class="profile-picture" />
+          <h2 class="nickname">{{ userInfo.user?.userNickname }}</h2>
+          <p>팔로잉 {{userInfo.following.length}} | 팔로워 {{userInfo.follower.length}}</p>
         </aside>
         <div class="content-area">
             <div class="content">
@@ -30,22 +30,26 @@
                             <button class="see-all-routi">더보기</button>
                             <button class="add-routine">운동 추가하기</button>
                         </div>
-                        <RoutineComponent/>
+                        <div class="routine-component" v-for="routine in userInfo.routines">
+                          <p class="routine-name">{{ routine.routineName }}</p>
+                          <!-- {{routine.exercises}}
+                          <br> -->
+                          <span v-for="exercise in routine.exercises">
+                            {{ exercise.exerciseName }} |
+                          </span>
+                        </div>
+                        <!-- <RoutineComponent/>
                         
                         <RoutineComponent/>
                         
                         <RoutineComponent/>
                         
-                        <RoutineComponent/>
+                        <RoutineComponent/> -->
                     </div>
 
                     <div class="social-mypost row">
                         <h3>#오운완</h3>
-                        <SocialPostComponent/>
-                        <SocialPostComponent/>
-                        <SocialPostComponent/>
-                        <SocialPostComponent/>
-                        <SocialPostComponent/>
+                        <img v-for="post in userInfo.myPost" :src="`/`+post.board.boardImgUrl" class="col-4"/>
                     </div>
 
                 </div>
@@ -94,9 +98,10 @@
   import { useAuthStore } from '@/stores/auth';
   import { useRoute } from 'vue-router'
   import { routeLocationKey } from 'vue-router';
-import RoutineComponent from '@/components/info/RoutineComponent.vue';
-import SocialPostComponent from '@/components/social/SocialPostComponent.vue';
-import router from '@/router';
+  import RoutineComponent from '@/components/info/RoutineComponent.vue';
+  import SocialPostComponent from '@/components/social/SocialPostComponent.vue';
+  import router from '@/router';
+  import axios from 'axios';
 
 
 
@@ -105,12 +110,68 @@ import router from '@/router';
   const selectTab = (tab) => {
     selectedTab.value = tab;
   };
+  const userId = route.params.id;
+  const userInfo = ref({
+    user: null,
+    following: [],
+    follower: [],
+    routines:[],
+    myPost: null
+  })
   
   const socialStore = useSocialStore();
   const authStore = useAuthStore();
 
   console.log(route.params.id)
   console.log(authStore.user.userId)
+
+  //유저정보
+  const getUserInfo = () => {
+    axios.get('http://localhost:8080/users/'+userId)
+    .then((response) => {
+      userInfo.value.user = response.data;
+      console.log(userInfo.value.user)
+    })
+  }
+
+  //팔로잉팔로워
+  const getFollowingFollowers = () => {
+    axios.get('http://localhost:8080/follows/following/'+userId)
+    .then((response) => {
+      userInfo.value.following = response.data
+    })
+    axios.get('http://localhost:8080/follows/followers/'+userId)
+    .then((response) => {
+      userInfo.value.follower = response.data
+    })
+  }
+
+  //루틴보기
+  const getRoutines = () => {
+    axios.get('http://localhost:8080/routines/users/'+userId)
+    .then((response) => {
+      userInfo.value.routines = response.data.map(routine => ({
+        ...routine,
+        exercises: routine.exercises || []  // Ensure exercises is an array
+      }));
+    })
+  }
+
+  //작성글 보기
+  const getUserPost = (userId) => {
+    axios.get('http://localhost:8080/boards/user/'+userId)
+    .then((response) => {
+      userInfo.value.myPost = response.data
+      // console.log(myPost)
+    })
+  }
+
+  onMounted(() => {
+    getUserPost(userId)
+    getFollowingFollowers()
+    getUserInfo()
+    getRoutines()
+  })
   </script>
   
   
