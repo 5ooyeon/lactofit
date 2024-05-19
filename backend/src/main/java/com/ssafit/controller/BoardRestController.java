@@ -26,7 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafit.model.dto.Board;
+import com.ssafit.model.dto.BoardLikes;
 import com.ssafit.model.dto.User;
+import com.ssafit.model.service.BoardLikesService;
 import com.ssafit.model.service.BoardService;
 import com.ssafit.model.service.RoutineService;
 import com.ssafit.model.service.UserService;
@@ -43,6 +45,9 @@ public class BoardRestController {
 
 	@Autowired
 	private BoardService boardService;
+
+	@Autowired
+	private BoardLikesService boardLikesService;
 
 	@Autowired
 	private UserService userService;
@@ -203,5 +208,30 @@ public class BoardRestController {
 	public ResponseEntity<Void> deleteBoard(@PathVariable("board_id") int boardId) {
 		boardService.deleteBoard(boardId);
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@GetMapping("likes")
+	@Operation(summary = "좋아요 순으로 모든 게시물을 조회합니다.")
+	public ResponseEntity<?> getAllBoardsOrderByLikes() {
+		List<Board> boards = boardService.getAllBoardsOrderByLikes();
+		if (boards.isEmpty() || boards == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		List<Map<String, Object>> list = new ArrayList<>();
+		for (Board b : boards) {
+			Map<String, Object> map = new HashMap<>();
+			User writer = userService.getUserById(b.getUserId());
+			List<Map<String, Object>> likes = boardLikesService.getLikesCountByBoardId(b.getUserId());
+
+			map.put("writer", writer);
+			map.put("board", b);
+			map.put("RoutineComponents", routineService.getRoutineComponentsByRoutineId(b.getRoutineId()));
+			map.put("likes", likes);
+
+			list.add(map);
+		}
+
+		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 }

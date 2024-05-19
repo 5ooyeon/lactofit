@@ -12,7 +12,7 @@
     </select>
 
     <select id="getNotificationsByUserId" parameterType="int" resultType="com.ssafit.model.dto.Notification">
-        SELECT * FROM Notification WHERE user_id = #{userId}
+        SELECT * FROM Notification WHERE user_id = #{userId} ORDER BY notification_regDate DESC
     </select>
 
     <delete id="deleteNotification" parameterType="int">

@@ -21,18 +21,20 @@ public class BoardServiceImpl implements BoardService {
 		return boardDao.getBoardById(boardId);
 	}
 
-	@Override
 	public List<Board> getBoardByUserId(int userId) {
 		return boardDao.getBoardByUserId(userId);
 	}
 
-	@Override
 	public List<Board> getFollowingBoardByUserId(int userId) {
 		return boardDao.getFollowingBoardByUserId(userId);
 	}
 
 	public List<Board> getAllBoards() {
 		return boardDao.getAllBoards();
+	}
+	
+	public List<Board> getAllBoardsOrderByLikes() {
+		return boardDao.getAllBoardsOrderByLikes();
 	}
 
 	public void updateBoard(Board board) {

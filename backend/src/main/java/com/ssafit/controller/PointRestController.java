@@ -1,6 +1,10 @@
 package com.ssafit.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,13 +28,25 @@ public class PointRestController {
 
 	@PostMapping("/")
 	@Operation(summary = "포인트 획득/사용을 기록합니다.")
-	public void addPoint(@RequestBody Point point) {
+	public ResponseEntity<Void> addPoint(@RequestBody Point point) {
 		pointService.trackPoint(point);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@GetMapping("/{user_id}")
-	@Operation(summary = "포인트를 총량을 출력합니다.")
-	public int getPointsSumByUserId(@PathVariable("user_id") int user_id) {
-		return pointService.getPointsSumByUserId(user_id);
+	@Operation(summary = "포인트 총량을 출력합니다.")
+	public ResponseEntity<Integer> getPointsSumByUserId(@PathVariable("user_id") int userId) {
+		int pointsSum = pointService.getPointsSumByUserId(userId);
+		return new ResponseEntity<>(pointsSum, HttpStatus.OK);
+	}
+	///////////////왜 NULL???
+	@GetMapping("/desc/{user_id}")
+	@Operation(summary = "포인트 기록을 출력합니다.")
+	public ResponseEntity<List<Point>> getPointDescByUserId(@PathVariable("user_id") int userId) {
+		List<Point> pointDesc = pointService.getPointDescByUserId(userId);
+		if (pointDesc == null || pointDesc.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(pointDesc, HttpStatus.OK);
 	}
 }

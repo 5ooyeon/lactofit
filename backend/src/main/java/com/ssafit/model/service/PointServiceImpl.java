@@ -1,5 +1,7 @@
 package com.ssafit.model.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +14,18 @@ public class PointServiceImpl implements PointService {
 	@Autowired
 	private PointDao pointDao;
 
+	@Override
 	public void trackPoint(Point point) {
 		pointDao.trackPoint(point);
 	}
 
-	public int getPointsSumByUserId(int user_id) {
-		return pointDao.getPointsSumByUserId(user_id);
+	@Override
+	public int getPointsSumByUserId(int userId) {
+		return pointDao.getPointsSumByUserId(userId);
+	}
+
+	@Override
+	public List<Point> getPointDescByUserId(int userId) {
+		return pointDao.getPointDescByUserId(userId);
 	}
 }

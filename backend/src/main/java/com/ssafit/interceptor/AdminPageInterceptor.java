@@ -14,7 +14,7 @@ public class AdminPageInterceptor implements HandlerInterceptor {
 			throws Exception {
 		HttpSession session = request.getSession();
 		if (!"admin".equals(session.getAttribute("loginUser"))) {
-//			response.sendRedirect("");
+			response.sendRedirect("");
 			return false;
 		}
 		return true;

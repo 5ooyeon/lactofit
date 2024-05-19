@@ -1,10 +1,13 @@
 package com.ssafit.model.service;
 
+import java.util.List;
+
 import com.ssafit.model.dto.Point;
 
 public interface PointService {
+	void trackPoint(Point point);
 
-	public void trackPoint(Point point);
+	int getPointsSumByUserId(int userId);
 
-	public int getPointsSumByUserId(int user_id);
+	List<Point> getPointDescByUserId(int userId);
 }

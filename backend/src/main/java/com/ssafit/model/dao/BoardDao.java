@@ -15,6 +15,8 @@ public interface BoardDao {
 
 	List<Board> getAllBoards();
 
+	List<Board> getAllBoardsOrderByLikes();
+	
 	void updateBoard(Board board);
 
 	void deleteBoard(int boardId);
