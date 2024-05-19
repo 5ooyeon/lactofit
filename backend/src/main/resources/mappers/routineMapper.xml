@@ -62,7 +62,8 @@
 	</select>
 
 	<select id="getRoutinesByUserId" resultType="map">
-		SELECT r.routine_id AS routineId,
+		SELECT
+		r.routine_id AS routineId,
 		r.user_id AS userId,
 		r.routine_name AS routineName,
 		r.routine_desc AS routineDesc,

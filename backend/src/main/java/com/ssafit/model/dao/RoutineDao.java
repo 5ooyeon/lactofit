@@ -19,6 +19,6 @@ public interface RoutineDao {
 
 	List<List<Map<String, Object>>> getExercisesByRoutineId(int routineId);
 
-	List<List<Map<String, Object>>> getRoutinesByUserId(int userId);
+	List<Map<String, Object>> getRoutinesByUserId(int userId);
 
 }

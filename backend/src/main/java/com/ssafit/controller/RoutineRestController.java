@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafit.model.dto.Exercise;
@@ -151,11 +152,32 @@ public class RoutineRestController {
 
 	@GetMapping("/users/{user_Id}")
 	@Operation(summary = "유저ID로 루틴을 조회합니다.")
-	public ResponseEntity<Map<String, Object>> getRoutinesByUserId(@PathVariable("user_Id") int userId) {
-		List<List<Map<String, Object>>> routines = routineService.getRoutinesByUserId(userId);
+	public ResponseEntity<List<Map<String, Object>>> getRoutinesByUserId(@PathVariable("user_Id") int userId) {
+		List<Map<String, Object>> routines = routineService.getRoutinesByUserId(userId);
 		if (routines == null || routines.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity(routines, HttpStatus.OK);
+		return new ResponseEntity<>(routines, HttpStatus.OK);
 	}
+
+	@GetMapping("/exercises/search/{exercise_part}")
+	@Operation(summary = "특정 운동 부위의 운동만 반환합니다.")
+	public ResponseEntity<List<Exercise>> getExercisesByPart(@PathVariable("exercise_part") String exercisePart) {
+		List<Exercise> exercises = routineService.getExercisesByPart(exercisePart);
+		if (exercises == null || exercises.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(exercises, HttpStatus.OK);
+	}
+
+	@GetMapping("/exercises/search")
+	@Operation(summary = "운동명 또는 운동 부위에 포함된 운동을 반환합니다.")
+	public ResponseEntity<List<Exercise>> searchExercises(@RequestParam("keyword") String keyword) {
+		List<Exercise> exercises = routineService.searchExercises(keyword);
+		if (exercises == null || exercises.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(exercises, HttpStatus.OK);
+	}
+
 }

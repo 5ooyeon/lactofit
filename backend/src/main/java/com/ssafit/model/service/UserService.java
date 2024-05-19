@@ -16,4 +16,6 @@ public interface UserService {
 	void updateStreakColor(int userId, String userStreakColor);
 
 	void updateStreakPrice(int userId, int userStreakPrice);
+
+	User getUserByUserTag(String userTag);
 }

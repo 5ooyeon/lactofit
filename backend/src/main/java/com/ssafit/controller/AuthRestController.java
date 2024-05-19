@@ -82,6 +82,7 @@ public class AuthRestController {
 			user.setUserBirth(birthDate);
 			user.setUserProfileImage(profileImage);
 			userService.createUser(user);
+			user = userService.getUserByUserTag(openId);
 		}
 
 		// 유저 정보 세션에 저장

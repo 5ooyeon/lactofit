@@ -37,5 +37,9 @@ public interface RoutineService {
 
 	public List<List<Map<String, Object>>> getExercisesByRoutineId(int routineId);
 
-	public List<List<Map<String, Object>>> getRoutinesByUserId(int userId);
+	public List<Map<String, Object>> getRoutinesByUserId(int userId);
+
+	List<Exercise> getExercisesByPart(String exercisePart);
+
+	List<Exercise> searchExercises(String query);
 }

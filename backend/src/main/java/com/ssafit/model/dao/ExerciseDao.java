@@ -8,4 +8,8 @@ public interface ExerciseDao {
 	Exercise getExerciseById(int exerciseId);
 
 	List<Exercise> getAllExercises();
+
+	List<Exercise> getExercisesByPart(String part);
+
+	List<Exercise> searchExercises(String keyword);
 }

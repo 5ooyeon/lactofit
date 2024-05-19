@@ -12,7 +12,19 @@
 
 	<select id="getAllExercises"
 		resultType="com.ssafit.model.dto.Exercise">
+		SELECT * FROM Exercise ORDER BY exercise_part
+	</select>
+
+	<select id="getExercisesByPart"
+		resultType="com.ssafit.model.dto.Exercise">
+		SELECT * FROM Exercise WHERE exercise_part = #{exercisePart}
+	</select>
+
+	<select id="searchExercises"
+		resultType="com.ssafit.model.dto.Exercise">
 		SELECT * FROM Exercise
+		WHERE exercise_name LIKE CONCAT('%', #{keyword}, '%')
+		OR exercise_part LIKE CONCAT('%', #{keyword}, '%')
 	</select>
 
 </mapper>
