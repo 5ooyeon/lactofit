@@ -7,12 +7,10 @@
 	<insert id="insertRoutine">
 		INSERT INTO Routine (user_id,
 		routine_name,
-		routine_desc, routine_regDate,
-		routine_updateDate)
+		routine_desc)
 		VALUES
 		(#{userId},
-		#{routineName}, #{routineDesc}, #{routineRegDate},
-		#{routineUpdateDate})
+		#{routineName}, #{routineDesc})
 	</insert>
 
 	<select id="getRoutineById"
