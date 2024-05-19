@@ -1,6 +1,7 @@
 package com.ssafit.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,7 +76,7 @@ public class RoutineServiceImpl implements RoutineService {
 		return routineComponentsDao.getRoutineComponentById(routineComponentsId);
 	}
 
-	public List<RoutineComponents> getRoutineComponentsByRoutineId(int routineId) {
+	public List<Map<String, Object>> getRoutineComponentsByRoutineId(int routineId) {
 		return routineComponentsDao.getRoutineComponentsByRoutineId(routineId);
 	}
 

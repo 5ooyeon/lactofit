@@ -1,6 +1,7 @@
 package com.ssafit.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -135,10 +136,10 @@ public class RoutineRestController {
 
 	@GetMapping("/routinecomponents/routine/{routine_Id}")
 	@Operation(summary = "루틴 ID로 루틴 컴포넌트를 조회합니다.")
-	public ResponseEntity<List<RoutineComponents>> getRoutineComponentsByRoutineId(
+	public ResponseEntity<Map<String, Object>> getRoutineComponentsByRoutineId(
 			@PathVariable("routine_Id") int routineId) {
-		List<RoutineComponents> routineComponents = routineService.getRoutineComponentsByRoutineId(routineId);
-		return new ResponseEntity<>(routineComponents, HttpStatus.OK);
+		List<Map<String, Object>> routineComponents = routineService.getRoutineComponentsByRoutineId(routineId);
+		return new ResponseEntity(routineComponents, HttpStatus.OK);
 	}
 
 	@GetMapping("/routinecomponents")

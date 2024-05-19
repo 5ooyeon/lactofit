@@ -77,18 +77,18 @@ public class BoardRestController {
 		// 게시글 등록
 		boardService.createBoard(board);
 
-		User writer = userService.getUserById(userId);
-		List<RoutineComponents> routines = routineService.getRoutineComponentsByRoutineId(routineId);
+//		User writer = userService.getUserById(userId);
+//		List<RoutineComponents> routines = routineService.getRoutineComponentsByRoutineId(routineId);
+//
+//		Map<String, Object> map = new HashMap<>();
+//
+//		map.put("userId", userId);
+//		map.put("userTag", writer.getUserTag());
+//		map.put("userNickname", writer.getUserNickname());
+//		map.put("board", board);
+//		map.put("RoutineComponents", routines);
 
-		Map<String, Object> map = new HashMap<>();
-
-		map.put("userId", userId);
-		map.put("userTag", writer.getUserTag());
-		map.put("userNickname", writer.getUserNickname());
-		map.put("board", board);
-		map.put("RoutineComponents", routines);
-
-		return new ResponseEntity<>(map, HttpStatus.CREATED);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	@GetMapping("/{board_id}")
@@ -99,13 +99,13 @@ public class BoardRestController {
 		if (board != null) {
 			Map<String, Object> map = new HashMap<>();
 			User writer = userService.getUserById(board.getUserId());
-			List<RoutineComponents> routines = routineService.getRoutineComponentsByRoutineId(board.getRoutineId());
+//			List<RoutineComponents> routines = ;
 
 			map.put("userId", writer.getUserId());
 			map.put("userTag", writer.getUserTag());
 			map.put("userNickname", writer.getUserNickname());
 			map.put("board", board);
-			map.put("RoutineComponents", routines);
+			map.put("RoutineComponents", routineService.getRoutineComponentsByRoutineId(board.getRoutineId()));
 
 			return new ResponseEntity<>(map, HttpStatus.OK);
 		}
@@ -124,13 +124,14 @@ public class BoardRestController {
 		for (Board b : boards) {
 			Map<String, Object> map = new HashMap<>();
 			User writer = userService.getUserById(b.getUserId());
-			List<RoutineComponents> routines = routineService.getRoutineComponentsByRoutineId(b.getRoutineId());
-
-			map.put("userId", writer.getUserId());
-			map.put("userTag", writer.getUserTag());
-			map.put("userNickname", writer.getUserNickname());
+//			List<RoutineComponents> routines = r;
+			
+			map.put("writer", writer);
+//			map.put("userId", writer.getUserId());
+//			map.put("userTag", writer.getUserTag());
+//			map.put("userNickname", writer.getUserNickname());
 			map.put("board", b);
-			map.put("RoutineComponents", routines);
+			map.put("RoutineComponents", routineService.getRoutineComponentsByRoutineId(b.getRoutineId()));
 
 			list.add(map);
 		}
@@ -150,13 +151,14 @@ public class BoardRestController {
 		for (Board b : boards) {
 			Map<String, Object> map = new HashMap<>();
 			User writer = userService.getUserById(b.getUserId());
-			List<RoutineComponents> routines = routineService.getRoutineComponentsByRoutineId(b.getRoutineId());
-
-			map.put("userId", writer.getUserId());
-			map.put("userTag", writer.getUserTag());
-			map.put("userNickname", writer.getUserNickname());
+//			List<RoutineComponents> routines = ;
+//
+//			map.put("userId", writer.getUserId());
+//			map.put("userTag", writer.getUserTag());
+//			map.put("userNickname", writer.getUserNickname());
+			map.put("writer", writer);
 			map.put("board", b);
-			map.put("RoutineComponents", routines);
+			map.put("RoutineComponents", routineService.getRoutineComponentsByRoutineId(b.getRoutineId()));
 
 			list.add(map);
 		}
@@ -175,13 +177,14 @@ public class BoardRestController {
 		for (Board b : boards) {
 			Map<String, Object> map = new HashMap<>();
 			User writer = userService.getUserById(b.getUserId());
-			List<RoutineComponents> routines = routineService.getRoutineComponentsByRoutineId(b.getRoutineId());
-
-			map.put("userId", writer.getUserId());
-			map.put("userTag", writer.getUserTag());
-			map.put("userNickname", writer.getUserNickname());
+//			List<RoutineComponents> routines = ;
+//
+//			map.put("userId", writer.getUserId());
+//			map.put("userTag", writer.getUserTag());
+//			map.put("userNickname", writer.getUserNickname());
+			map.put("writer", writer);
 			map.put("board", b);
-			map.put("RoutineComponents", routines);
+			map.put("RoutineComponents", routineService.getRoutineComponentsByRoutineId(b.getRoutineId()));
 
 			list.add(map);
 		}

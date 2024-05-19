@@ -1,6 +1,7 @@
 package com.ssafit.model.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ssafit.model.dto.RoutineComponents;
 
@@ -17,7 +18,7 @@ public interface RoutineComponentsDao {
 	// D
 	void deleteRoutineComponent(int routineComponentsId);
 
-	List<RoutineComponents> getRoutineComponentsByRoutineId(int routineId);
+	List<Map<String, Object>> getRoutineComponentsByRoutineId(int routineId);
 
 	List<RoutineComponents> getAllRoutineComponents();
 }

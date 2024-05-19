@@ -1,6 +1,7 @@
 package com.ssafit.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ssafit.model.dto.Exercise;
 import com.ssafit.model.dto.Routine;
@@ -30,7 +31,7 @@ public interface RoutineService {
 
 	public RoutineComponents getRoutineComponentById(int routineComponentsId);
 
-	public List<RoutineComponents> getRoutineComponentsByRoutineId(int routineId);
+	public List<Map<String, Object>> getRoutineComponentsByRoutineId(int routineId);
 
 	public List<RoutineComponents> getAllRoutineComponents();
 
