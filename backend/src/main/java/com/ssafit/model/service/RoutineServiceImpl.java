@@ -84,8 +84,8 @@ public class RoutineServiceImpl implements RoutineService {
 		return routineComponentsDao.getAllRoutineComponents();
 	}
 
-//	public List<RoutineComponents> getExercisesByRoutineId(int routineId) {
-//		return routineDao.getExercisesByRoutineId(routineId);
-//	}
+	public List<RoutineComponents> getExercisesByRoutineId(int routineId) {
+		return routineDao.getExercisesByRoutineId(routineId);
+	}
 
 }

@@ -22,10 +22,11 @@ public class FollowServiceImpl implements FollowService {
 	private UserService userService;
 
 	@Override
-	public void toggleFollow(Follow follow) {
+	public boolean toggleFollow(Follow follow) {
 		Follow alreadyFollow = followDao.getFollowByUsers(follow.getUserId(), follow.getFollowingUserId());
 		if (alreadyFollow != null) {
 			followDao.deleteFollow(alreadyFollow.getFollowId(), follow.getUserId());
+			return false;
 		} else {
 			followDao.createFollow(follow);
 			Notification notification = new Notification();
@@ -34,6 +35,7 @@ public class FollowServiceImpl implements FollowService {
 					userService.getUserById(follow.getUserId()).getUserNickname() + "(이)가 팔로우 하였습니다.");
 			notification.setNotificationRead(false);
 			notificationService.createNotification(notification);
+			return true;
 		}
 	}
 

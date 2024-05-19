@@ -35,5 +35,5 @@ public interface RoutineService {
 
 	public List<RoutineComponents> getAllRoutineComponents();
 
-//	public List<RoutineComponents> getExercisesByRoutineId(int routineId);
+	public List<RoutineComponents> getExercisesByRoutineId(int routineId);
 }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafit.model.dto.Board;
-import com.ssafit.model.dto.RoutineComponents;
 import com.ssafit.model.dto.User;
 import com.ssafit.model.service.BoardService;
 import com.ssafit.model.service.RoutineService;
@@ -52,82 +52,53 @@ public class BoardRestController {
 
 	@PostMapping("/")
 	@Operation(summary = "게시물을 등록합니다.")
-//	public ResponseEntity<?> createBoard(@RequestParam("file") MultipartFile file, @RequestParam("userId") int userId,
-//			@RequestParam("routineId") int routineId, @RequestParam("boardContent") String boardContent,
-//			@RequestParam("boardVisibility") boolean boardVisibility) {
-//		// 파일업로드
-//		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-//		System.out.println(fileName);
-//		try {
-//			Path path = Paths.get(UPLOAD_DIR + fileName);
-//			System.out.println(path.toString());
-//			Files.createDirectories(path.getParent());
-//			Files.write(path, file.getBytes());
-//			System.out.println("done");
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//
-//		Board board = new Board();
-//		board.setUserId(userId);
-//		board.setRoutineId(routineId);
-//		board.setBoardContent(boardContent);
-//		board.setBoardImgUrl(UPLOAD_DIR + fileName);
-//		board.setBoardViewCnt(0);
-//		board.setBoardVisibility(boardVisibility);
-//
-//		// 게시글 등록
-//		boardService.createBoard(board);
-//
-////		User writer = userService.getUserById(userId);
-////		List<RoutineComponents> routines = routineService.getRoutineComponentsByRoutineId(routineId);
-////
-////		Map<String, Object> map = new HashMap<>();
-////
-////		map.put("userId", userId);
-////		map.put("userTag", writer.getUserTag());
-////		map.put("userNickname", writer.getUserNickname());
-////		map.put("board", board);
-////		map.put("RoutineComponents", routines);
-//
-//		return new ResponseEntity<>(HttpStatus.CREATED);
-//	}
-    public ResponseEntity<?> createBoard(@RequestParam("file") MultipartFile file, @RequestParam("userId") int userId,
-            @RequestParam("routineId") int routineId, @RequestParam("boardContent") String boardContent,
-            @RequestParam("boardVisibility") boolean boardVisibility) {
-		// 파일 업로드
-		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+	public ResponseEntity<?> createBoard(@RequestParam("file") MultipartFile file, @RequestParam("userId") int userId,
+			@RequestParam("routineId") int routineId, @RequestParam("boardContent") String boardContent,
+			@RequestParam("boardVisibility") boolean boardVisibility) {
+		// 파일명에 UUID 추가
+		String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
+		String fileExtension = getFileExtension(originalFileName);
+		String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
+
 		try {
-		// 상대 경로를 절대 경로로 변환
-		Path uploadPath = Paths.get(UPLOAD_DIR).toAbsolutePath().normalize();
-		Path path = uploadPath.resolve(fileName);
-		Files.createDirectories(path.getParent());
-		Files.write(path, file.getBytes());
-		
-		// 파일 경로 출력
-		System.out.println("File saved to: " + path.toString());
+			// 상대 경로를 절대 경로로 변환
+			Path uploadPath = Paths.get(UPLOAD_DIR).toAbsolutePath().normalize();
+			Path path = uploadPath.resolve(uniqueFileName);
+			Files.createDirectories(path.getParent());
+			Files.write(path, file.getBytes());
+
+			// 파일 경로 출력
+			System.out.println("File saved to: " + path.toString());
 		} catch (IOException e) {
-		e.printStackTrace();
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
+
 		Board board = new Board();
 		board.setUserId(userId);
 		board.setRoutineId(routineId);
 		board.setBoardContent(boardContent);
-		
+
 		// 프론트엔드에서 접근할 수 있는 URL로 설정
-		board.setBoardImgUrl("/assets/uploads/" + fileName);
-		
+		board.setBoardImgUrl("src/assets/uploads/" + uniqueFileName);
+
 		board.setBoardViewCnt(0);
 		board.setBoardVisibility(boardVisibility);
-		
+
 		// 게시글 등록
 		boardService.createBoard(board);
-		
+
 		return new ResponseEntity<>(HttpStatus.CREATED);
+	}
+
+	// 파일 확장자를 가져오는 메서드
+	private String getFileExtension(String fileName) {
+		if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
+			return fileName.substring(fileName.lastIndexOf("."));
+		} else {
+			return "";
 		}
+	}
 
 	@GetMapping("/{board_id}")
 	@Operation(summary = "ID로 게시물을 조회합니다.")
@@ -137,7 +108,6 @@ public class BoardRestController {
 		if (board != null) {
 			Map<String, Object> map = new HashMap<>();
 			User writer = userService.getUserById(board.getUserId());
-//			List<RoutineComponents> routines = ;
 
 			map.put("userId", writer.getUserId());
 			map.put("userTag", writer.getUserTag());
@@ -162,12 +132,8 @@ public class BoardRestController {
 		for (Board b : boards) {
 			Map<String, Object> map = new HashMap<>();
 			User writer = userService.getUserById(b.getUserId());
-//			List<RoutineComponents> routines = r;
-			
+
 			map.put("writer", writer);
-//			map.put("userId", writer.getUserId());
-//			map.put("userTag", writer.getUserTag());
-//			map.put("userNickname", writer.getUserNickname());
 			map.put("board", b);
 			map.put("RoutineComponents", routineService.getRoutineComponentsByRoutineId(b.getRoutineId()));
 
@@ -189,11 +155,6 @@ public class BoardRestController {
 		for (Board b : boards) {
 			Map<String, Object> map = new HashMap<>();
 			User writer = userService.getUserById(b.getUserId());
-//			List<RoutineComponents> routines = ;
-//
-//			map.put("userId", writer.getUserId());
-//			map.put("userTag", writer.getUserTag());
-//			map.put("userNickname", writer.getUserNickname());
 			map.put("writer", writer);
 			map.put("board", b);
 			map.put("RoutineComponents", routineService.getRoutineComponentsByRoutineId(b.getRoutineId()));
@@ -215,11 +176,6 @@ public class BoardRestController {
 		for (Board b : boards) {
 			Map<String, Object> map = new HashMap<>();
 			User writer = userService.getUserById(b.getUserId());
-//			List<RoutineComponents> routines = ;
-//
-//			map.put("userId", writer.getUserId());
-//			map.put("userTag", writer.getUserTag());
-//			map.put("userNickname", writer.getUserNickname());
 			map.put("writer", writer);
 			map.put("board", b);
 			map.put("RoutineComponents", routineService.getRoutineComponentsByRoutineId(b.getRoutineId()));

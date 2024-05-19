@@ -1,11 +1,12 @@
 package com.ssafit.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,9 +30,12 @@ public class FollowRestController {
 
 	@PostMapping("/")
 	@Operation(summary = "사용자를 팔로우 또는 언팔로우합니다.")
-	public ResponseEntity<Void> toggleFollow(@RequestBody Follow follow) {
-		followService.toggleFollow(follow);
-		return new ResponseEntity<>(HttpStatus.OK);
+	public ResponseEntity<?> toggleFollow(@RequestBody Follow follow) {
+		boolean isfollowed = followService.toggleFollow(follow);
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("followed", isfollowed);
+
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@GetMapping("/followers/{user_Id}")

@@ -8,7 +8,7 @@ import com.ssafit.model.dto.Follow;
 
 public interface FollowService {
 
-	void toggleFollow(Follow follow);
+	boolean toggleFollow(Follow follow);
 
 	void deleteFollow(@Param("followId") int followId, @Param("userId") int userId);
 
