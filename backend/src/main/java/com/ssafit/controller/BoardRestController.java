@@ -39,7 +39,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "boardRestController", description = "게시판(오.운.완)CRUD")
 public class BoardRestController {
 
-	private static final String UPLOAD_DIR = "C:/uploads/";
+	private static final String UPLOAD_DIR = "./../frontend/src/assets/uploads/";
 
 	@Autowired
 	private BoardService boardService;
@@ -52,44 +52,82 @@ public class BoardRestController {
 
 	@PostMapping("/")
 	@Operation(summary = "게시물을 등록합니다.")
-	public ResponseEntity<?> createBoard(@RequestParam("file") MultipartFile file, @RequestParam("userId") int userId,
-			@RequestParam("routineId") int routineId, @RequestParam("boardContent") String boardContent,
-			@RequestParam("boardVisibility") boolean boardVisibility) {
-		// 파일업로드
+//	public ResponseEntity<?> createBoard(@RequestParam("file") MultipartFile file, @RequestParam("userId") int userId,
+//			@RequestParam("routineId") int routineId, @RequestParam("boardContent") String boardContent,
+//			@RequestParam("boardVisibility") boolean boardVisibility) {
+//		// 파일업로드
+//		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+//		System.out.println(fileName);
+//		try {
+//			Path path = Paths.get(UPLOAD_DIR + fileName);
+//			System.out.println(path.toString());
+//			Files.createDirectories(path.getParent());
+//			Files.write(path, file.getBytes());
+//			System.out.println("done");
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//
+//		Board board = new Board();
+//		board.setUserId(userId);
+//		board.setRoutineId(routineId);
+//		board.setBoardContent(boardContent);
+//		board.setBoardImgUrl(UPLOAD_DIR + fileName);
+//		board.setBoardViewCnt(0);
+//		board.setBoardVisibility(boardVisibility);
+//
+//		// 게시글 등록
+//		boardService.createBoard(board);
+//
+////		User writer = userService.getUserById(userId);
+////		List<RoutineComponents> routines = routineService.getRoutineComponentsByRoutineId(routineId);
+////
+////		Map<String, Object> map = new HashMap<>();
+////
+////		map.put("userId", userId);
+////		map.put("userTag", writer.getUserTag());
+////		map.put("userNickname", writer.getUserNickname());
+////		map.put("board", board);
+////		map.put("RoutineComponents", routines);
+//
+//		return new ResponseEntity<>(HttpStatus.CREATED);
+//	}
+    public ResponseEntity<?> createBoard(@RequestParam("file") MultipartFile file, @RequestParam("userId") int userId,
+            @RequestParam("routineId") int routineId, @RequestParam("boardContent") String boardContent,
+            @RequestParam("boardVisibility") boolean boardVisibility) {
+		// 파일 업로드
 		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 		try {
-			Path path = Paths.get(UPLOAD_DIR + fileName);
-			Files.createDirectories(path.getParent());
-			Files.write(path, file.getBytes());
+		// 상대 경로를 절대 경로로 변환
+		Path uploadPath = Paths.get(UPLOAD_DIR).toAbsolutePath().normalize();
+		Path path = uploadPath.resolve(fileName);
+		Files.createDirectories(path.getParent());
+		Files.write(path, file.getBytes());
+		
+		// 파일 경로 출력
+		System.out.println("File saved to: " + path.toString());
 		} catch (IOException e) {
-			e.printStackTrace();
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		e.printStackTrace();
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
+		
 		Board board = new Board();
 		board.setUserId(userId);
 		board.setRoutineId(routineId);
 		board.setBoardContent(boardContent);
-		board.setBoardImgUrl(UPLOAD_DIR + fileName);
+		
+		// 프론트엔드에서 접근할 수 있는 URL로 설정
+		board.setBoardImgUrl("/assets/uploads/" + fileName);
+		
 		board.setBoardViewCnt(0);
 		board.setBoardVisibility(boardVisibility);
-
+		
 		// 게시글 등록
 		boardService.createBoard(board);
-
-//		User writer = userService.getUserById(userId);
-//		List<RoutineComponents> routines = routineService.getRoutineComponentsByRoutineId(routineId);
-//
-//		Map<String, Object> map = new HashMap<>();
-//
-//		map.put("userId", userId);
-//		map.put("userTag", writer.getUserTag());
-//		map.put("userNickname", writer.getUserNickname());
-//		map.put("board", board);
-//		map.put("RoutineComponents", routines);
-
+		
 		return new ResponseEntity<>(HttpStatus.CREATED);
-	}
+		}
 
 	@GetMapping("/{board_id}")
 	@Operation(summary = "ID로 게시물을 조회합니다.")
