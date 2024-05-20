@@ -7,8 +7,10 @@ import router from './router'
 // Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css'
 
+import '@mdi/font/css/materialdesignicons.css'
+
 // Bootstrap JavaScript
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+import 'bootstrap/dist/js/bootstrap.bundle'
 
 const app = createApp(App)
 

@@ -212,9 +212,11 @@ const hideUploadModal = () => {
 
 const showBoardDetail = async (board) => {
   selectedBoard.value = board;
+  console.log(selectedBoard.value)
   try {
     const response = await axios.get(`http://localhost:8080/boardlikes/${board.board.boardId}`);
     boardLikes.value = response.data;
+    console.log(boardLikes.value)
   } catch (error) {
     console.error('Error fetching board likes:', error);
   }
