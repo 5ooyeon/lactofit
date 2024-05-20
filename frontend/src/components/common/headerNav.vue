@@ -1,8 +1,10 @@
 <template>
-  <header class="navbar navbar-expand-lg rounded">
+  <header class="navbar navbar-expand-lg">
     <nav class="container">
       <div class="navbar-collapse d-lg-flex" id="navbarsExample11">
-        <RouterLink :to="{ name: 'Main' }" class="navbar-brand col-lg-3 me-0">SSAFIT</RouterLink>
+        <RouterLink :to="{ name: 'Main' }" class="navbar-brand col-lg-3 me-0">
+          <img src="../../assets/img/LACTOFIT_HEADER.png" class="logo-img" />
+        </RouterLink>
         <ul class="navbar-nav col-lg-6 justify-content-lg-center">
           <li class="nav-item">
             <a class="nav-link" href="#routine">운동백과</a>
@@ -25,34 +27,84 @@
             Google 로그인
           </button>
           <div v-if="authStore.user" style="display: flex;">
-            <div class="notification">
+            <div class="notification dropstart me-5" type="button" data-bs-toggle="dropdown" aria-expanded="false" :class="{ 'has-unread-notifications': hasUnreadNotifications }">
               <div class="bell-container">
                 <div class="bell"></div>
               </div>
+              <ul class="dropdown-menu">
+                <div class="notifications-container">
+                  <div v-if="notifications.length !== 0">
+                    <li v-for="noti in notifications" :key="noti.notificationId">
+                      <div class="alert" :class="{ 'alert-read': noti.notificationRead }">
+                        <div class="alert-prompt-wrap" @click="openModal(noti)">
+                          <p class="text-sm text-yellow-700">
+                            {{ noti.notificationContent }}
+                            <p class="noti-regDate">{{ noti.notificationRegDate }}</p>
+                          </p>
+                        </div>
+                        <button class="btn" @click="deleteNoti(noti.notificationId)">
+                          <svg viewBox="0 0 15 17.5" height="17.5" width="15" xmlns="http://www.w3.org/2000/svg" class="icon">
+                            <path transform="translate(-2.5 -1.25)" d="M15,18.75H5A1.251,1.251,0,0,1,3.75,17.5V5H2.5V3.75h15V5H16.25V17.5A1.251,1.251,0,0,1,15,18.75ZM5,5V17.5H15V5Zm7.5,10H11.25V7.5H12.5V15ZM8.75,15H7.5V7.5H8.75V15ZM12.5,2.5h-5V1.25h5V2.5Z" id="Fill"></path>
+                          </svg>
+                        </button>
+                      </div>
+                    </li>
+                  </div>
+                  <div class="no-noti" v-else>
+                    알림이 없습니다.
+                  </div>
+                </div>
+              </ul>
             </div>
-            <img :src="authStore.user.userProfileImage" ref="profileImage" class="user-profile-img dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-              <li><button class="dropdown-item" @click="goToProfilePage">프로필</button></li>
-              <li><button class="dropdown-item" @click="logout">로그아웃</button></li>
-            </ul>
+
+            <div class="dropdown">
+              <img :src="`${authStore.user.userProfileImage}`" class="user-profile-img dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <ul class="dropdown-menu">
+                <li><RouterLink :to="{ name: 'MyPageView', params: { id: authStore.user.userId } }">나의 프로필</RouterLink></li>
+                <li><button @click="logout()">내 정보 수정</button></li>
+                <li><button @click="logout()">로그아웃</button></li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
     </nav>
   </header>
+
+  <!-- Modal -->
+  <div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="notificationModalLabel">{{ selectedNotification?.notificationContent }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>{{ selectedNotification?.notificationContent }}</p>
+          <p class="noti-regDate">{{ selectedNotification?.notificationRegDate }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="deleteNoti(selectedNotification?.notificationId)">삭제</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useAuthStore } from '../../stores/auth.js'
 import { useRoute, useRouter } from 'vue-router'
-import * as bootstrap from 'bootstrap'
+import axios from 'axios'
+import { Modal } from 'bootstrap'
 
 const authStore = useAuthStore()
 const route = useRoute()
 const router = useRouter()
 
-const profileImage = ref(null)
+const notifications = ref([])
+const selectedNotification = ref(null)
+let notificationModal = null
 
 const loginWithGoogle = () => {
   authStore.loginWithGoogle()
@@ -66,20 +118,62 @@ const goToProfilePage = () => {
   router.push({ name: 'UserProfile' })
 }
 
+const hasUnreadNotifications = ref(false)
+
+const getNotifications = () => {
+  const userId = authStore.user.userId;
+  axios.get('http://localhost:8080/notifications/' + userId)
+    .then((Response) => {
+      notifications.value = Response.data;
+      console.log(notifications.value);
+      // Check if there are any unread notifications
+      hasUnreadNotifications.value = notifications.value.some(noti => !noti.notificationRead);
+    });
+}
+
+// 알림 삭제
+const deleteNoti = (notificationId) => {
+  axios.delete(`http://localhost:8080/notifications/${notificationId}`)
+    .then(() => {
+      notifications.value = notifications.value.filter(noti => noti.notificationId !== notificationId)
+    })
+}
+
+// 모달 열기
+const openModal = (noti) => {
+  selectedNotification.value = noti
+  if (!notificationModal) {
+    const modalElement = document.getElementById('notificationModal')
+    notificationModal = new Modal(modalElement)
+  }
+  //알림 읽음 처리
+  axios.put('http://localhost:8080/notifications/'+noti.notificationId)
+  .then((response) => {
+    noti.notificationRead = true;
+    hasUnreadNotifications.value = notifications.value.some(noti => !noti.notificationRead);
+    console.log('read')
+  })
+  // event.stopPropagation()
+  notificationModal.show()
+}
+
 onMounted(() => {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const code = urlParams.get('code');
-  if (code) {
-    authStore.fetchUserOpenId(code)
+
+  if (authStore.user) {
+    getNotifications();
   }
-
-  // Bootstrap JavaScript 초기화
-  const dropdown = new bootstrap.Dropdown(profileImage.value)
-
-  // 이미지 경로 확인
-  console.log('User profile image URL:', authStore.user?.userProfileImage)
-})
+  console.log(notifications.value)
+  if (code) {
+    authStore.fetchUserOpenId(code).then(() => {
+      if (authStore.user) {
+        getNotifications();
+      }
+    });
+  }
+});
 </script>
 
 <style scoped>
@@ -92,7 +186,16 @@ onMounted(() => {
   z-index: var(--z-fixed);
   transition: .4s;
 }
+.logo {
+  display: flex;
+  align-items: center; /* 수직 중앙 정렬 */
+}
 
+.logo-img {
+  height: 100%; /* 부모 요소의 높이에 맞추기 */
+  max-height: 60px; /* 최대 높이 설정 */
+  width: auto; /* 비율 유지 */
+}
 .navbar-brand, .nav-link {
   color: #333;
 }
@@ -203,13 +306,21 @@ onMounted(() => {
   border-radius: 50%;
   background-color: red;
   position: absolute;
-  right: -4px; /* 수정된 부분 */
-  top: 3px; /* 수정된 부분 */
-  display: flex;
+  right: -4px;
+  top: 3px;
+  display: none; /* 기본적으로 숨김 */
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
+
+.has-unread-notifications::before {
+  display: block; /* 안 읽은 알림이 있을 때만 표시 */
+}
+
+/* .notification::before {
+  display: none;
+} */
 
 .notification:hover {
   background: rgba(170, 170, 170, 0.062);
@@ -240,4 +351,61 @@ onMounted(() => {
     transform: rotate(0deg);
   }
 }
+
+.notifications-container {
+  width: 320px;
+  height: auto;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.flex {
+
+}
+
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+
+.alert {
+  border-color: grey;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  display: flex;
+  margin-bottom: 0 !important;
+  align-items: center; /* Ensure items are centered vertically */
+}
+
+.alert-svg {
+  height: 1.25rem;
+  width: 1.25rem;
+  /* color: rgb(250 204 21); */
+}
+
+.alert-prompt-wrap {
+  margin-left: 0.75rem;
+  flex-grow: 1; /* Allow it to take up the remaining space */
+}
+
+.alert-prompt-link {
+  font-weight: 500;
+  color: rgb(141, 56, 0);
+  text-decoration: underline;
+}
+
+.alert-prompt-link:hover {
+  color: rgb(202 138 4);
+}
+
+.alert button {
+  margin-left: auto; /* Push the button to the right */
+}
+
+.alert-read {
+  background-color: grey;
+}
+
 </style>

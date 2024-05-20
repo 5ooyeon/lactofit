@@ -16,12 +16,16 @@
 
                 <div v-if="selectedTab === 'feed'" class="feed">
                     <div class="workout-streak">
+                      <div class="workout-yet">
+                        <p>아직 운동 인증을 하지 않았어요!</p>
+                        <button class="btn">운동 인증하기</button>
+                      </div>
                         <h3>연속 0 일 운동중!</h3>
-                            <div class="grid">
-                                <div>
-                                    <!-- 툴팁이나 추가 정보를 표시할 수 있습니다 -->
-                                </div>
+                        <div class="grid">
+                            <div>
+                                <!-- 툴팁이나 추가 정보를 표시할 수 있습니다 -->
                             </div>
+                        </div>
                     </div>
 
                     <div class="my-routine">
