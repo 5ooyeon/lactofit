@@ -37,9 +37,9 @@ public class RoutineRestController {
 		return new ResponseEntity<>(routine, HttpStatus.CREATED);
 	}
 
-	@PutMapping("/{routine_Id}")
+	@PutMapping("/{routine_id}")
 	@Operation(summary = "루틴을 수정합니다.")
-	public ResponseEntity<Routine> updateRoutine(@PathVariable("routine_Id") int routineId,
+	public ResponseEntity<Routine> updateRoutine(@PathVariable("routine_id") int routineId,
 			@RequestBody Routine routine) {
 		routine.setRoutineId(routineId);
 		routineService.updateRoutine(routine);
@@ -50,16 +50,16 @@ public class RoutineRestController {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
-	@DeleteMapping("/{routine_Id}")
+	@DeleteMapping("/{routine_id}")
 	@Operation(summary = "루틴을 삭제합니다.")
-	public ResponseEntity<Void> deleteRoutine(@PathVariable("routine_Id") int routineId) {
+	public ResponseEntity<Void> deleteRoutine(@PathVariable("routine_id") int routineId) {
 		routineService.deleteRoutine(routineId);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-	@GetMapping("/{routine_Id}")
+	@GetMapping("/{routine_id}")
 	@Operation(summary = "루틴(이름, 설명 등)을 조회합니다.")
-	public ResponseEntity<Routine> getRoutineById(@PathVariable("routine_Id") int routineId) {
+	public ResponseEntity<Routine> getRoutineById(@PathVariable("routine_id") int routineId) {
 		Routine routine = routineService.getRoutineById(routineId);
 		if (routine != null) {
 			return new ResponseEntity<>(routine, HttpStatus.OK);
@@ -74,9 +74,9 @@ public class RoutineRestController {
 		return new ResponseEntity<>(routines, HttpStatus.OK);
 	}
 
-	@GetMapping("/users/{user_Id}")
+	@GetMapping("/users/{user_id}")
 	@Operation(summary = "유저ID로 루틴을 조회합니다.")
-	public ResponseEntity<List<Map<String, Object>>> getRoutinesByUserId(@PathVariable("user_Id") int userId) {
+	public ResponseEntity<List<Map<String, Object>>> getRoutinesByUserId(@PathVariable("user_id") int userId) {
 		List<Map<String, Object>> routines = routineService.getRoutinesByUserId(userId);
 		if (routines == null || routines.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

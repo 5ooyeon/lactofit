@@ -13,34 +13,42 @@ public class BoardServiceImpl implements BoardService {
 	@Autowired
 	private BoardDao boardDao;
 
+	@Override
 	public void createBoard(Board board) {
 		boardDao.createBoard(board);
 	}
 
+	@Override
 	public Board getBoardById(int boardId) {
 		return boardDao.getBoardById(boardId);
 	}
 
+	@Override
 	public List<Board> getBoardByUserId(int userId) {
 		return boardDao.getBoardByUserId(userId);
 	}
 
+	@Override
 	public List<Board> getFollowingBoardByUserId(int userId) {
 		return boardDao.getFollowingBoardByUserId(userId);
 	}
 
+	@Override
 	public List<Board> getAllBoards() {
 		return boardDao.getAllBoards();
 	}
-	
+
+	@Override
 	public List<Board> getAllBoardsOrderByLikes() {
 		return boardDao.getAllBoardsOrderByLikes();
 	}
 
+	@Override
 	public void updateBoard(Board board) {
 		boardDao.updateBoard(board);
 	}
 
+	@Override
 	public void deleteBoard(int boardId) {
 		boardDao.deleteBoard(boardId);
 	}

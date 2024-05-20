@@ -38,7 +38,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/boards")
-@Tag(name = "boardRestController", description = "게시판(오.운.완)CRUD")
+@Tag(name = "boardRestController", description = "게시판(오.운.완) 컨트롤러")
 public class BoardRestController {
 
 	private static final String UPLOAD_DIR = "./../frontend/src/assets/uploads/";
@@ -71,9 +71,6 @@ public class BoardRestController {
 			Path path = uploadPath.resolve(uniqueFileName);
 			Files.createDirectories(path.getParent());
 			Files.write(path, file.getBytes());
-
-			// 파일 경로 출력
-			System.out.println("File saved to: " + path.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

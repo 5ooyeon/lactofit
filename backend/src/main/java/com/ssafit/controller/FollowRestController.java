@@ -38,30 +38,30 @@ public class FollowRestController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@GetMapping("/followers/{user_Id}")
+	@GetMapping("/followers/{user_id}")
 	@Operation(summary = "특정 사용자의 팔로워 목록을 조회합니다.")
-	public ResponseEntity<List<Follow>> getFollowers(@PathVariable("user_Id") int userId) {
+	public ResponseEntity<List<Follow>> getFollowers(@PathVariable("user_id") int userId) {
 		List<Follow> followers = followService.getFollowers(userId);
 		return new ResponseEntity<>(followers, HttpStatus.OK);
 	}
 
-	@GetMapping("/following/{user_Id}")
+	@GetMapping("/following/{user_id}")
 	@Operation(summary = "특정 사용자가 팔로우하는 사용자 목록을 조회합니다.")
 	public ResponseEntity<List<Follow>> getFollowing(@PathVariable("user_Id") int userId) {
 		List<Follow> following = followService.getFollowing(userId);
 		return new ResponseEntity<>(following, HttpStatus.OK);
 	}
 
-	@GetMapping("/count/followers/{user_Id}")
+	@GetMapping("/followers/count/{user_id}")
 	@Operation(summary = "특정 사용자의 팔로워 수를 조회합니다.")
-	public ResponseEntity<Integer> countFollowers(@PathVariable("user_Id") int userId) {
+	public ResponseEntity<Integer> countFollowers(@PathVariable("user_id") int userId) {
 		int count = followService.countFollowers(userId);
 		return new ResponseEntity<>(count, HttpStatus.OK);
 	}
 
-	@GetMapping("/count/following/{user_Id}")
+	@GetMapping("/following/count/{user_id}")
 	@Operation(summary = "특정 사용자가 팔로우하는 수를 조회합니다.")
-	public ResponseEntity<Integer> countFollowing(@PathVariable("user_Id") int userId) {
+	public ResponseEntity<Integer> countFollowing(@PathVariable("user_id") int userId) {
 		int count = followService.countFollowing(userId);
 		return new ResponseEntity<>(count, HttpStatus.OK);
 	}

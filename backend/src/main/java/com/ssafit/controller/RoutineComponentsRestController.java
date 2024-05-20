@@ -28,10 +28,10 @@ public class RoutineComponentsRestController {
 	@Autowired
 	private RoutineService routineService;
 
-	@PutMapping("/{routineComponents_Id}")
+	@PutMapping("/{routineComponents_id}")
 	@Operation(summary = "루틴 컴포넌트를 수정합니다.")
 	public ResponseEntity<RoutineComponents> updateRoutineComponent(
-			@PathVariable("routineComponents_Id") int routineComponentsId,
+			@PathVariable("routineComponents_id") int routineComponentsId,
 			@RequestBody RoutineComponents routineComponents) {
 		routineComponents.setRoutineComponentsId(routineComponentsId);
 		routineService.updateRoutineComponent(routineComponents);
@@ -43,17 +43,17 @@ public class RoutineComponentsRestController {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
-	@DeleteMapping("/{routineComponents_Id}")
+	@DeleteMapping("/{routineComponents_id}")
 	@Operation(summary = "루틴 컴포넌트를 삭제합니다.")
-	public ResponseEntity<Void> deleteRoutineComponent(@PathVariable("routineComponents_Id") int routineComponentsId) {
+	public ResponseEntity<Void> deleteRoutineComponent(@PathVariable("routineComponents_id") int routineComponentsId) {
 		routineService.deleteRoutineComponent(routineComponentsId);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-	@GetMapping("/{routineComponents_Id}")
+	@GetMapping("/{routineComponents_id}")
 	@Operation(summary = "루틴 컴포넌트를 조회합니다.")
 	public ResponseEntity<RoutineComponents> getRoutineComponentById(
-			@PathVariable("routineComponents_Id") int routineComponentsId) {
+			@PathVariable("routineComponents_id") int routineComponentsId) {
 		RoutineComponents routineComponents = routineService.getRoutineComponentById(routineComponentsId);
 		if (routineComponents != null) {
 			return new ResponseEntity<>(routineComponents, HttpStatus.OK);
@@ -61,10 +61,10 @@ public class RoutineComponentsRestController {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
-	@GetMapping("/routine/{routine_Id}")
+	@GetMapping("/routine/{routine_id}")
 	@Operation(summary = "루틴 ID로 루틴 컴포넌트를 조회합니다.")
 	public ResponseEntity<Map<String, Object>> getRoutineComponentsByRoutineId(
-			@PathVariable("routine_Id") int routineId) {
+			@PathVariable("routine_id") int routineId) {
 		List<Map<String, Object>> routineComponents = routineService.getRoutineComponentsByRoutineId(routineId);
 		return new ResponseEntity(routineComponents, HttpStatus.OK);
 	}

@@ -62,7 +62,7 @@ public class UserRestController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@PutMapping("/{user_id}/streakColor")
+	@PutMapping("/streakColor/{user_id}")
 	@Operation(summary = "유저의 스트릭 색상을 변경합니다.")
 	public ResponseEntity<User> updateStreakColor(@PathVariable("user_id") int userId,
 			@RequestBody String userStreakColor) {
@@ -74,7 +74,7 @@ public class UserRestController {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
-	@PutMapping("/{user_id}/streakPrice")
+	@PutMapping("/streakPrice/{user_id}")
 	@Operation(summary = "유저의 스트릭 뽑기 가격을 변경합니다.")
 	public ResponseEntity<User> updateStreakPrice(@PathVariable("user_id") int userId,
 			@RequestBody int userStreakPrice) {

@@ -35,9 +35,9 @@ public class ExerciseRestController {
 		return new ResponseEntity<>(exercises, HttpStatus.OK);
 	}
 
-	@PostMapping("/{routine_Id}")
+	@PostMapping("/{routine_id}")
 	@Operation(summary = "루틴에 운동을 추가합니다.")
-	public ResponseEntity<Void> addExercisesToRoutine(@PathVariable("routine_Id") int routineId,
+	public ResponseEntity<Void> addExercisesToRoutine(@PathVariable("routine_id") int routineId,
 			@RequestBody List<Exercise> exercises) {
 		routineService.addExercisesToRoutine(routineId, exercises);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -63,9 +63,9 @@ public class ExerciseRestController {
 		return new ResponseEntity<>(exercises, HttpStatus.OK);
 	}
 
-	@GetMapping("/routine/{routine_Id}")
+	@GetMapping("/routine/{routine_id}")
 	@Operation(summary = "루틴(운동)을 조회합니다.")
-	public ResponseEntity<?> getExercisesByRoutineId(@PathVariable("routine_Id") int routineId) {
+	public ResponseEntity<?> getExercisesByRoutineId(@PathVariable("routine_id") int routineId) {
 		List<List<Map<String, Object>>> exercises = routineService.getExercisesByRoutineId(routineId);
 		if (exercises == null || exercises.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -27,35 +27,43 @@ public class RoutineServiceImpl implements RoutineService {
 	@Autowired
 	private RoutineComponentsDao routineComponentsDao;
 
+	@Override
 	public Exercise getExerciseById(int exerciseId) {
 		return exerciseDao.getExerciseById(exerciseId);
 	}
 
+	@Override
 	public List<Exercise> getAllExercises() {
 		return exerciseDao.getAllExercises();
 	}
 
+	@Override
 	public int createRoutine(Routine routine) {
 		routineDao.insertRoutine(routine);
 		return routine.getRoutineId();
 	}
 
+	@Override
 	public void updateRoutine(Routine routine) {
 		routineDao.updateRoutine(routine);
 	}
 
+	@Override
 	public void deleteRoutine(int routineId) {
 		routineDao.deleteRoutine(routineId);
 	}
 
+	@Override
 	public Routine getRoutineById(int routineId) {
 		return routineDao.getRoutineById(routineId);
 	}
 
+	@Override
 	public List<Routine> getAllRoutines() {
 		return routineDao.getAllRoutines();
 	}
 
+	@Override
 	public void addExercisesToRoutine(int routineId, List<Exercise> exercises) {
 		for (Exercise exercise : exercises) {
 			RoutineComponents routineComponent = new RoutineComponents();
@@ -65,30 +73,37 @@ public class RoutineServiceImpl implements RoutineService {
 		}
 	}
 
+	@Override
 	public void updateRoutineComponent(RoutineComponents routineComponents) {
 		routineComponentsDao.updateRoutineComponent(routineComponents);
 	}
 
+	@Override
 	public void deleteRoutineComponent(int routineComponentsId) {
 		routineComponentsDao.deleteRoutineComponent(routineComponentsId);
 	}
 
+	@Override
 	public RoutineComponents getRoutineComponentById(int routineComponentsId) {
 		return routineComponentsDao.getRoutineComponentById(routineComponentsId);
 	}
 
+	@Override
 	public List<Map<String, Object>> getRoutineComponentsByRoutineId(int routineId) {
 		return routineComponentsDao.getRoutineComponentsByRoutineId(routineId);
 	}
 
+	@Override
 	public List<RoutineComponents> getAllRoutineComponents() {
 		return routineComponentsDao.getAllRoutineComponents();
 	}
 
+	@Override
 	public List<List<Map<String, Object>>> getExercisesByRoutineId(int routineId) {
 		return routineDao.getExercisesByRoutineId(routineId);
 	}
 
+	@Override
 	public List<Map<String, Object>> getRoutinesByUserId(int userId) {
 		List<Map<String, Object>> routines = routineDao.getRoutinesByUserId(userId);
 
@@ -120,12 +135,15 @@ public class RoutineServiceImpl implements RoutineService {
 
 		return new ArrayList<>(groupedRoutines.values());
 	}
-    public List<Exercise> getExercisesByPart(String part) {
-        return exerciseDao.getExercisesByPart(part);
-    }
 
-    public List<Exercise> searchExercises(String keyword) {
-        return exerciseDao.searchExercises(keyword);
-    }
+	@Override
+	public List<Exercise> getExercisesByPart(String part) {
+		return exerciseDao.getExercisesByPart(part);
+	}
+
+	@Override
+	public List<Exercise> searchExercises(String keyword) {
+		return exerciseDao.searchExercises(keyword);
+	}
 
 }

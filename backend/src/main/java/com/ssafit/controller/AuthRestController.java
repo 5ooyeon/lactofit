@@ -23,7 +23,7 @@ import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/oauth2")
-@Tag(name = "authRestController", description = "소셜-구글 로그인 관리용 컨트롤러")
+@Tag(name = "authRestController", description = "소셜 : 구글 로그인 관리용 컨트롤러")
 public class AuthRestController {
 
 	@Value("${google.client.id}")
@@ -39,7 +39,7 @@ public class AuthRestController {
 	private UserService userService;
 
 	@PostMapping("/callback")
-	@Operation(summary = "Front-End에서 받은 구글로그인 유저의 정보를 DB와 세션에 저장하고 다시 Front-End로 보냅니다.")
+	@Operation(summary = "FrontEnd에서 받은 구글로그인 유저의 정보를 DB와 세션에 저장하고 다시 FrontEnd로 보냅니다.")
 	public ResponseEntity<Map<String, Object>> googleCallback(@RequestBody Map<String, String> requestBody,
 			HttpSession session) {
 		String code = requestBody.get("code");
