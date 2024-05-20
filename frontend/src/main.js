@@ -9,9 +9,6 @@ import 'bootstrap/dist/js/bootstrap.bundle.js'
 // Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-import '@mdi/font/css/materialdesignicons.css'
-
-
 
 const app = createApp(App)
 
