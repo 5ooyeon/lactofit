@@ -29,4 +29,8 @@ public class NotificationServiceImpl implements NotificationService {
 	public void deleteNotification(int notificationId) {
 		notificationDao.deleteNotification(notificationId);
 	}
+
+	public void readNotification(int notificationId) {
+		notificationDao.readNotification(notificationId);
+	}
 }

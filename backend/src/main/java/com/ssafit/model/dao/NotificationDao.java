@@ -4,11 +4,14 @@ import java.util.List;
 import com.ssafit.model.dto.Notification;
 
 public interface NotificationDao {
-    void createNotification(Notification notification);
+	void createNotification(Notification notification);
 
-    Notification getNotificationById(int notificationId);
+	Notification getNotificationById(int notificationId);
 
-    List<Notification> getNotificationsByUserId(int userId);
+	List<Notification> getNotificationsByUserId(int userId);
 
-    void deleteNotification(int notificationId);
+	void deleteNotification(int notificationId);
+
+	void readNotification(int notificationId);
+
 }

@@ -43,7 +43,6 @@ public class NotificationRestController {
 			return new ResponseEntity<>(notification, HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
 	}
 
 	@GetMapping("/{user_id}")
@@ -57,6 +56,13 @@ public class NotificationRestController {
 	@Operation(summary = "알림을 삭제합니다.")
 	public ResponseEntity<?> deleteNotification(@PathVariable("notification_id") int notificationId) {
 		notificationService.deleteNotification(notificationId);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@PutMapping("/{notification_id}")
+	@Operation(summary = "알림 읽음처리 합니다.")
+	public ResponseEntity<?> readNotification(@PathVariable("notification_id") int notificationId) {
+		notificationService.readNotification(notificationId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

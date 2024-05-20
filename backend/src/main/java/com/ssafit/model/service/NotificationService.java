@@ -13,4 +13,6 @@ public interface NotificationService {
 	public List<Notification> getNotificationsByUserId(int userId);
 
 	public void deleteNotification(int notificationId);
+
+	public void readNotification(int notificationId);
 }

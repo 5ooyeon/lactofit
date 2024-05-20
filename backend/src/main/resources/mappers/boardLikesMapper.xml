@@ -24,7 +24,7 @@
 
 	<select id="getLikesCountByBoardId" parameterType="int"
 		resultType="Map">
-		    SELECT count(*) as likesCount
+		    SELECT *
 		    FROM boardlikes b
 		    INNER JOIN user u ON b.user_id = u.user_id
 		    WHERE b.board_id = #{boardId}
