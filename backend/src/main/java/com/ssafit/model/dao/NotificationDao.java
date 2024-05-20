@@ -1,14 +1,17 @@
 package com.ssafit.model.dao;
 
 import java.util.List;
+
 import com.ssafit.model.dto.Notification;
 
 public interface NotificationDao {
-    void createNotification(Notification notification);
+	void createNotification(Notification notification);
 
-    Notification getNotificationById(int notificationId);
+	Notification getNotificationById(Integer notificationId);
 
-    List<Notification> getNotificationsByUserId(int userId);
+	List<Notification> getNotificationsByUserId(Integer userId);
 
-    void deleteNotification(int notificationId);
+	void updateNotification(Notification notification);
+
+	void deleteNotification(Integer notificationId);
 }

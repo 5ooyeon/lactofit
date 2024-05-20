@@ -26,6 +26,10 @@ public class NotificationServiceImpl implements NotificationService {
 		return notificationDao.getNotificationsByUserId(userId);
 	}
 
+	public void updateNotification(Notification notification) {
+		notificationDao.updateNotification(notification);
+	}
+
 	public void deleteNotification(int notificationId) {
 		notificationDao.deleteNotification(notificationId);
 	}

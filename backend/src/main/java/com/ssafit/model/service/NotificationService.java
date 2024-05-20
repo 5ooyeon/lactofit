@@ -12,5 +12,7 @@ public interface NotificationService {
 
 	public List<Notification> getNotificationsByUserId(int userId);
 
+	public void updateNotification(Notification notification);
+
 	public void deleteNotification(int notificationId);
 }

@@ -11,8 +11,6 @@ public interface BoardService {
 
 	public List<Board> getAllBoards();
 
-	public List<Board> getAllBoardsOrderByLikes();
-
 	public List<Board> getBoardByUserId(int userId);
 
 	public List<Board> getFollowingBoardByUserId(int userId);

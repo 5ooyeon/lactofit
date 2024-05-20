@@ -17,8 +17,4 @@ public interface FollowDao {
 	List<Follow> getFollowersByUserId(int userId);
 
 	List<Follow> getFollowingByUserId(int followingUserId);
-	
-	int countFollowers(int userId);
-
-    int countFollowing(int userId);
 }

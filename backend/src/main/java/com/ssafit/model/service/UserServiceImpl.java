@@ -45,9 +45,4 @@ public class UserServiceImpl implements UserService {
 	public void updateStreakPrice(int userId, int userStreakPrice) {
 		userDao.updateStreakPrice(userId, userStreakPrice);
 	}
-
-	@Override
-	public User getUserByUserTag(String userTag) {
-		return userDao.getUserByTag(userTag);
-	}
 }

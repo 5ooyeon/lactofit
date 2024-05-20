@@ -1,21 +1,29 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssafit.model.dao.NotificationDao">
+	<insert id="createNotification">
+		INSERT INTO Notification(user_id, notification_content, notification_read,
+		notification_timestamp)
+		VALUES(#{userId}, #{notificationContent}, #{notificationRead}, NOW())
+	</insert>
 
-    <insert id="createNotification" parameterType="com.ssafit.model.dto.Notification">
-        INSERT INTO Notification (user_id, notification_content, notification_read, notification_regDate)
-        VALUES (#{userId}, #{notificationContent}, #{notificationRead}, NOW())
-    </insert>
+	<select id="getNotificationById"
+		resultType="com.ssafit.model.dto.Notification">
+		SELECT * FROM Notification WHERE notification_id = #{notificationId}
+	</select>
 
-    <select id="getNotificationById" parameterType="int" resultType="com.ssafit.model.dto.Notification">
-        SELECT * FROM Notification WHERE notification_id = #{notificationId}
-    </select>
+	<select id="getNotificationsByUserId"
+		resultType="com.ssafit.model.dto.Notification">
+		SELECT * FROM Notification WHERE user_id = #{userId}
+	</select>
 
-    <select id="getNotificationsByUserId" parameterType="int" resultType="com.ssafit.model.dto.Notification">
-        SELECT * FROM Notification WHERE user_id = #{userId} ORDER BY notification_regDate DESC
-    </select>
+	<update id="updateNotification">
+		UPDATE Notification SET notification_content = #{notificationContent},
+		notification_read = #{notificationRead}, notification_timestamp =
+		NOW() WHERE notification_id = #{notificationId}
+	</update>
 
-    <delete id="deleteNotification" parameterType="int">
-        DELETE FROM Notification WHERE notification_id = #{notificationId}
-    </delete>
+	<delete id="deleteNotification">
+		DELETE FROM Notification WHERE notification_id = #{notificationId}
+	</delete>
 </mapper>
