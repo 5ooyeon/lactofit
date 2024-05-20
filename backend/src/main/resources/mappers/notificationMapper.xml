@@ -6,7 +6,7 @@
 		parameterType="com.ssafit.model.dto.Notification">
 		INSERT INTO Notification (user_id, notification_content,
 		notification_read, notification_regDate)
-		VALUES (#{userId}, #{notificationContent}, #{notificationRead}, NOW())
+		VALUES (#{userId}, #{notificationContent}, 0, NOW())
 	</insert>
 
 	<select id="getNotificationById" parameterType="int"
@@ -28,4 +28,10 @@
 		UPDATE Notification SET notification_read = 1 WHERE notification_id =
 		#{notificationId}
 	</update>
+
+	<delete id="deleteReadNotification" parameterType="int">
+		DELETE FROM Notification WHERE user_id = #{userId} and notification_read
+		= 1
+	</delete>
+
 </mapper>

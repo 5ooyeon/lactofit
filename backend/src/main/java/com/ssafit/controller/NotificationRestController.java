@@ -65,4 +65,11 @@ public class NotificationRestController {
 		notificationService.readNotification(notificationId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+
+	@DeleteMapping("/read/{user_id}")
+	@Operation(summary = "읽은 알림을 삭제합니다.")
+	public ResponseEntity<?> deleteReadNotification(@PathVariable("user_id") int userId) {
+		notificationService.deleteReadNotification(userId);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 }

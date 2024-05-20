@@ -24,6 +24,9 @@ public class BoardLikesServiceImpl implements BoardLikesService {
 	@Autowired
 	private NotificationService notificationService;
 
+	@Autowired
+	private UserService userService;
+
 	@Override
 	public boolean toggleLike(BoardLikes boardLikes) {
 		BoardLikes existingLike = boardLikesDao.getLikeByUsers(boardLikes.getUserId(), boardLikes.getBoardId());
@@ -39,10 +42,11 @@ public class BoardLikesServiceImpl implements BoardLikesService {
 			// 알림 생성
 			Notification notification = new Notification();
 			notification.setUserId(board.getUserId());
-			notification.setNotificationContent(boardLikes.getUserId() + "가 좋아요 하였습니다. : " + board.getBoardId());
+			notification.setNotificationContent(userService.getUserById(boardLikes.getUserId()).getUserNickname()
+					+ "(이)가 좋아요 하였습니다. : " + board.getBoardContent());
 			notification.setNotificationRead(false);
 			notificationService.createNotification(notification);
-			
+
 			return true;
 		}
 	}
