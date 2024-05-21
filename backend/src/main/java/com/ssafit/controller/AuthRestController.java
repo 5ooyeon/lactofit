@@ -16,10 +16,10 @@ import org.springframework.web.client.RestTemplate;
 
 import com.ssafit.model.dto.User;
 import com.ssafit.model.service.UserService;
+import com.ssafit.util.JwtUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/oauth2")
@@ -38,10 +38,12 @@ public class AuthRestController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private JwtUtil jwtUtil;
+
 	@PostMapping("/callback")
 	@Operation(summary = "FrontEnd에서 받은 구글로그인 유저의 정보를 DB와 세션에 저장하고 다시 FrontEnd로 보냅니다.")
-	public ResponseEntity<Map<String, Object>> googleCallback(@RequestBody Map<String, String> requestBody,
-			HttpSession session) {
+	public ResponseEntity<Map<String, Object>> googleCallback(@RequestBody Map<String, String> requestBody) {
 		String code = requestBody.get("code");
 		String redirectUri = requestBody.get("redirect_uri");
 		RestTemplate restTemplate = new RestTemplate();
@@ -74,7 +76,7 @@ public class AuthRestController {
 		}
 
 		// DB에 유저를 추가하거나 수정
-		User user = userService.getUserByTag(openId);
+		User user = userService.getUserByUserTag(openId);
 		if (user == null) {
 			user = new User();
 			user.setUserTag(openId);
@@ -85,17 +87,17 @@ public class AuthRestController {
 			user = userService.getUserByUserTag(openId);
 		}
 
-		// 유저 정보 세션에 저장
-		session.setAttribute("user", user);
+		// JWT 토큰 생성
+		String jwtToken = jwtUtil.generateToken(String.valueOf(user.getUserId()));
 
-		// 프론트로 유저 정보 response
+		// 프론트로 유저 정보와 JWT 토큰 response
 		Map<String, Object> response = new HashMap<>();
 		response.put("userId", user.getUserId());
 		response.put("userTag", user.getUserTag());
 		response.put("userNickname", user.getUserNickname());
 		response.put("userProfileImage", user.getUserProfileImage());
 		response.put("userBirth", user.getUserBirth() != null ? user.getUserBirth().toString() : null);
-		response.put("accessToken", accessToken);
+		response.put("jwtToken", jwtToken);
 
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}

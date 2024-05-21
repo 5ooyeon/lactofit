@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS `Routine` (
   CONSTRAINT `fk_Routine_User`
     FOREIGN KEY (`user_id`)
     REFERENCES `User` (`user_id`)
+  ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -62,10 +63,12 @@ CREATE TABLE IF NOT EXISTS `Board` (
   PRIMARY KEY (`board_id`),
   CONSTRAINT `fk_Board_User`
     FOREIGN KEY (`user_id`)
-    REFERENCES `User` (`user_id`),
+    REFERENCES `User` (`user_id`)
+    ON DELETE CASCADE,
   CONSTRAINT `fk_Board_Routine`
     FOREIGN KEY (`routine_id`)
     REFERENCES `Routine` (`routine_id`)
+    ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -81,10 +84,12 @@ CREATE TABLE IF NOT EXISTS `BoardLikes` (
   PRIMARY KEY (`boardLikes_id`),
   CONSTRAINT `fk_BoardLikes_User`
     FOREIGN KEY (`user_id`)
-    REFERENCES `User` (`user_id`),
+    REFERENCES `User` (`user_id`)
+    ON DELETE CASCADE,
   CONSTRAINT `fk_BoardLikes_Board`
     FOREIGN KEY (`board_id`)
     REFERENCES `Board` (`board_id`)
+    ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -114,10 +119,12 @@ CREATE TABLE IF NOT EXISTS `RoutineComponents` (
   PRIMARY KEY (`routineComponents_id`),
   CONSTRAINT `fk_RoutineComponents_Exercise`
     FOREIGN KEY (`exercise_id`)
-    REFERENCES `Exercise` (`exercise_id`),
+    REFERENCES `Exercise` (`exercise_id`)
+    ON DELETE CASCADE,
   CONSTRAINT `fk_RoutineComponents_Routine`
     FOREIGN KEY (`routine_id`)
     REFERENCES `Routine` (`routine_id`)
+    ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -133,10 +140,12 @@ CREATE TABLE IF NOT EXISTS `Follow` (
   PRIMARY KEY (`follow_id`),
   CONSTRAINT `fk_Follow_User`
     FOREIGN KEY (`user_id`)
-    REFERENCES `User` (`user_id`),
+    REFERENCES `User` (`user_id`)
+    ON DELETE CASCADE,
   CONSTRAINT `fk_Follow_FollowingUser`
     FOREIGN KEY (`following_user_id`)
     REFERENCES `User` (`user_id`)
+    ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -154,6 +163,7 @@ CREATE TABLE IF NOT EXISTS `Point` (
   CONSTRAINT `fk_Point_User`
     FOREIGN KEY (`user_id`)
     REFERENCES `User` (`user_id`)
+    ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -171,6 +181,7 @@ CREATE TABLE IF NOT EXISTS `Notification` (
   CONSTRAINT `fk_Notification_User`
     FOREIGN KEY (`user_id`)
     REFERENCES `User` (`user_id`)
+    ON DELETE CASCADE
 ) ENGINE = InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;
