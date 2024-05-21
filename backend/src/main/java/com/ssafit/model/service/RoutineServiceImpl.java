@@ -146,4 +146,9 @@ public class RoutineServiceImpl implements RoutineService {
 		return exerciseDao.searchExercises(keyword);
 	}
 
+	@Override
+	public List<Map<String, Object>> getRoutineComponentsByUserId(int userId) {
+		return routineComponentsDao.getRoutineComponentsByUserId(userId);
+	}
+
 }

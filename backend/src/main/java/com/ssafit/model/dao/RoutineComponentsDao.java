@@ -17,4 +17,7 @@ public interface RoutineComponentsDao {
 	List<Map<String, Object>> getRoutineComponentsByRoutineId(int routineId);
 
 	List<RoutineComponents> getAllRoutineComponents();
+
+	List<Map<String, Object>> getRoutineComponentsByUserId(int userId);
+
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -82,5 +83,17 @@ public class RoutineRestController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<>(routines, HttpStatus.OK);
+	}
+
+	// 유저id > 유저가 한 componets group by part
+
+	@GetMapping("analysis/{user_id}")
+	@Operation(summary = "유저ID로 루틴 컴포넌츠를 조회하고 부위별로 분류합니다.")
+	public ResponseEntity<?> getRoutineComponentsByUserId(@PathVariable("user_id") int userId) {
+		List<Map<String, Object>> routinesComponents = routineService.getRoutineComponentsByUserId(userId);
+		if (routinesComponents == null || routinesComponents.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(routinesComponents, HttpStatus.OK);
 	}
 }

@@ -42,4 +42,6 @@ public interface RoutineService {
 	List<Exercise> getExercisesByPart(String exercisePart);
 
 	List<Exercise> searchExercises(String query);
+
+	List<Map<String, Object>> getRoutineComponentsByUserId(int userId);
 }
