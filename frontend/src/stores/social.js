@@ -21,6 +21,9 @@ export const useSocialStore = defineStore('social', () => {
       .then((response) => {
         returnBoardList.value = response.data
       })
+      .catch((error) => {
+        returnBoardList.value = []
+      })
     }
 
     const getBoardLikeCnt = (boardId) => {

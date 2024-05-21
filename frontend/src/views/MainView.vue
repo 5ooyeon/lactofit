@@ -6,7 +6,7 @@
         <div class="home__content">
           <p class="home_title">
             운동이 쉬워진다.<br />
-            싸핏으로<br />
+            樂土必으로<br />
             운동 고민 끝
           </p>
           <button class="cssbuttons-io">
@@ -20,7 +20,7 @@
         <div class="routine__container container">
           <div class="routine__content">
             <div class="routine__image">
-              <img src="https://images.squarespace-cdn.com/content/v1/6581fd2d9a7c875e912e0907/19116ab1-4f67-4632-851b-8f0cf510b417/Sleek+Objects+1.jpg?format=2500w" alt="new image" />
+              <img src="./../assets/img/LACTOFIT_main_1.jpg" alt="new image" />
             </div>
             <div class="routine__info">
               <h2 class="routine__title">More about our brand</h2>

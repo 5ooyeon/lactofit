@@ -72,12 +72,16 @@
           </div>
           <div class="modal-body">
             <img :src="selectedBoard?.board.boardImgUrl" class="img-fluid" alt="Board Image">
-            <img :src="selectedBoard?.writer.userProfileImage" @click="goProfile(selectedBoard?.writer.userId)" alt="" sizes="1.5rem">
-            <p class="board-detail-writer-name">{{selectedBoard?.writer.userNickname}}</p>
+            <div @click="goProfile(selectedBoard?.writer.userId)">
+              <img :src="selectedBoard?.writer.userProfileImage" alt="" sizes="1.5rem">
+              <p class="board-detail-writer-name">{{selectedBoard?.writer.userNickname}}</p>
+            </div>
+
 
             <!-- 해당 유저를 팔로우 중이 아니라면 팔로우 버튼 보여주기 -->
             <button class="btn" v-if="!isFollower && authStore.user.userId != selectedBoard?.writer.userId" @click="followUnfollow(selectedBoard?.writer.userId)">팔로우</button>
             <button class="btn" v-else-if="isFollower && authStore.user.userId != selectedBoard?.writer.userId" @click="followUnfollow(selectedBoard?.writer.userId)">언팔로우</button>
+            <button class="btn" v-else-if="authStore.user.userId == selectedBoard?.writer.userId" @click="deleteBoard(selectedBoard?.board.boardId)">글 삭제하기</button>
 
             <p class="board-detail-routine-label">{{ selectedBoard?.writer.userNickname }} 님의 운동 루틴</p>
             <div class="board-detail-routine" v-for="routine in selectedBoard?.RoutineComponents" :key="routine.exercise_name">
@@ -147,7 +151,7 @@ const writeBoard = ref({
   boardContent: '',
   boardVisibility: false
 });
-const myFollowing = ref(null);
+const myFollowing = ref([]);
 const isFollower = ref(false);
 
 const onFileChange = (e) => {
@@ -273,6 +277,7 @@ const followUnfollow = (writerId) => {
   axios.post('http://localhost:8080/follows/', { followingUserId, userId })
     .then((response) => {
       console.log(response.data);
+      isFollower.value = !isFollower.value; // Toggle the follow state
     })
     .catch((err) => {
       console.log(err);
@@ -283,6 +288,15 @@ const goProfile = (userId) => {
   boardDetailModal.hide();
   router.push({ name: 'MyPageView', params: { id: userId } });
 };
+
+
+//게시글 삭제
+const deleteBoard = (boardId) => {
+  axios.delete('http://localhost:8080/boards/'+boardId)
+  .then((response) => {
+    console.log('deleted')
+  })
+}
 </script>
 
 <style scoped>
