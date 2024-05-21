@@ -92,11 +92,7 @@ public class AuthRestController {
 
 		// 프론트로 유저 정보와 JWT 토큰 response
 		Map<String, Object> response = new HashMap<>();
-		response.put("userId", user.getUserId());
-		response.put("userTag", user.getUserTag());
-		response.put("userNickname", user.getUserNickname());
-		response.put("userProfileImage", user.getUserProfileImage());
-		response.put("userBirth", user.getUserBirth() != null ? user.getUserBirth().toString() : null);
+		response.put("user", user);
 		response.put("jwtToken", jwtToken);
 
 		return new ResponseEntity<>(response, HttpStatus.OK);
