@@ -1,0 +1,4 @@
+ALTER TABLE boardlikes
+ADD CONSTRAINT fk_BoardLikes_Board
+FOREIGN KEY (board_id) REFERENCES board(board_id)
+ON DELETE CASCADE;
