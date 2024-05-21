@@ -192,6 +192,7 @@ const registPost = () => {
   });
 };
 
+//글 작성 모달 열기
 const showUploadModal = () => {
   axios.get(`http://localhost:8080/routines/users/${userId}`)
     .then((response) => {

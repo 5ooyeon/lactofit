@@ -27,7 +27,7 @@
               <p class="routine__description">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum id amet incidunt deleniti nesciunt, possimus laborum minus commodi! Ratione odit voluptate iure dolorum libero sit cumque sapiente animi dicta
               </p>
-              <a href="#" class="routine__button">Learn More</a>
+              <RouterLink :to="{name: 'ExerciseView'}" class="routine__button">Learn More</RouterLink>
             </div>
           </div>
         </div>

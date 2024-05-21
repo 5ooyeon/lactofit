@@ -1,103 +1,146 @@
 <template>
-    <div class="calendar" id="calendar">
-      <div
-        v-for="(day, index) in days"
-        :key="index"
-        class="day"
-        :class="{ filled: isFilled(day.dateStr) }"
-        :style="{ gridColumnStart: getColumn(index), gridRowStart: getRow(index) }"
-      >
-        <div class="tooltip">{{ day.dateStr }}</div>
+  <div class="activity-calendar">
+    <div class="calendar">
+      <div class="calendar-grid">
+        <div v-for="week in weeks" :key="week[0] ? week[0].toISOString() : Math.random()" class="week">
+          <div
+            v-for="day in week"
+            :key="day ? day.toISOString() : Math.random()"
+            :title="getTitle(day)"
+            :class="['day', getColor(day), isToday(day) ? 'today' : '']"
+          ></div>
+        </div>
       </div>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    name: "CalendarGrid",
-    data() {
-      return {
-        records: [
-          { id: 41, user_id: 41, board_id: 48, title: '나다', date: '2024-05-20' },
-          { id: 40, user_id: 41, board_id: 10, title: 'Outdoor workout', date: '2024-05-18' },
-          { id: 39, user_id: 41, board_id: 9, title: 'Gym day!', date: '2024-05-17' },
-          { id: 38, user_id: 41, board_id: 8, title: 'Healthy lifestyle', date: '2024-05-16' },
-          { id: 37, user_id: 41, board_id: 7, title: 'Workout tips', date: '2024-05-14' },
-          { id: 36, user_id: 41, board_id: 6, title: 'My favorite exercises', date: '2024-05-12' },
-          { id: 35, user_id: 41, board_id: 5, title: 'Here\'s my progress', date: '2024-05-11' },
-          { id: 34, user_id: 41, board_id: 4, title: 'Feeling great after this workout', date: '2024-05-10' },
-          { id: 33, user_id: 41, board_id: 3, title: 'Loving the new exercises', date: '2024-05-08' },
-          { id: 32, user_id: 41, board_id: 2, title: 'Just finished a tough session', date: '2024-05-07' },
-          { id: 31, user_id: 41, board_id: 1, title: 'Check out my new workout routine!', date: '2024-05-06' },
-          { id: 30, user_id: 41, board_id: 10, title: '야외에서의 운동!', date: '2024-05-05' },
-          { id: 29, user_id: 41, board_id: 9, title: '체육관에서의 하루!', date: '2024-05-04' }
-        ],
-        startDate: new Date(2024, 0, 1), // January 1, 2024
-        daysToDisplay: 366, // Leap year
-        days: [],
-      };
-    },
-    created() {
-      const oneDay = 24 * 60 * 60 * 1000;
-  
-      for (let i = 0; i < this.daysToDisplay; i++) {
-        const currentDate = new Date(this.startDate.getTime() + i * oneDay);
-        const dateStr = currentDate.toISOString().split('T')[0];
-        this.days.push({ dateStr });
-      }
-    },
-    methods: {
-      isFilled(dateStr) {
-        return this.records.some(record => record.date === dateStr);
-      },
-      getColumn(index) {
-        return Math.floor(index / 7) + 1;
-      },
-      getRow(index) {
-        return (index % 7) + 1;
-      }
-    }
-  };
-  </script>
-  
-  <style scoped>
-  .calendar {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 15px); /* 고정된 박스 크기 */
-    grid-template-rows: repeat(7, 15px); /* 7행으로 설정 */
-    gap: 4px; /* 동일한 행간 및 열 간격 */
-  }
-  .day {
-    width: 15px; /* 고정된 박스 크기 */
-    height: 15px; /* 고정된 박스 크기 */
-    border: 0.3px solid grey; /* 줄어든 테두리 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-  .filled {
-    background-color: pink;
-  }
-  .tooltip {
-    display: none;
-    position: absolute;
-    bottom: 125%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #333;
-    color: #fff;
-    padding: 5px;
-    border-radius: 3px;
-    font-size: 12px;
-    white-space: nowrap;
-    z-index: 10;
-  }
-  .day:hover .tooltip {
-    display: block;
-  }
-  .calendar {
-  overflow: visible;
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+import { getYearWeeks, getDayOfYear, formatDate } from '../../utils/date';
+import { useAuthStore } from '@/stores/auth';
+import axios from 'axios';
+
+const year = ref(new Date().getFullYear());
+const records = ref([]);
+
+const myRoutines = () => {
+  const userId = useAuthStore().user.userId;
+
+  axios.get('http://localhost:8080/boards/user/'+userId)
+  .then((response) => {
+    records.value = response.data
+    // console.log(records.value)
+  })
 }
-  </style>
-  
+
+const weeks = ref(getYearWeeks(year.value));
+
+const contributions = computed(() => {
+  const contributionsMap = {};
+
+  records.value.forEach(record => {
+    const date = new Date(record.board.boardRegDate);
+    const dayOfYear = getDayOfYear(date);
+    if (!contributionsMap[dayOfYear]) {
+      contributionsMap[dayOfYear] = [];
+    }
+    contributionsMap[dayOfYear].push(record);
+  });
+
+  return contributionsMap;
+});
+
+function getColor(date) {
+  if (!date) return 'color-0';
+  const dayOfYear = getDayOfYear(date);
+  const contributionCount = contributions.value[dayOfYear]?.length || 0;
+  if (contributionCount >= 1) return 'color-1';
+  return 'color-0';
+}
+
+function getTitle(date) {
+  if (!date) return '';
+  const dayOfYear = getDayOfYear(date);
+  // console.log(dayOfYear)
+  const contributionCount = contributions.value[dayOfYear]?.length || 0;
+  return `${formatDate(date)}`;
+}
+
+function isToday(date) {
+  if (!date) return false;
+  const today = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Seoul' }));
+
+  return (
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
+  );
+}
+
+function isYear(date) {
+  if(!date) return false;
+  // console.log(date.getFullYear())
+  return (
+    date.getFullYear() === '2024'
+  )
+}
+
+onMounted(() => {
+  myRoutines();
+});
+</script>
+
+<style scoped>
+.activity-calendar {
+  text-align: center;
+}
+
+.calendar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.week-row {
+  display: flex;
+  justify-content: center;
+}
+
+.day-label {
+  width: 15px;
+  height: 15px;
+  margin: 1px;
+  text-align: center;
+}
+
+.calendar-grid {
+  display: flex;
+  flex-direction: row;
+}
+
+.week {
+  display: flex;
+  flex-direction: column;
+  margin: 0.5px;
+}
+
+.day {
+  width: 14px;
+  height: 14px;
+  margin: 0.5px;
+  border-radius: 3px;
+}
+
+.color-0 {
+  background-color: #ebedf0;
+}
+
+.color-1 {
+  background-color: pink;
+}
+
+.today {
+  border: 2px solid rgb(255, 0, 98);
+}
+</style>

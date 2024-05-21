@@ -16,27 +16,12 @@
 
                 <div v-if="selectedTab === 'feed'" class="feed">
                     <div class="workout-streak">
-                      <div class="workout-yet">
+                      <div v-if="!hasTodayPost">
                         <p>아직 운동 인증을 하지 않았어요!</p>
-                        <button class="btn">운동 인증하기</button>
+                        <button class="btn" @click="showUploadModal">운동 인증하기</button>
                       </div>
-                        <h3>올해 0일 째 운동중!</h3>
-                        <div class="grid">
-                          <!-- <UserStreakComponent/> -->
-
-                          <div class="calendar" id="calendar">
-      <div
-        v-for="(day, index) in days"
-        :key="index"
-        class="day"
-        :class="{ filled: isFilled(day.dateStr) }"
-        :style="{ gridColumnStart: getColumn(index), gridRowStart: getRow(index) }"
-      >
-        <div class="tooltip">{{ day.dateStr }}</div>
-      </div>
-    </div>
-
-                        </div>
+                        <h3>올해 {{ userInfo.myPost?.length }} 일 째 운동중!</h3>
+                        <UserStreakComponent/>
                     </div>
 
                     <div class="my-routine">
@@ -105,138 +90,216 @@
         </div>
       </div>
     </div>
+
+
+
+    <!-- Upload Modal -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="uploadModalLabel">Upload Image</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" v-model="writeBoard.boardVisibility">
+              <label class="form-check-label" for="flexSwitchCheckChecked">공개</label>
+            </div>
+            <div class="routine-list-container">
+              <div class="routine-list">
+                <div v-for="routine in userInfo.routines" :key="routine.routineId" class="form-check">
+                  <input class="form-check-input" type="radio" name="routine" :id="`routine${routine.routineId}`" :value="routine.routineId" v-model="writeBoard.routineId">
+                  <label class="form-check-label" :for="`routine${routine.routineId}`">
+                    {{ routine.routineName }}
+                    <ul>
+                      <li v-for="exercise in routine.exercises" :key="exercise.exerciseId">
+                        {{ exercise.exerciseName }}
+                      </li>
+                    </ul>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="file-upload-wrapper">
+                <input type="file" id="formFile" @change="onFileChange" class="file-input">
+                <label for="formFile" class="file-upload-label">
+                  <i class="fas fa-cloud-upload-alt"></i>
+                </label>
+              </div>
+            </div>
+            <div v-if="imageUrl">
+              <img :src="imageUrl" class="img-fluid" alt="Image preview">
+            </div>
+            <div class="write-form">
+              <textarea v-model="writeBoard.boardContent" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+            </div>
+            <button class="btn btn-primary mt-3" @click="registPost">등록</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
   </template>
   
   <script setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, computed } from 'vue';
+  import { Modal } from 'bootstrap';
   import { useSocialStore } from '@/stores/social';
   import { useAuthStore } from '@/stores/auth';
-  import { useRoute } from 'vue-router'
-  import { routeLocationKey } from 'vue-router';
-  import RoutineComponent from '@/components/info/RoutineComponent.vue';
-  import SocialPostComponent from '@/components/social/SocialPostComponent.vue';
-  import router from '@/router';
+  import { useRoute } from 'vue-router';
+  
   import axios from 'axios';
-  import UserStreakComponent from '@/components/user/UserStreakComponent.vue'
-
-
-
-  const route = useRoute()
+  import UserStreakComponent from '@/components/user/UserStreakComponent.vue';
+  
+  const socialStore = useSocialStore();
+  const authStore = useAuthStore();
+  
+  const route = useRoute();
   const selectedTab = ref('feed');
   const selectTab = (tab) => {
     selectedTab.value = tab;
   };
+  
   const userId = route.params.id;
   const userInfo = ref({
     user: null,
     following: [],
     follower: [],
-    routines:[],
-    myPost: null
-  })
+    routines: [],
+    myPost: null,
+  });
+  const writeBoard = ref({
+    userId: authStore.user.userId,
+    routineId: 0,
+    boardContent: '',
+    boardVisibility: false,
+  });
   
-  const socialStore = useSocialStore();
-  const authStore = useAuthStore();
-
-  console.log(route.params.id)
-  console.log(authStore.user.userId)
-
-  //유저정보
+  let uploadModal = null;
+  const imageUrl = ref(null);
+  const file = ref(null);
+  
+  console.log(route.params.id);
+  console.log(authStore.user.userId);
+  
+  // 유저정보
   const getUserInfo = () => {
-    axios.get('http://localhost:8080/users/'+userId)
-    .then((response) => {
+    axios.get('http://localhost:8080/users/' + userId).then((response) => {
       userInfo.value.user = response.data;
-      console.log(userInfo.value.user)
-    })
-  }
-
-  //팔로잉팔로워
+      console.log(userInfo.value.user);
+    });
+  };
+  
+  // 팔로잉팔로워
   const getFollowingFollowers = () => {
-    axios.get('http://localhost:8080/follows/following/'+userId)
-    .then((response) => {
-      userInfo.value.following = response.data
-    })
-    axios.get('http://localhost:8080/follows/followers/'+userId)
-    .then((response) => {
-      userInfo.value.follower = response.data
-    })
-  }
-
-  //루틴보기
+    axios.get('http://localhost:8080/follows/following/' + userId).then((response) => {
+      userInfo.value.following = response.data;
+    });
+    axios.get('http://localhost:8080/follows/followers/' + userId).then((response) => {
+      userInfo.value.follower = response.data;
+    });
+  };
+  
+  // 루틴보기
   const getRoutines = () => {
-    axios.get('http://localhost:8080/routines/users/'+userId)
-    .then((response) => {
-      userInfo.value.routines = response.data.map(routine => ({
+    axios.get('http://localhost:8080/routines/users/' + userId).then((response) => {
+      userInfo.value.routines = response.data.map((routine) => ({
         ...routine,
-        exercises: routine.exercises || []  // Ensure exercises is an array
+        exercises: routine.exercises || [], // Ensure exercises is an array
       }));
-    })
-  }
-
-  //작성글 보기
+    });
+  };
+  
+  // 작성글 보기
   const getUserPost = (userId) => {
-    axios.get('http://localhost:8080/boards/user/'+userId)
-    .then((response) => {
-      userInfo.value.myPost = response.data
-      // console.log(myPost)
-    })
-  }
-
-
-
-  const records = [
-  { id: 41, user_id: 41, board_id: 48, title: '나다', date: '2024-05-20' },
-  { id: 40, user_id: 41, board_id: 10, title: 'Outdoor workout', date: '2024-05-18' },
-  { id: 39, user_id: 41, board_id: 9, title: 'Gym day!', date: '2024-05-17' },
-  { id: 38, user_id: 41, board_id: 8, title: 'Healthy lifestyle', date: '2024-05-16' },
-  { id: 37, user_id: 41, board_id: 7, title: 'Workout tips', date: '2024-05-14' },
-  { id: 36, user_id: 41, board_id: 6, title: 'My favorite exercises', date: '2024-05-12' },
-  { id: 35, user_id: 41, board_id: 5, title: 'Here\'s my progress', date: '2024-05-11' },
-  { id: 34, user_id: 41, board_id: 4, title: 'Feeling great after this workout', date: '2024-05-10' },
-  { id: 33, user_id: 41, board_id: 3, title: 'Loving the new exercises', date: '2024-05-08' },
-  { id: 32, user_id: 41, board_id: 2, title: 'Just finished a tough session', date: '2024-05-07' },
-  { id: 31, user_id: 41, board_id: 1, title: 'Check out my new workout routine!', date: '2024-05-06' },
-  { id: 30, user_id: 41, board_id: 10, title: '야외에서의 운동!', date: '2024-05-05' },
-  { id: 29, user_id: 41, board_id: 9, title: '체육관에서의 하루!', date: '2024-05-04' }
-];
-
-const startDate = new Date(2024, 0, 1); // January 1, 2024
-const daysToDisplay = 366; // Leap year
-const days = ref([]);
-
-const oneDay = 24 * 60 * 60 * 1000;
-
-for (let i = 0; i < daysToDisplay; i++) {
-  const currentDate = new Date(startDate.getTime() + i * oneDay);
-  const dateStr = currentDate.toISOString().split('T')[0];
-  days.value.push({ dateStr });
-}
-
-const isFilled = (dateStr) => {
-  return records.some(record => record.date === dateStr);
-};
-
-const getRow = (index) => {
-  return (index % 7) + 1;
-};
-
-const getColumn = (index) => {
-  return Math.floor(index / 7) + 1;
-};
-
-
-
-
-
-
-
+    axios.get('http://localhost:8080/boards/user/' + userId).then((response) => {
+      userInfo.value.myPost = response.data;
+      console.log(userInfo.value.myPost.length);
+    });
+  };
+  
+  // 오늘 운동 했는지 안했는지 확인
+  const hasTodayPost = computed(() => {
+    const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Seoul' });
+    return userInfo.value.myPost?.some((post) => {
+      const postDate = new Date(post.board.boardRegDate).toISOString().split('T')[0]
+      console.log('postdate is ' + postDate + ', nowdate is ' + today);
+      return postDate === today;
+    });
+  });
+  
+  // 글 작성 모달 열기
+  const showUploadModal = () => {
+    if (!uploadModal) {
+      const modalElement = document.getElementById('uploadModal');
+      uploadModal = new Modal(modalElement);
+    }
+    uploadModal.show();
+  };
+  
+  // 사진 첨부
+  const onFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile && selectedFile.type.startsWith('image/')) {
+      file.value = selectedFile;
+      imageUrl.value = URL.createObjectURL(selectedFile);
+    } else {
+      file.value = null;
+      imageUrl.value = null;
+    }
+  };
+  
+  // 글 등록하기
+  const registPost = () => {
+    const formData = new FormData();
+    formData.append('file', file.value);
+    formData.append('userId', writeBoard.value.userId);
+    formData.append('routineId', writeBoard.value.routineId);
+    formData.append('boardContent', writeBoard.value.boardContent);
+    formData.append('boardVisibility', writeBoard.value.boardVisibility);
+  
+    axios
+      .post('http://localhost:8080/boards/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((response) => {
+        // 업로드 후 상태 초기화
+        file.value = null;
+        imageUrl.value = null;
+        writeBoard.value.routineId = 0;
+        writeBoard.value.boardContent = '';
+        writeBoard.value.boardVisibility = false;
+        hideUploadModal();
+      })
+      .catch((err) => {
+        console.error('Error registering post:', err);
+      });
+  };
+  
+  const hideUploadModal = () => {
+    if (uploadModal) {
+      uploadModal.hide();
+    }
+  };
+  
   onMounted(() => {
-    getUserPost(userId)
-    getFollowingFollowers()
-    getUserInfo()
-    getRoutines()
-  })
+    getUserPost(userId);
+    getFollowingFollowers();
+    getUserInfo();
+    getRoutines();
+  });
   </script>
+  
   
   
   <style scoped>
@@ -326,47 +389,73 @@ const getColumn = (index) => {
     /* background-color: grey; */
   }
 
-
-
-
-
-
-  .calendar {
-  display: grid;
-
+  .img-fluid {
+  max-width: 100%;
+  height: auto;
 }
 
-.day {
-  width: 100%; /* Full width of the grid cell */
-  height: 100%; /* Full height of the grid cell */
-  border: 0.3px solid grey; /* Thinner border */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.file-upload-wrapper {
   position: relative;
+  display: inline-block;
 }
 
-.filled {
-  background-color: pink;
-}
-
-.tooltip {
-  display: none;
+.file-input {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
   position: absolute;
-  bottom: 100%; /* Position above the day element */
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #333;
-  color: #fff;
-  padding: 5px;
-  border-radius: 3px;
-  font-size: 12px;
-  white-space: nowrap;
-  z-index: 10;
+  z-index: -1;
 }
 
-.day:hover .tooltip {
-  display: block;
+.file-upload-label {
+  display: inline-block;
+  cursor: pointer;
+  font-size: 1.25rem;
+  color: #007bff;
+  background-color: #fff;
+  border: 2px solid #007bff;
+  padding: 10px 20px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
 }
+
+.file-upload-label:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.file-upload-label i {
+  margin-right: 10px;
+}
+
+
+.menu {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.select-menu {
+  margin: 0 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.routine-list-container {
+  max-height: 200px; /* 원하는 높이 설정 */
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+
+.form-check {
+  margin-bottom: 10px;
+}
+
+
+
   </style>
   
