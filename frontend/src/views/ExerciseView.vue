@@ -1,3 +1,4 @@
+
 <template>
   <div class="container">
     <h1>운동 정보 검색</h1>
@@ -22,7 +23,7 @@
       <RouterLink class="go-to-routine" type="button" :to="{name: 'CreateRoutineComponent'}">
         루틴 만들러 가기
       </RouterLink>
-      <button class="go-to-routine" @click="goYoutube()">관련 유튜브 영상 보기</button>
+      <button class="go-to-youtube" @click="goYoutube()">관련 유튜브 영상 보기</button>
     </div>
     <input 
       type="text" 
@@ -40,69 +41,66 @@
     </div>
   </div>
 </template>
-
-
-
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import axios from 'axios';
 import { useAuthStore } from '@/stores/auth';
-import {useYoutubeStore} from '@/stores/youtube'
+import { useYoutubeStore } from '@/stores/youtube';
 import { useRouter } from 'vue-router';
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
 
 const openaiApiKey = import.meta.env.VITE_OPENAI_API_KEY;
 
-const user = useAuthStore().user
+const user = useAuthStore().user;
 const youtubeStore = useYoutubeStore();
 const router = useRouter();
 
 const routine = ref({
   routineName: '',
   routineDesc: '',
-  userId: user.userId
-})
+  userId: user.userId,
+});
 
-const exerciseList = ref([])
-const keyword = ref("")
-const response = ref("")
-const selectedRoutine = ref([])
-const isPressed = ref(false)
-const selectedExercise = ref("")
-const isLoading = ref(false)
-const searchInput = ref('')
+const exerciseList = ref([]);
+const keyword = ref("");
+const response = ref("");
+const selectedRoutine = ref([]);
+const isPressed = ref(false);
+const selectedExercise = ref("");
+const isLoading = ref(false);
+const searchInput = ref('');
 
 // 모든 운동 가져오기
 const getAllExercises = () => {
   axios.get(`http://localhost:8080/exercises/`)
     .then((response) => {
-      exerciseList.value = response.data
+      exerciseList.value = response.data;
     })
     .catch((err) => {
       console.log(err);
     });
-}
+};
 
 // 검색어로 운동 검색
 const searchExercises = (keyword) => {
   axios.get(`http://localhost:8080/exercises/search?keyword=${keyword}`)
     .then((response) => {
-      exerciseList.value = response.data
+      exerciseList.value = response.data;
     })
     .catch((err) => {
       console.log(err);
     });
-}
+};
 
 // 입력 이벤트 핸들러
 const handleInput = (event) => {
   keyword.value = event.target.value;
   if (keyword.value) {
-    searchExercises(keyword.value)
+    searchExercises(keyword.value);
   } else {
-    getAllExercises()
+    getAllExercises();
   }
-}
+};
 
 // 쿠키에 운동명 저장
 const saveToCookies = (exerciseName) => {
@@ -115,16 +113,16 @@ const saveToCookies = (exerciseName) => {
     }
     Cookies.set('recentSearches', JSON.stringify(recentSearches), { expires: 7 });
   }
-}
+};
 
 // 운동에 대한 설명 검색
 const searchExercise = async (exerciseName) => {
-  selectedExercise.value = exerciseName
+  selectedExercise.value = exerciseName;
   isLoading.value = true; // 로딩 상태 시작
   window.scrollTo({ top: 0, behavior: 'smooth' }); // 페이지 상단으로 스크롤
   searchInput.value.value = '';
-  saveToCookies(exerciseName)
-  getAllExercises()
+  saveToCookies(exerciseName);
+  getAllExercises();
   try {
     const prompt = `[${exerciseName}] 라는 운동에 대해 한국어와 존댓말로 설명해줘. 다음은 내가 원하는 답변의 형태 예시야.
 
@@ -142,10 +140,7 @@ const searchExercise = async (exerciseName) => {
     `;
     const result = await fetchGPT35Response(prompt);
     response.value = result;
-    // console.log(response.value);
     isLoading.value = false; // 로딩 상태 종료
-    
-
   } catch (error) {
     if (error.response && error.response.status === 429) {
       response.value = "요청이 너무 많습니다. 잠시 후 다시 시도해주세요.";
@@ -193,14 +188,13 @@ const groupedExerciseList = computed(() => {
 //검색한 운동과 유튜브 이동 메소드
 const goYoutube = async () => {
   const keyword1 = selectedExercise.value;
-  const search1 = 'search'
+  const search1 = 'search';
   await youtubeStore.getVideosBySearchWord(keyword1, search1);
   router.push({ name: 'SearchResultComponent' });
-}
+};
 
 onMounted(getAllExercises);
 </script>
-
 <style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -209,169 +203,83 @@ onMounted(getAllExercises);
 }
 
 #answerbox {
-  border: 1px solid black; /* 테두리 두께, 스타일, 색상 지정 */
-  padding: 10px; /* 내부 여백 추가 */
-  margin-top: 20px; /* 위쪽 여백 추가 */
-  background-color: #f9f9f9; /* 배경색 추가 */
-  border-radius: 5px; /* 테두리 둥글게 */
-  overflow-y: auto; /* 높이를 초과할 경우 스크롤 추가 */
-  white-space: pre-wrap; /* 줄바꿈 유지 */
-  display: block; /* 블록 요소로 표시 */
-  max-width: 800px; /* 최대 너비 지정 */
-  margin-left: auto; /* 수평 중앙 정렬 */
-  margin-right: auto; /* 수평 중앙 정렬 */
-  height: auto; /* 높이를 자동으로 설정 */
-  max-height: 600px; /* 최대 높이 지정 */
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-top: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  max-width: 800px;
+  margin: 20px auto;
+  height: auto;
+  max-height: 600px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .exercise-search-bar {
-  width: 80%; /* 검색창 너비 지정 */
-  padding: 10px; /* 내부 여백 추가 */
-  margin: 20px auto; /* 외부 여백 추가 및 중앙 정렬 */
-  border-radius: 5px; /* 테두리 둥글게 */
-  border: 1px solid #ccc; /* 테두리 스타일 지정 */
+  width: 80%;
+  padding: 15px;
+  margin: 20px auto;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .exercise-group {
-  margin-top: 30px; /* 각 그룹 간격 추가 */
+  margin-top: 30px;
 }
 
 .exercise-grid {
-  display: flex; /* Flexbox 사용 */
-  flex-wrap: wrap; /* 아이템들을 여러 줄로 배치 */
-  justify-content: center; /* 중앙 정렬 */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .exercise-item {
-  flex: 1 1 30%; /* 아이템의 기본 크기 지정 및 늘어나거나 줄어들 수 있게 설정 */
-  margin: 10px; /* 아이템 간 간격 추가 */
-  padding: 10px; /* 내부 여백 추가 */
-  background-color: #f0f0f0; /* 배경색 지정 */
-  border-radius: 5px; /* 테두리 둥글게 */
-  cursor: pointer; /* 마우스 커서 포인터로 변경 */
-  transition: background-color 0.3s ease; /* 배경색 변경 애니메이션 추가 */
+  flex: 1 1 30%;
+  margin: 10px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .exercise-item:hover {
-  background-color: #e0e0e0; /* 마우스 오버 시 배경색 변경 */
+  background-color: #e6e6e6;
 }
 
-.l {
-  color: blue;
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.loader span {
+  color: #3c90e2;
   opacity: 0;
-  animation: pass 2s ease-in-out infinite;
-  animation-delay: 0.2s;
-  letter-spacing: 0.5em;
+  animation: fadeInOut 2s ease-in-out infinite;
   font-weight: bold;
   text-shadow: 2px 2px 3px #919191;
 }
 
-.o {
-  color: blue;
-  opacity: 0;
-  animation: pass 2s ease-in-out infinite;
-  animation-delay: 0.4s;
-  letter-spacing: 0.5em;
-  font-weight: bold;
-  text-shadow: 2px 2px 3px #919191;
-}
+.loader span:nth-child(1) { animation-delay: 0.2s; }
+.loader span:nth-child(2) { animation-delay: 0.4s; }
+.loader span:nth-child(3) { animation-delay: 0.6s; }
+.loader span:nth-child(4) { animation-delay: 0.8s; }
+.loader span:nth-child(5) { animation-delay: 1s; }
+.loader span:nth-child(6) { animation-delay: 1.2s; }
+.loader span:nth-child(7) { animation-delay: 1.4s; }
+.loader span:nth-child(8) { animation-delay: 1.6s; }
+.loader span:nth-child(9) { animation-delay: 2s; }
 
-.a {
-  color: blue;
-  opacity: 0;
-  animation: pass 2s ease-in-out infinite;
-  animation-delay: 0.6s;
-  letter-spacing: 0.5em;
-  font-weight: bold;
-  text-shadow: 2px 2px 3px #919191;
-}
-
-.d {
-  color: blue;
-  opacity: 0;
-  animation: pass 2s ease-in-out infinite;
-  animation-delay: 0.8s;
-  letter-spacing: 0.5em;
-  font-weight: bold;
-  text-shadow: 2px 2px 3px #919191;
-}
-
-.i {
-  color: blue;
-  opacity: 0;
-  animation: pass 2s ease-in-out infinite;
-  animation-delay: 1s;
-  letter-spacing: 0.5em;
-  font-weight: bold;
-  text-shadow: 2px 2px 3px #919191;
-}
-
-.n {
-  color: blue;
-  opacity: 0;
-  animation: pass 2s ease-in-out infinite;
-  animation-delay: 1.2s;
-  letter-spacing: 0.5em;
-  font-weight: bold;
-  text-shadow: 2px 2px 3px #919191;
-}
-
-.g {
-  color: blue;
-  opacity: 0;
-  animation: pass 2s ease-in-out infinite;
-  animation-delay: 1.4s;
-  letter-spacing: 0.5em;
-  font-weight: bold;
-  text-shadow: 2px 2px 3px #919191;
-}
-
-.d1 {
-  color: blue;
-  opacity: 0;
-  animation: pass1 2s ease-in-out infinite;
-  animation-delay: 1.6s;
-  letter-spacing: 0.5em;
-  font-weight: bold;
-  text-shadow: 2px 2px 3px #919191;
-}
-
-.d2 {
-  color: blue;
-  opacity: 0;
-  animation: pass1 2s ease-in-out infinite;
-  animation-delay: 2s;
-  letter-spacing: 0.5em;
-  font-weight: bold;
-  text-shadow: 2px 2px 3px #919191;
-}
-
-@keyframes pass {
-  0% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes pass1 {
-  0% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
+@keyframes fadeInOut {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 .button-container {
@@ -379,27 +287,23 @@ onMounted(getAllExercises);
   justify-content: space-between;
   margin-top: 10px;
   max-width: 800px;
-  margin-left: auto; /* 수평 중앙 정렬 */
-  margin-right: auto; /* 수평 중앙 정렬 */
+  margin: 20px auto;
 }
 
 .go-to-routine, .go-to-youtube {
   width: 49%;
   padding: 10px;
-  border: 0.5px solid black;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  background-color: #747474; /* 녹색 배경 */
-  text-decoration: none;
-  text-align: center;
-  color: white; /* 흰색 글자 */
+  background-color: #3c90e2;
+  color: white;
   cursor: pointer;
+  text-align: center;
   transition: background-color 0.3s ease;
+  text-decoration: none;
 }
 
 .go-to-routine:hover, .go-to-youtube:hover {
-  background-color: rgb(59, 59, 59); /* 호버 시 더 진한 녹색 */
+  background-color: #2b6ba3;
 }
-
-
-
 </style>

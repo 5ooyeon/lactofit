@@ -14,14 +14,8 @@
             <span class="circle" aria-hidden="true">
               <span class="icon arrow"></span>
             </span>
-            <!-- <span class="button-text">더 알아보기</span> -->
             <RouterLink class="button-text" :to="{name: 'RoutineInfoComponent'}" style="text-decoration: none;">더 알아보기</RouterLink>
           </button>
-
-
-          <!-- <button class="cssbuttons-io">
-            <RouterLink class="make-routine" :to="{name: 'RoutineInfoComponent'}" style="text-decoration: none; color: white;">시작하기</RouterLink>
-          </button> -->
         </div>
       </section>
 
@@ -37,7 +31,9 @@
               <p class="routine__description">
                 운동명으로 검색하여 원하는 운동에 대한 정보를 확인하고, 맞춤형 루틴을 만들어보세요. 다양한 운동 정보를 통해 더욱 효과적인 운동을 경험할 수 있습니다.
               </p>
-              <RouterLink :to="{name: 'ExerciseView'}" class="routine__button">Learn More</RouterLink>
+              <button class="goto">
+                <RouterLink :to="{name: 'ExerciseView'}" style="text-decoration: none; color: black;">Learn More</RouterLink>
+              </button>
             </div>
           </div>
         </div>
@@ -55,7 +51,7 @@
               <p class="youtube__description">
                 운동명으로 검색하여 원하는 운동에 대한 자세한 설명과 올바른 자세를 확인해보세요. 각 운동의 단계별 수행 방법, 주의사항, 그리고 효과를 상세히 알려드립니다. 또한, 관련 유튜브 영상을 통해 보다 쉽게 운동을 따라할 수 있습니다. 체계적인 운동 계획을 세워 목표를 달성하는 데 도움을 드립니다.
               </p>
-              <button class="youtube__button">
+              <button class="goto">
                 <RouterLink :to="{name:'YoutubeMainComponent'}" style="text-decoration: none; color: black;">영상 찾아보기</RouterLink>
               </button>
             </div>
@@ -65,7 +61,6 @@
           </div>
         </div>
       </section>
-
 
       <!--==================== social ====================-->
       <section class="social section" id="social">
@@ -84,13 +79,10 @@
         </div>
 
         <div class="social__button-container container">
-          <!-- <RouterLink :to="{name: 'SocialMainComponent'}" class="social__button" style="text-decoration: none; color: white;">바로가기</RouterLink> -->
           <button class="goto">
-          <RouterLink :to="{name: 'SocialMainComponent'}" style="text-decoration: none; color: white;">바로가기</RouterLink>
-        </button>
+            <RouterLink :to="{name: 'SocialMainComponent'}" style="text-decoration: none;">바로가기</RouterLink>
+          </button>
         </div>
-
-
       </section>
     </main>
 
@@ -105,11 +97,10 @@
         <span class="top-button-elem">
           <svg viewBox="0 0 46 40">
             <path d="M23 5l-17 17c-1.1 1.1-1.1 3.1 0 4.2s3.1 1.1 4.2 0L23 14.2l13.8 13.8c1.1 1.1 3.1 1.1 4.2 0s1.1-3.1 0-4.2L23 5z"></path>
-          </svg>
+        </svg>
         </span>
       </div>
     </button>
-
 
     <footer class="footer">
       <div class="container">
@@ -143,7 +134,6 @@ const getPopularBoardList = () => {
   axios.get('http://localhost:8080/boards/likes')
     .then((response) => {
       boardList.value = response.data.slice(0, 8); // Limit to top 8 posts
-      console.log(boardList.value);
     });
 };
 
@@ -175,17 +165,7 @@ onBeforeUnmount(() => {
 });
 </script>
 
-
-
 <style scoped>
-
-
-.white-text-button {
-  text-decoration: none;
-  color: white;
-}
-
-/* Video and Overlay Styling */
 .home {
   position: relative;
   width: 100vw;
@@ -227,63 +207,51 @@ video {
   font-size: 60px;
 }
 
-.new {
-  padding: 2rem 0;
-}
-
-.routine__container {
+.routine__container,
+.youtube__container {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.routine__content {
+.routine__content,
+.youtube__content {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 
-.routine__image {
+.routine__image,
+.youtube__image {
   flex: 1;
   padding-right: 2rem;
 }
 
-.routine__image img {
+.routine__image img,
+.youtube__image img {
   width: 35rem;
   height: auto;
   object-fit: cover;
 }
 
-.routine__info {
+.routine__info,
+.youtube__info {
   flex: 1;
   padding-left: 2rem;
 }
 
-.routine__title {
+.routine__title,
+.youtube__title {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 1rem;
 }
 
-.routine__description {
+.routine__description,
+.youtube__description {
   font-size: 1rem;
   color: #666;
   margin-bottom: 1.5rem;
-}
-
-@media (max-width: 768px) {
-  .routine__content {
-    flex-direction: column;
-  }
-
-  .routine__image,
-  .routine__info {
-    padding: 0;
-  }
-}
-
-.social__description {
-  text-align: center;
 }
 
 .social__title {
@@ -291,6 +259,10 @@ video {
   font-weight: 700;
   text-align: center;
   margin-bottom: 2rem;
+}
+
+.social__description {
+  text-align: center;
 }
 
 .social__container {
@@ -340,19 +312,6 @@ video {
   margin-bottom: 0.5rem;
 }
 
-.footer__left p {
-  margin: 0;
-}
-
-.footer__left a {
-  color: #6C63FF;
-  text-decoration: none;
-}
-
-.footer__left a:hover {
-  text-decoration: underline;
-}
-
 .footer__right {
   display: flex;
   gap: 2rem;
@@ -369,11 +328,19 @@ video {
   margin-bottom: 0.5rem;
 }
 
-.footer__info p {
-  margin: 0;
-}
-
 @media (max-width: 768px) {
+  .routine__content,
+  .youtube__content {
+    flex-direction: column;
+  }
+
+  .routine__image,
+  .routine__info,
+  .youtube__image,
+  .youtube__info {
+    padding: 0;
+  }
+
   .social__container {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -395,167 +362,131 @@ video {
   }
 }
 
-.make-routine {
-  position: relative;
-  z-index: 10;
-  transition: color 0.4s;
-  display: inline-flex;
-  align-items: center;
-  padding: 0.8em 1.2em 0.8em 1.05em;
+.animate {
+  position: relative !important;
+  display: inline-block !important;
+  cursor: pointer !important;
+  outline: none !important;
+  border: 0 !important;
+  vertical-align: middle !important;
+  text-decoration: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
 }
 
-.cssbuttons-io::before,
-.cssbuttons-io::after {
+button.animate {
+  width: 12rem;
+  height: auto;
+}
+
+button.animate .circle {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: relative;
+  display: block;
+  margin: 0;
+  width: 3rem;
+  height: 3rem;
+  background: #3c90e2;
+  border-radius: 1.625rem;
+}
+
+button.animate .circle .icon {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  background: #fff;
+}
+
+button.animate .circle .icon.arrow {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  left: 0.625rem;
+  width: 1.125rem;
+  height: 0.125rem;
+  background: none;
+}
+
+button.animate .circle .icon.arrow::before {
+  position: absolute;
+  content: "";
+  top: -0.29rem;
+  right: 0.0625rem;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-top: 0.125rem solid #fff;
+  border-right: 0.125rem solid #fff;
+  transform: rotate(45deg);
+}
+
+button.animate .button-text {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1) !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  padding: 0.75rem 0 !important;
+  margin: 0 0 0 1.85rem !important;
+  color: white;
+  font-weight: 700 !important;
+  line-height: 1.6 !important;
+  text-align: center !important;
+  text-transform: uppercase !important;
+  font-size: 15px !important;
+}
+
+.animate:hover .circle {
+  width: 100%;
+}
+
+.animate:hover .circle .icon.arrow {
+  background: #fff;
+  transform: translate(1rem, 0);
+}
+
+.animate:hover .button-text {
+  color: #fff !important;
+}
+
+.goto {
+  padding: 15px 25px;
+  border: unset;
+  border-radius: 15px;
+  color: #212121;
+  z-index: 1;
+  background: #e8e8e8;
+  position: relative;
+  font-weight: 1000;
+  font-size: 17px;
+  box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+  transition: all 250ms;
+  overflow: hidden;
+}
+
+.goto::before {
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
   height: 100%;
-  z-index: 0;
-}
-
-.cssbuttons-io::before {
-  content: "";
-  background: #222222;
-  width: 120%;
-  left: -10%;
-  transform: skew(30deg);
-  transition: transform 0.4s cubic-bezier(0.3, 1, 0.8, 1);
-  box-shadow: inset 0 0 0 1px #19242b;
-}
-
-.cssbuttons-io:hover::before {
-  transform: translate3d(100%, 0, 0);
-}
-
-.cssbuttons-io:active {
-  transform: scale(0.95);
-}
-
-.signin {
-  float: right;
-  max-width: 320px;
-  display: flex;
-  padding: 0.3rem .8rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  font-weight: 700;
-  text-align: center;
-  font-family: "Montserrat", sans-serif;
-  vertical-align: middle;
-  align-items: center;
-  border-radius: 0.5rem;
-  border: 1px solid #19242b;
-  gap: 0.75rem;
-  color: #19242b;
-  background-color: whitesmoke;
-  cursor: pointer;
-  transition: all 0.25s cubic-bezier(0, 0.87, 0.12, 1);
-}
-
-.signin:hover {
-  transform: scale(1.025);
-}
-
-.signin:active {
-  transform: scale(0.975);
-}
-
-.svg__google {
-  height: 24px;
-  width: auto;
-}
-
-.routine__button {
-  display: inline-block;
-  padding: 0.75rem 1.5rem;
-  background-color: #6C63FF;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 0.5rem;
-  transition: background-color 0.3s;
-}
-
-.routine__button:hover {
-  background-color: #5752d4;
-}
-
-.youtube__button {
-  display: inline-block;
-  padding: 10px 12px;
-  border: none;
-  border-radius: 10px;
-  transition: all 0.2s ease-in;
-  position: relative;
-  overflow: hidden;
-  font-size: 14px;
-  cursor: pointer;
-  color: black;
-  z-index: 1;
-}
-
-.youtube__button:before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%) scaleY(1) scaleX(1.25);
-  top: 100%;
-  width: 140%;
-  height: 180%;
-  background-color: rgba(0, 0, 0, 0.05);
-  border-radius: 50%;
-  display: block;
-  transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+  width: 0;
+  border-radius: 15px;
+  background-color: #3297CE;
+  color: #e8e8e8;
   z-index: -1;
+  box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
+  transition: all 250ms;
 }
 
-.youtube__button:after {
-  content: "";
-  position: absolute;
-  left: 55%;
-  transform: translateX(-50%) scaleY(1) scaleX(1.45);
-  top: 180%;
-  width: 160%;
-  height: 190%;
-  background-color: #3297CE;
-  border-radius: 50%;
-  display: block;
-  transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
-  z-index: -1;
+.goto:hover {
+  color: #e8e8e8 !important;
 }
 
-.youtube__button:hover {
-  color: #ffffff;
-  border: 1px solid #3297CE;
-}
-
-.youtube__button:hover:before {
-  top: -35%;
-  background-color: #3297CE;
-  transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
-}
-
-.youtube__button:hover:after {
-  top: -45%;
-  background-color: #3297CE;
-  transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
-}
-
-.social__button-container {
-  display: flex;
-}
-
-/* .social__button {
-  padding: 0.75rem 1.5rem;
-  background-color: #6C63FF;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 0.5rem;
-  transition: background-color 0.3s;
-} */
-
-.social__button:hover {
-  background-color: #5752d4;
+.goto:hover::before {
+  width: 100%;
 }
 
 .scroll-top-button {
@@ -632,189 +563,4 @@ video {
   transition: 0.4s;
   transform: translateY(-56px);
 }
-
-
-.youtube__container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.youtube__content {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.youtube__info {
-  flex: 1;
-  padding-right: 2rem;
-}
-
-.youtube__image {
-  flex: 1;
-  padding-left: 2rem;
-}
-
-.youtube__image img {
-  width: 35rem;
-  height: auto;
-  object-fit: cover;
-}
-
-.youtube__title {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-}
-
-.youtube__description {
-  font-size: 1rem;
-  color: #666;
-  margin-bottom: 1.5rem;
-}
-
-@media (max-width: 768px) {
-  .youtube__content {
-    flex-direction: column;
-  }
-
-  .youtube__info,
-  .youtube__image {
-    padding: 0;
-  }
-}
-
-
-.animate {
-  position: relative !important;
-  display: inline-block !important;
-  cursor: pointer !important;
-  outline: none !important;
-  border: 0 !important;
-  vertical-align: middle !important;
-  text-decoration: none !important;
-  background: transparent !important;
-  padding: 0 !important;
-  font-size: inherit !important;
-  font-family: inherit !important;
-}
-
-button.animate {
-  width: 12rem;
-  height: auto;
-}
-
-button.animate .circle {
-  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
-  position: relative;
-  display: block;
-  margin: 0;
-  width: 3rem;
-  height: 3rem;
-  background: #3c90e2;
-  border-radius: 1.625rem;
-}
-
-button.animate .circle .icon {
-  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-  background: #fff;
-}
-
-button.animate .circle .icon.arrow {
-  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
-  left: 0.625rem;
-  width: 1.125rem;
-  height: 0.125rem;
-  background: none;
-}
-
-button.animate .circle .icon.arrow::before {
-  position: absolute;
-  content: "";
-  top: -0.29rem;
-  right: 0.0625rem;
-  width: 0.625rem;
-  height: 0.625rem;
-  border-top: 0.125rem solid #fff;
-  border-right: 0.125rem solid #fff;
-  transform: rotate(45deg);
-}
-
-button.animate .button-text {
-  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1)  !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  padding: 0.75rem 0 !important;
-  margin: 0 0 0 1.85rem !important;
-  color: white;
-  font-weight: 700 !important;
-  line-height: 1.6 !important;
-  text-align: center !important;
-  text-transform: uppercase !important;
-  font-size: 15px !important;
-}
-
-.animate:hover .circle {
-  width: 100%;
-}
-
-.animate:hover .circle .icon.arrow {
-  background: #fff;
-  transform: translate(1rem, 0);
-}
-
-.animate:hover .button-text {
-  color: #fff !important;
-}
-
-
-
-.goto {
- padding: 15px 25px;
- border: unset;
- border-radius: 15px;
- color: #212121 !important;
- z-index: 1;
- background: #e8e8e8;
- position: relative;
- font-weight: 1000;
- font-size: 17px;
- -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
- box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
- transition: all 250ms;
- overflow: hidden;
-}
-
-.goto::before {
- content: "";
- position: absolute;
- top: 0;
- left: 0;
- height: 100%;
- width: 0;
- border-radius: 15px;
- background-color: #3297CE;
- z-index: -1;
- -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
- box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
- transition: all 250ms
-}
-
-.goto:hover {
- color: #e8e8e8;
-}
-
-.goto:hover::before {
- width: 100%;
-}
-
-  </style>
-  
+</style>

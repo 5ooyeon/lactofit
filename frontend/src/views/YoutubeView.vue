@@ -14,8 +14,6 @@
   <RouterView/>
 </template>
 
-
-
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useYoutubeStore } from '@/stores/youtube';
@@ -34,36 +32,38 @@ function youtubeSearch(keyword, mode) {
 }
 </script>
 
-
 <style scoped>
-
 .search-container {
   margin-top: 50px;
   width: 100%;
   max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .input-group {
   display: flex;
   width: 100%;
-  box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 24px;
   overflow: hidden;
+  background-color: #f5f5f5;
 }
 
 .search-input {
   flex: 1;
-  padding: 10px 20px;
+  padding: 15px 20px;
   font-size: 16px;
   border: none;
   outline: none;
+  background-color: #fff;
+  color: #333;
 }
 
 .search-button {
   padding: 10px 20px;
-  background-color: #f8f9fa;
+  background-color: #3c90e2;
   border: none;
-  border-left: 1px solid #ddd;
   cursor: pointer;
   transition: background-color 0.3s;
   display: flex;
@@ -72,16 +72,12 @@ function youtubeSearch(keyword, mode) {
 }
 
 .search-button:hover {
-  background-color: #e8e8e8;
+  background-color: #357ab8;
 }
 
 .search__icon {
   width: 24px;
   height: 24px;
-  fill: #606770;
-}
-
-.search__icon path {
-  fill: #606770;
+  fill: #fff;
 }
 </style>
