@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafit.model.dto.Exercise;
+import com.ssafit.model.dto.RoutineComponents;
 import com.ssafit.model.service.RoutineService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,7 +39,7 @@ public class ExerciseRestController {
 	@PostMapping("/{routine_id}")
 	@Operation(summary = "루틴에 운동을 추가합니다.")
 	public ResponseEntity<Void> addExercisesToRoutine(@PathVariable("routine_id") int routineId,
-			@RequestBody List<Exercise> exercises) {
+			@RequestBody List<RoutineComponents> exercises) {
 		routineService.addExercisesToRoutine(routineId, exercises);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
@@ -71,5 +72,11 @@ public class ExerciseRestController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<>(exercises, HttpStatus.OK);
+	}
+	
+	@GetMapping("/searchbyname")
+	public ResponseEntity<?> getExerciseInfoByExerciseTitle(@RequestParam("title") String title) {
+		
+		return new ResponseEntity<>(routineService.getExerciseDtoByExerciseTitle(title), HttpStatus.OK);
 	}
 }

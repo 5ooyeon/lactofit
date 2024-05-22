@@ -1,6 +1,11 @@
 <template>
     <div class="container">
-        <h1>Routine</h1>
         <RouterView/>
     </div>
 </template>
+
+<style scoped>
+h1 {
+    margin: 15px 0px;
+}
+</style>

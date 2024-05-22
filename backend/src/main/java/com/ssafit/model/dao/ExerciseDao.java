@@ -12,4 +12,6 @@ public interface ExerciseDao {
 	List<Exercise> getExercisesByPart(String part);
 
 	List<Exercise> searchExercises(String keyword);
+
+	Exercise getExerciseByExerciseName(String name);
 }

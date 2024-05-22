@@ -1,10 +1,14 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import { useRoute } from 'vue-router';
 import headerNav from "@/components/common/headerNav.vue";
+import headerNav_main from './components/common/headerNav_main.vue';
+
+const route = useRoute()
 </script>
 
 <template>
-  <headerNav/>
+  <component :is="route.name === 'Main' ? headerNav_main : headerNav" />
 
   <RouterView></RouterView>
 

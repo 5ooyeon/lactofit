@@ -104,15 +104,24 @@ const handleInput = (event) => {
 
 // 쿠키에 운동명 저장
 const saveToCookies = (exerciseName) => {
+
   let recentSearches = Cookies.get('recentSearches');
   recentSearches = recentSearches ? JSON.parse(recentSearches) : [];
-  if (!recentSearches.includes(exerciseName)) {
-    recentSearches.push(exerciseName);
-    if (recentSearches.length > 10) {
-      recentSearches.shift(); // 최근 10개만 유지
+
+  //운동명으로 운동 정보 가져오는 axios
+  axios.get(`http://localhost:8080/exercises/searchbyname?title=${exerciseName}`)
+  .then((response ) => {
+
+    if (!recentSearches.includes(response.data)) {
+      recentSearches.push(response.data);
+      if (recentSearches.length > 10) {
+        recentSearches.shift(); // 최근 10개만 유지
+      }
+      Cookies.set('recentSearches', JSON.stringify(recentSearches), { expires: 7 });
     }
-    Cookies.set('recentSearches', JSON.stringify(recentSearches), { expires: 7 });
-  }
+
+  })
+
 };
 
 // 운동에 대한 설명 검색
@@ -124,7 +133,7 @@ const searchExercise = async (exerciseName) => {
   saveToCookies(exerciseName);
   getAllExercises();
   try {
-    const prompt = `[${exerciseName}] 라는 운동에 대해 한국어와 존댓말로 설명해줘. 다음은 내가 원하는 답변의 형태 예시야.
+    const prompt = `[${exerciseName}] 라는 운동에 대해 한국어와 존댓말로 다음과 같은 형식으로 답변해줘 .
 
     펙 덱 플라이는 가슴근육과 삼각근을 강화하는 운동입니다. 이 운동은 펙 덱 머신을 이용하여 수행됩니다. 
 

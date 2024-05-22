@@ -82,7 +82,7 @@ public class BoardRestController {
 		board.setBoardContent(boardContent);
 
 		// 프론트엔드에서 접근할 수 있는 URL로 설정
-		board.setBoardImgUrl("/src/assets/uploads/" + uniqueFileName);
+		board.setBoardImgUrl("src/assets/uploads/" + uniqueFileName);
 
 		board.setBoardViewCnt(0);
 		board.setBoardVisibility(boardVisibility);

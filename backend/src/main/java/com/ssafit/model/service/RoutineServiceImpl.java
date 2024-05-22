@@ -64,12 +64,9 @@ public class RoutineServiceImpl implements RoutineService {
 	}
 
 	@Override
-	public void addExercisesToRoutine(int routineId, List<Exercise> exercises) {
-		for (Exercise exercise : exercises) {
-			RoutineComponents routineComponent = new RoutineComponents();
-			routineComponent.setExerciseId(exercise.getExerciseId());
-			routineComponent.setRoutineId(routineId);
-			routineComponentsDao.insertRoutineComponent(routineComponent);
+	public void addExercisesToRoutine(int routineId, List<RoutineComponents> exercises) {
+		for (RoutineComponents exercise : exercises) {
+			routineComponentsDao.insertRoutineComponent(exercise);
 		}
 	}
 
@@ -149,6 +146,12 @@ public class RoutineServiceImpl implements RoutineService {
 	@Override
 	public List<Map<String, Object>> getRoutineComponentsByUserId(int userId) {
 		return routineComponentsDao.getRoutineComponentsByUserId(userId);
+	}
+
+	@Override
+	public Exercise getExerciseDtoByExerciseTitle(String title) {
+		// TODO Auto-generated method stub
+		return exerciseDao.getExerciseByExerciseName(title);
 	}
 
 }

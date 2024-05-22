@@ -13,64 +13,67 @@
       <p v-if="store.returnBoardList.length == 0" class="no-post-message">게시물이 없습니다.</p>
     </div>
     <button type="button" class="btn btn-primary" @click="showUploadModal">작성하기</button>
-
     <!-- Upload Modal -->
-    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="uploadModalLabel">Upload Image</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" v-model="writeBoard.boardVisibility">
-              <label class="form-check-label" for="flexSwitchCheckChecked">공개</label>
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadModalLabel">Upload Image</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" v-model="writeBoard.boardVisibility">
+          <label class="form-check-label" for="flexSwitchCheckChecked">공개</label>
+        </div>
+        <div class="routine-list-container">
+          <div class="routine-list">
+            <div v-for="routine in myRoutines" :key="routine.routineId" class="form-check">
+              <input class="form-check-input" type="radio" name="routine" :id="`routine${routine.routineId}`" :value="routine.routineId" v-model="writeBoard.routineId">
+              <label class="form-check-label" :for="`routine${routine.routineId}`">
+                {{ routine.routineName }}
+                <ul>
+                  <li v-for="exercise in routine.exercises" :key="exercise.exerciseId">
+                    {{ exercise.exerciseName }}
+                  </li>
+                </ul>
+              </label>
             </div>
-            <div class="routine-list-container">
-              <div class="routine-list">
-                <div v-for="routine in myRoutines" :key="routine.routineId" class="form-check">
-                  <input class="form-check-input" type="radio" name="routine" :id="`routine${routine.routineId}`" :value="routine.routineId" v-model="writeBoard.routineId">
-                  <label class="form-check-label" :for="`routine${routine.routineId}`">
-                    {{ routine.routineName }}
-                    <ul>
-                      <li v-for="exercise in routine.exercises" :key="exercise.exerciseId">
-                        {{ exercise.exerciseName }}
-                      </li>
-                    </ul>
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div class="mb-3">
-              <div class="file-upload-wrapper">
-                <input type="file" id="formFile" @change="onFileChange" class="file-input">
-                <label for="formFile" class="file-upload-label">
-                  <i class="fas fa-cloud-upload-alt"></i> 업로드
-                </label>
-              </div>
-            </div>
-            <div v-if="imageUrl">
-              <img :src="imageUrl" class="img-fluid" alt="Image preview">
-            </div>
-            <div class="write-form">
-              <textarea v-model="writeBoard.boardContent" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
-            </div>
-            <button class="btn btn-primary mt-3" @click="registPost">등록</button>
           </div>
         </div>
+        <div class="mb-3">
+          <div class="file-upload-wrapper">
+            <input type="file" id="formFile" @change="onFileChange" class="file-input">
+            <label for="formFile" class="file-upload-label">
+              <i class="fas fa-cloud-upload-alt"></i> 업로드
+            </label>
+          </div>
+        </div>
+        <div v-if="imageUrl">
+          <img :src="imageUrl" class="img-fluid" alt="Image preview">
+        </div>
+        <div class="write-form">
+          <textarea v-model="writeBoard.boardContent" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+        </div>
+        <button class="btn btn-primary mt-3" @click="registPost">등록</button>
       </div>
     </div>
+  </div>
+</div>
 
-    <!-- Board Detail Modal -->
-    <div class="modal fade" id="boardDetailModal" tabindex="-1" aria-labelledby="boardDetailModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
+<!-- Board Detail Modal -->
+<div class="modal fade" id="boardDetailModal" tabindex="-1" aria-labelledby="boardDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-content">
+          <div class="detail-image">
             <img :src="selectedBoard?.board.boardImgUrl" class="img-fluid" alt="Board Image">
+          </div>
+          <div class="detail-info">
             <div @click="goProfile(selectedBoard?.writer.userId)" class="writer-info">
               <img :src="selectedBoard?.writer.userProfileImage" alt="" class="writer-profile-image">
               <p class="board-detail-writer-name">{{selectedBoard?.writer.userNickname}}</p>
@@ -84,49 +87,51 @@
                 <span class="option-2" v-else>언팔로우</span>
               </div>
             </div>
-            <button class="btn btn-danger" v-if="authStore.user.userId == selectedBoard?.writer.userId" @click="deleteBoard(selectedBoard?.board.boardId)">글 삭제하기</button>
-            <p class="board-detail-routine-label">{{ selectedBoard?.writer.userNickname }} 님의 운동 루틴</p>
-            <div class="board-detail-routine" v-for="routine in selectedBoard?.RoutineComponents" :key="routine.exercise_name">
-              <p class="detail-routine-name"><em class="detail-routine-part">[{{ routine.exercise_part }}]</em>{{routine.exercise_name}}</p>
-            </div>
-            <p>{{ selectedBoard?.board.boardContent }}</p>
-            <p class="board-detail-regdate">{{ selectedBoard?.board.boardRegDate }}</p>
-          </div>
-          <div class="board-like">
-            <div title="Like" class="heart-container">
-              <input id="Give-It-An-Id" class="checkbox" type="checkbox" :checked="hasUserLiked" @click="boardLike(selectedBoard?.board.boardId)">
-              <div class="svg-container">
-                <svg xmlns="http://www.w3.org/2000/svg" class="svg-outline" viewBox="0 0 24 24">
-                  <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z"></path>
-                </svg>
-                <svg xmlns="http://www.w3.org/2000/svg" class="svg-filled" viewBox="0 0 24 24">
-                  <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z"></path>
-                </svg>
-                <svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" class="svg-celebrate">
-                  <polygon points="10,10 20,20"></polygon>
-                  <polygon points="10,50 20,50"></polygon>
-                  <polygon points="20,80 30,70"></polygon>
-                  <polygon points="90,10 80,20"></polygon>
-                  <polygon points="90,50 80,50"></polygon>
-                  <polygon points="80,80 70,70"></polygon>
-                </svg>
+            <div class="routine-section">
+              <p class="board-detail-routine-label">{{ selectedBoard?.writer.userNickname }} 님의 운동 루틴</p>
+              <div class="board-detail-routine" v-for="routine in selectedBoard?.RoutineComponents" :key="routine.exercise_name">
+                <p class="detail-routine-name"><em class="detail-routine-part">[{{ routine.exercise_part }}]</em> {{routine.exercise_name}}</p>
               </div>
-              <p class="board-like-count">{{ boardLikes.length }}</p>
             </div>
+            <p class="board-content">{{ selectedBoard?.board.boardContent }}</p>
+            <p class="board-detail-regdate">{{ selectedBoard?.board.boardRegDate }}</p>
+            <div class="board-like">
+              <div title="Like" class="heart-container">
+                <input id="Give-It-An-Id" class="checkbox" type="checkbox" :checked="hasUserLiked" @click="boardLike(selectedBoard?.board.boardId)">
+                <div class="svg-container">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="svg-outline" viewBox="0 0 24 24">
+                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z"></path>
+                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="svg-filled" viewBox="0 0 24 24">
+                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z"></path>
+                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" height="100" width="100" class="svg-celebrate">
+                    <polygon points="10,10 20,20"></polygon>
+                    <polygon points="10,50 20,50"></polygon>
+                    <polygon points="20,80 30,70"></polygon>
+                    <polygon points="90,10 80,20"></polygon>
+                    <polygon points="90,50 80,50"></polygon>
+                    <polygon points="80,80 70,70"></polygon>
+                  </svg>
+                </div>
+                <p class="board-like-count">{{ boardLikes.length }}</p>
+              </div>
+            </div>
+            <button class="btn btn-danger" v-if="authStore.user.userId == selectedBoard?.writer.userId" @click="deleteBoard(selectedBoard?.board.boardId)">글 삭제하기</button>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+</div>
 </template>
-
-
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { Modal } from 'bootstrap';
 import axios from 'axios';
 import { useSocialStore } from '@/stores/social';
-import { useAuthStore } from '@/stores/auth'; // Assuming you have an auth store
+import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
 
 const store = useSocialStore();
@@ -181,25 +186,22 @@ const registPost = () => {
     },
   })
   .then((response) => {
-    // 업로드 후 상태 초기화
     file.value = null;
     imageUrl.value = null;
     writeBoard.value.routineId = 0;
     writeBoard.value.boardContent = '';
     writeBoard.value.boardVisibility = false;
     hideUploadModal();
-    store.getAllBoardList(); // Refresh the board list after posting
+    store.getAllBoardList();
   })
   .catch((err) => {
     console.error('Error registering post:', err);
   });
 };
 
-//글 작성 모달 열기
 const showUploadModal = () => {
   axios.get(`http://localhost:8080/routines/users/${userId}`)
     .then((response) => {
-      console.log(response.data);
       myRoutines.value = response.data;
       if (!uploadModal) {
         const modalElement = document.getElementById('uploadModal');
@@ -220,11 +222,9 @@ const hideUploadModal = () => {
 
 const showBoardDetail = async (board) => {
   selectedBoard.value = board;
-  console.log(selectedBoard.value)
   try {
     const response = await axios.get(`http://localhost:8080/boardlikes/${board.board.boardId}`);
     boardLikes.value = response.data;
-    console.log(boardLikes.value)
   } catch (error) {
     console.error('Error fetching board likes:', error);
   }
@@ -282,8 +282,7 @@ const followUnfollow = (writerId) => {
 
   axios.post('http://localhost:8080/follows/', { followingUserId, userId })
     .then((response) => {
-      console.log(response.data);
-      isFollower.value = !isFollower.value; // Toggle the follow state
+      isFollower.value = !isFollower.value;
       if (isFollower.value) {
         myFollowing.value.push({ followingUserId });
       } else {
@@ -300,17 +299,15 @@ const goProfile = (userId) => {
   router.push({ name: 'MyPageView', params: { id: userId } });
 };
 
-//게시글 삭제
 const deleteBoard = (boardId) => {
-  axios.delete('http://localhost:8080/boards/'+boardId)
-  .then((response) => {
-    console.log('deleted')
-    store.getAllBoardList(); // Refresh the board list after deletion
-    boardDetailModal.hide(); // Close the modal after deletion
-  })
-  .catch((err) => {
-    console.error('Error deleting board:', err);
-  });
+  axios.delete('http://localhost:8080/boards/' + boardId)
+    .then((response) => {
+      store.getAllBoardList();
+      boardDetailModal.hide();
+    })
+    .catch((err) => {
+      console.error('Error deleting board:', err);
+    });
 };
 
 const selectMenu = (menu) => {
@@ -322,8 +319,6 @@ const selectMenu = (menu) => {
   selectedMenu.value = menu;
 };
 </script>
-
-
 <style scoped>
 .container {
   margin-top: 20px;
@@ -375,23 +370,23 @@ const selectMenu = (menu) => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: hidden;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s, box-shadow 0.3s;
-  max-height: 300px; /* 일정한 높이 유지 */
 }
 
 .board-item:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .board-thumbnail {
   width: 100%;
-  height: auto;
-  object-fit: cover;
   cursor: pointer;
+  border-radius: 10px;
+  transition: transform 0.3s;
+}
+
+.board-thumbnail:hover {
+  transform: scale(1.05);
 }
 
 .no-post-message {
@@ -473,6 +468,22 @@ const selectMenu = (menu) => {
   margin-right: 10px;
 }
 
+.detail-content {
+  display: flex;
+  gap: 20px;
+}
+
+.detail-image {
+  flex: 2;
+}
+
+.detail-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 .writer-info {
   display: flex;
   align-items: center;
@@ -498,7 +509,7 @@ const selectMenu = (menu) => {
   align-items: center;
   gap: 10px;
   padding: 10px 15px;
-  background-color: #333;
+  background-color: #007bff;
   color: #fff;
   border-radius: 5px;
   cursor: pointer;
@@ -506,7 +517,7 @@ const selectMenu = (menu) => {
 }
 
 .follow-container:hover {
-  background-color: #555;
+  background-color: #0056b3;
 }
 
 .heart-container {
@@ -602,9 +613,12 @@ const selectMenu = (menu) => {
   color: #333;
 }
 
+.routine-section {
+  margin-top: 20px;
+}
+
 .board-detail-routine-label {
   font-weight: bold;
-  margin-top: 20px;
   font-size: 1.2em;
   color: #333;
 }
@@ -620,6 +634,12 @@ const selectMenu = (menu) => {
 
 .detail-routine-part {
   font-weight: bold;
+}
+
+.board-content {
+  margin-top: 10px;
+  font-size: 1em;
+  color: #333;
 }
 
 .board-detail-regdate {

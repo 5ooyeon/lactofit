@@ -1,6 +1,6 @@
 <template>
   <div class="video-card" @click="watchVideo">
-    <img :src="video.snippet.thumbnails.default.url" class="video-thumbnail">
+    <img :src="video.snippet.thumbnails.high.url" class="video-thumbnail">
     <div class="video-info">
       <p class="video-title" v-html="video.snippet.title"></p>
     </div>
@@ -49,7 +49,8 @@ const watchVideo = () => {
 
 .video-thumbnail {
   width: 100%;
-  height: auto;
+  /* height: fit-content; */
+  /* height: auto; */
 }
 
 .video-info {

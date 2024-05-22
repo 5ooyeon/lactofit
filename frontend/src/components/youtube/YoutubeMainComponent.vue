@@ -39,6 +39,7 @@ onMounted(() => {
     store.getVideosBySearchWord('상체', null);
   }
 });
+console.log(store.weaknessVideos)
 </script>
 
 <style scoped>
@@ -70,7 +71,7 @@ onMounted(() => {
 .recent-videos,
 .weakness-videos {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 16px;
 }
 </style>

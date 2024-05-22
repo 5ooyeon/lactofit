@@ -79,6 +79,7 @@
 		LEFT JOIN RoutineComponents rc ON r.routine_id = rc.routine_id
 		LEFT JOIN Exercise e ON rc.exercise_id = e.exercise_id
 		WHERE r.user_id = #{userId}
+		order by r.routine_id desc
 	</select>
 
 </mapper>

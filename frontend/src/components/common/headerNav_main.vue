@@ -2,18 +2,18 @@
   <header class="navbar navbar-expand-lg">
     <nav class="container">
       <div class="navbar-collapse d-lg-flex" id="navbarsExample11">
-        <RouterLink :to="{ name: 'Main' }" class="navbar-brand col-lg-3 me-0">
+        <a href="#">
           <img src="../../assets/img/LACTOFIT_HEADER.png" class="logo-img" />
-        </RouterLink>
+        </a>
         <ul class="navbar-nav col-lg-6 justify-content-lg-center">
           <li class="nav-item">
-            <RouterLink class="nav-link" :to="{name: 'ExerciseView'}">운동백과</RouterLink>
+            <a class="nav-link" href="#routine">운동백과</a>
           </li>
           <li class="nav-item">
-            <RouterLink class="nav-link" :to="{name: 'YoutubeMainComponent'}">영상PICK</RouterLink>
+            <a class="nav-link" href="#youtube">영상PICK</a>
           </li>
           <li class="nav-item">
-            <RouterLink class="nav-link" :to="{name: 'SocialMainComponent'}">#오운완</RouterLink>
+            <a class="nav-link" href="#social">#오운완</a>
           </li>
         </ul>
         <div class="d-lg-flex col-lg-3 justify-content-lg-end align-items-center">

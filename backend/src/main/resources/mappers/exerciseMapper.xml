@@ -26,5 +26,9 @@
 		WHERE exercise_name LIKE CONCAT('%', #{keyword}, '%')
 		OR exercise_part LIKE CONCAT('%', #{keyword}, '%')
 	</select>
+	
+	<select id="getExerciseByExerciseName" resultType="com.ssafit.model.dto.Exercise">
+		select * from exercise where exercise_name like #{name}
+	</select>
 
 </mapper>
