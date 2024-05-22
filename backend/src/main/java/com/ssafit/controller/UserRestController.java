@@ -64,7 +64,8 @@ public class UserRestController {
 	    User user = userService.getUserById(userId);
 
 	    /** 프로필 이미지 업데이트 저장 **/
-
+	    System.out.println(nickname);
+	    
 	    // 파일명 수정
 	    
 	    if(file != null && !file.isEmpty()) {

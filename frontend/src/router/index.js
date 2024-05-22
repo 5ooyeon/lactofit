@@ -14,6 +14,7 @@ import RoutineView from '@/views/RoutineView.vue'
 import RoutineInfoComponent from '@/components/routine/RoutineInfoComponent.vue'
 import CreateRoutineComponent from '@/components/routine/CreateRoutineComponent.vue'
 import ExerciseView from '@/views/ExerciseView.vue'
+import SlotMachineView from '@/views/SlotMachineView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -95,6 +96,11 @@ const router = createRouter({
       path: "/exercise",
       name: "ExerciseView",
       component: ExerciseView,
+    },
+    {
+      path: "/slot",
+      name: "SlotMachineView",
+      component: SlotMachineView,
     },
   ]
 })

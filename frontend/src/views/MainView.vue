@@ -10,7 +10,7 @@
             운동 고민 끝
           </p>
           <button class="cssbuttons-io">
-            <RouterLink class="make-routine" :to="{name: 'RoutineInfoComponent'}">시작하기</RouterLink>
+            <RouterLink class="make-routine" :to="{name: 'RoutineInfoComponent'}" style="text-decoration: none; color: white;">시작하기</RouterLink>
           </button>
         </div>
       </section>
@@ -23,9 +23,9 @@
               <img src="./../assets/img/LACTOFIT_main_1.jpg" alt="new image" />
             </div>
             <div class="routine__info">
-              <h2 class="routine__title">More about our brand</h2>
+              <h2 class="routine__title">원하는 운동을 찾아보세요.</h2>
               <p class="routine__description">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum id amet incidunt deleniti nesciunt, possimus laborum minus commodi! Ratione odit voluptate iure dolorum libero sit cumque sapiente animi dicta
+                운동명으로 검색하여 원하는 운동에 대한 정보를 확인하고, 맞춤형 루틴을 만들어보세요. 다양한 운동 정보를 통해 더욱 효과적인 운동을 경험할 수 있습니다.
               </p>
               <RouterLink :to="{name: 'ExerciseView'}" class="routine__button">Learn More</RouterLink>
             </div>
@@ -34,25 +34,28 @@
       </section>
 
       <!--==================== youtube ====================-->
-      <section class="routine section" id="youtube">
-        <div class="routine__container container">
-          <div class="routine__content">
-            <div class="routine__info">
-              <h2 class="routine__title">
+      <section class="youtube section" id="youtube">
+        <div class="youtube__container container">
+          <div class="youtube__content">
+            <div class="youtube__info">
+              <h2 class="youtube__title">
                 운동 시 자세 잡는 것이 어렵다면?<br />
                 운동 별 영상을 제공해드려요.
               </h2>
-              <p class="routine__description">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, hic ad adipisci dolores debitis eligendi asperiores earum perferendis deserunt repellendus eveniet, laborum magnam mollitia animi quia velit, enim sapiente. Inventore!
+              <p class="youtube__description">
+                운동명으로 검색하여 원하는 운동에 대한 자세한 설명과 올바른 자세를 확인해보세요. 각 운동의 단계별 수행 방법, 주의사항, 그리고 효과를 상세히 알려드립니다. 또한, 관련 유튜브 영상을 통해 보다 쉽게 운동을 따라할 수 있습니다. 체계적인 운동 계획을 세워 목표를 달성하는 데 도움을 드립니다.
               </p>
-              <button class="youtube__button"><RouterLink :to="{name:'YoutubeMainComponent'}">영상 찾아보기</RouterLink></button>
+              <button class="youtube__button">
+                <RouterLink :to="{name:'YoutubeMainComponent'}" style="text-decoration: none; color: black;">영상 찾아보기</RouterLink>
+              </button>
             </div>
-            <div class="routine__image">
-              <img src="https://images.squarespace-cdn.com/content/v1/6581fd2d9a7c875e912e0907/19116ab1-4f67-4632-851b-8f0cf510b417/Sleek+Objects+1.jpg?format=2500w" alt="new image" />
+            <div class="youtube__image">
+              <img src="./../assets/img/LACTOFIT_main_2.png" alt="new image" />
             </div>
           </div>
         </div>
       </section>
+
 
       <!--==================== social ====================-->
       <section class="social section" id="social">
@@ -61,7 +64,7 @@
           함께 이겨내요.
         </h2>
         <p class="social__description">
-          SSAFIT 커뮤니티에서 소통하고, 공유하고, 응원하세요.
+          LACTOFIT 커뮤니티에서 소통하고, 공유하고, 응원하세요.
         </p>
 
         <div class="social__container container grid">
@@ -71,7 +74,7 @@
         </div>
 
         <div class="social__button-container container">
-          <RouterLink :to="{name: 'SocialMainComponent'}" class="social__button">더 많은 게시글 보러가기</RouterLink>
+          <RouterLink :to="{name: 'SocialMainComponent'}" class="social__button" style="text-decoration: none; color: white;">더 많은 게시글 보러가기</RouterLink>
         </div>
       </section>
     </main>
@@ -91,6 +94,7 @@
         </span>
       </div>
     </button>
+
 
     <footer class="footer">
       <div class="container">
@@ -116,24 +120,54 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import axios from 'axios';
 
-const boardList = ref([])
+const boardList = ref([]);
 const getPopularBoardList = () => {
   axios.get('http://localhost:8080/boards/likes')
     .then((response) => {
       boardList.value = response.data.slice(0, 8); // Limit to top 8 posts
-      console.log(boardList.value)
-    })
-}
+      console.log(boardList.value);
+    });
+};
+
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  });
+};
+
+const handleScroll = () => {
+  const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+  if (window.scrollY > 200) {
+    scrollToTopBtn.style.display = 'block';
+  } else {
+    scrollToTopBtn.style.display = 'none';
+  }
+};
 
 onMounted(() => {
   getPopularBoardList();
-})
+  const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+  scrollToTopBtn.addEventListener('click', scrollToTop);
+  window.addEventListener('scroll', handleScroll);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
 </script>
 
+
+
 <style scoped>
+.white-text-button {
+  text-decoration: none;
+  color: white;
+}
+
 /* Video and Overlay Styling */
 .home {
   position: relative;
@@ -198,7 +232,7 @@ video {
 }
 
 .routine__image img {
-  width: 100%;
+  width: 35rem;
   height: auto;
   object-fit: cover;
 }
@@ -601,6 +635,59 @@ video {
   transition: 0.4s;
   transform: translateY(-56px);
 }
+
+
+.youtube__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.youtube__content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.youtube__info {
+  flex: 1;
+  padding-right: 2rem;
+}
+
+.youtube__image {
+  flex: 1;
+  padding-left: 2rem;
+}
+
+.youtube__image img {
+  width: 35rem;
+  height: auto;
+  object-fit: cover;
+}
+
+.youtube__title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.youtube__description {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .youtube__content {
+    flex-direction: column;
+  }
+
+  .youtube__info,
+  .youtube__image {
+    padding: 0;
+  }
+}
+
 
   </style>
   

@@ -62,7 +62,7 @@
                     <div class="col">
                         <div class="row">
                             <label for="changeNickname">닉네임</label>
-                            <input type="text" id="changeNickname" :value="authStore.user.userNickname">
+                            <input type="text" id="changeNickname" v-model="newNickname">
                         </div>
                         <div class="row">
                             <div class="col-2">
@@ -176,6 +176,7 @@
     boardVisibility: false,
   });
   
+  const newNickname = ref(authStore.user.userNickname); // 닉네임을 저장하는 ref
   let uploadModal = null;
   const imageUrl = ref(null);
   const file = ref(null);
@@ -318,7 +319,7 @@ const saveProfile = () => {
   }
 
   formData.append('userId', authStore.user.userId);
-  formData.append('nickname', authStore.user.userNickname);
+  formData.append('nickname', newNickname.value); // 변경된 닉네임을 전송
   axios.post(`http://localhost:8080/users/update`, formData, {
       headers: {
           'Content-Type': 'multipart/form-data',
