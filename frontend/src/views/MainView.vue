@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main-scroll">
     <main>
       <section class="home section">
         <video src="https://kr.object.ncloudstorage.com/thebody/hit35_main_width_240326.mp4" autoplay loop muted></video>
@@ -9,9 +9,19 @@
             樂土必으로<br />
             운동 고민 끝
           </p>
-          <button class="cssbuttons-io">
-            <RouterLink class="make-routine" :to="{name: 'RoutineInfoComponent'}" style="text-decoration: none; color: white;">시작하기</RouterLink>
+
+          <button class="animate">
+            <span class="circle" aria-hidden="true">
+              <span class="icon arrow"></span>
+            </span>
+            <!-- <span class="button-text">더 알아보기</span> -->
+            <RouterLink class="button-text" :to="{name: 'RoutineInfoComponent'}" style="text-decoration: none;">더 알아보기</RouterLink>
           </button>
+
+
+          <!-- <button class="cssbuttons-io">
+            <RouterLink class="make-routine" :to="{name: 'RoutineInfoComponent'}" style="text-decoration: none; color: white;">시작하기</RouterLink>
+          </button> -->
         </div>
       </section>
 
@@ -74,8 +84,13 @@
         </div>
 
         <div class="social__button-container container">
-          <RouterLink :to="{name: 'SocialMainComponent'}" class="social__button" style="text-decoration: none; color: white;">더 많은 게시글 보러가기</RouterLink>
+          <!-- <RouterLink :to="{name: 'SocialMainComponent'}" class="social__button" style="text-decoration: none; color: white;">바로가기</RouterLink> -->
+          <button class="goto">
+          <RouterLink :to="{name: 'SocialMainComponent'}" style="text-decoration: none; color: white;">바로가기</RouterLink>
+        </button>
         </div>
+
+
       </section>
     </main>
 
@@ -163,6 +178,8 @@ onBeforeUnmount(() => {
 
 
 <style scoped>
+
+
 .white-text-button {
   text-decoration: none;
   color: white;
@@ -378,26 +395,6 @@ video {
   }
 }
 
-.cssbuttons-io {
-  position: relative;
-  font-family: inherit;
-  font-weight: 500;
-  font-size: 18px;
-  letter-spacing: 0.05em;
-  border-radius: 0.8em;
-  cursor: pointer;
-  border: none;
-  background: linear-gradient(to right, #8e2de2, #4a00e0);
-  color: ghostwhite;
-  overflow: hidden;
-}
-
-.cssbuttons-io svg {
-  width: 1.2em;
-  height: 1.2em;
-  margin-right: 0.5em;
-}
-
 .make-routine {
   position: relative;
   z-index: 10;
@@ -548,14 +545,14 @@ video {
   display: flex;
 }
 
-.social__button {
+/* .social__button {
   padding: 0.75rem 1.5rem;
   background-color: #6C63FF;
   color: #fff;
   text-decoration: none;
   border-radius: 0.5rem;
   transition: background-color 0.3s;
-}
+} */
 
 .social__button:hover {
   background-color: #5752d4;
@@ -688,6 +685,136 @@ video {
   }
 }
 
+
+.animate {
+  position: relative !important;
+  display: inline-block !important;
+  cursor: pointer !important;
+  outline: none !important;
+  border: 0 !important;
+  vertical-align: middle !important;
+  text-decoration: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+}
+
+button.animate {
+  width: 12rem;
+  height: auto;
+}
+
+button.animate .circle {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: relative;
+  display: block;
+  margin: 0;
+  width: 3rem;
+  height: 3rem;
+  background: #3c90e2;
+  border-radius: 1.625rem;
+}
+
+button.animate .circle .icon {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  background: #fff;
+}
+
+button.animate .circle .icon.arrow {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  left: 0.625rem;
+  width: 1.125rem;
+  height: 0.125rem;
+  background: none;
+}
+
+button.animate .circle .icon.arrow::before {
+  position: absolute;
+  content: "";
+  top: -0.29rem;
+  right: 0.0625rem;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-top: 0.125rem solid #fff;
+  border-right: 0.125rem solid #fff;
+  transform: rotate(45deg);
+}
+
+button.animate .button-text {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1)  !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  padding: 0.75rem 0 !important;
+  margin: 0 0 0 1.85rem !important;
+  color: white;
+  font-weight: 700 !important;
+  line-height: 1.6 !important;
+  text-align: center !important;
+  text-transform: uppercase !important;
+  font-size: 15px !important;
+}
+
+.animate:hover .circle {
+  width: 100%;
+}
+
+.animate:hover .circle .icon.arrow {
+  background: #fff;
+  transform: translate(1rem, 0);
+}
+
+.animate:hover .button-text {
+  color: #fff !important;
+}
+
+
+
+.goto {
+ padding: 15px 25px;
+ border: unset;
+ border-radius: 15px;
+ color: #212121 !important;
+ z-index: 1;
+ background: #e8e8e8;
+ position: relative;
+ font-weight: 1000;
+ font-size: 17px;
+ -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+ box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+ transition: all 250ms;
+ overflow: hidden;
+}
+
+.goto::before {
+ content: "";
+ position: absolute;
+ top: 0;
+ left: 0;
+ height: 100%;
+ width: 0;
+ border-radius: 15px;
+ background-color: #3297CE;
+ z-index: -1;
+ -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+ box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+ transition: all 250ms
+}
+
+.goto:hover {
+ color: #e8e8e8;
+}
+
+.goto:hover::before {
+ width: 100%;
+}
 
   </style>
   

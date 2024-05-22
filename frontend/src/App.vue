@@ -19,9 +19,34 @@ import headerNav from "@/components/common/headerNav.vue";
   font-weight: 400;
 } */
 
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: whitesmoke;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+
 .object-fit-cover {
   object-fit: cover;
 }
+
 
 @import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap");
 

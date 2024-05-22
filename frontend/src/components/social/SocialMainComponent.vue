@@ -67,7 +67,6 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="boardDetailModalLabel">Board Details</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -77,11 +76,30 @@
               <p class="board-detail-writer-name">{{selectedBoard?.writer.userNickname}}</p>
             </div>
 
+            <div class="follow-container" @click="followUnfollow(selectedBoard?.writer.userId)">
+              <svg
+                class="feather feather-heart"
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                stroke-width="2"
+                stroke="currentColor"
+                fill="none"
+                viewBox="0 0 24 24"
+                height="24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                ></path>
+              </svg>
+              <div class="follow-action">
+                <span class="option-1" v-if="!isFollower">팔로우</span>
+                <span class="option-2" v-else>언팔로우</span>
+              </div>
+            </div>
 
-            <!-- 해당 유저를 팔로우 중이 아니라면 팔로우 버튼 보여주기 -->
-            <button class="btn" v-if="!isFollower && authStore.user.userId != selectedBoard?.writer.userId" @click="followUnfollow(selectedBoard?.writer.userId)">팔로우</button>
-            <button class="btn" v-else-if="isFollower && authStore.user.userId != selectedBoard?.writer.userId" @click="followUnfollow(selectedBoard?.writer.userId)">언팔로우</button>
-            <button class="btn" v-else-if="authStore.user.userId == selectedBoard?.writer.userId" @click="deleteBoard(selectedBoard?.board.boardId)">글 삭제하기</button>
+            <button class="btn" v-if="authStore.user.userId == selectedBoard?.writer.userId" @click="deleteBoard(selectedBoard?.board.boardId)">글 삭제하기</button>
 
             <p class="board-detail-routine-label">{{ selectedBoard?.writer.userNickname }} 님의 운동 루틴</p>
             <div class="board-detail-routine" v-for="routine in selectedBoard?.RoutineComponents" :key="routine.exercise_name">
@@ -186,6 +204,7 @@ const registPost = () => {
     writeBoard.value.boardContent = '';
     writeBoard.value.boardVisibility = false;
     hideUploadModal();
+    store.getAllBoardList(); // Refresh the board list after posting
   })
   .catch((err) => {
     console.error('Error registering post:', err);
@@ -279,6 +298,11 @@ const followUnfollow = (writerId) => {
     .then((response) => {
       console.log(response.data);
       isFollower.value = !isFollower.value; // Toggle the follow state
+      if (isFollower.value) {
+        myFollowing.value.push({ followingUserId });
+      } else {
+        myFollowing.value = myFollowing.value.filter(following => following.followingUserId !== followingUserId);
+      }
     })
     .catch((err) => {
       console.log(err);
@@ -290,15 +314,20 @@ const goProfile = (userId) => {
   router.push({ name: 'MyPageView', params: { id: userId } });
 };
 
-
 //게시글 삭제
 const deleteBoard = (boardId) => {
   axios.delete('http://localhost:8080/boards/'+boardId)
   .then((response) => {
     console.log('deleted')
+    store.getAllBoardList(); // Refresh the board list after deletion
+    boardDetailModal.hide(); // Close the modal after deletion
   })
-}
+  .catch((err) => {
+    console.error('Error deleting board:', err);
+  });
+};
 </script>
+
 
 <style scoped>
 .container {
@@ -478,5 +507,84 @@ const deleteBoard = (boardId) => {
 
 .board-like-count {
   margin: auto;
+}
+
+.follow-container{
+  background-color: rgb(36, 36, 36);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 15px 10px 10px;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 10px;
+  box-shadow: rgba(46, 46, 46, 0.2) 0px 8px 24px;
+  color: rgb(255, 255, 255);
+}
+
+#favorite {
+  display: none;
+}
+
+#favorite:checked + .follow-container svg {
+  fill: hsl(0deg 100% 50%);
+  stroke: hsl(0deg 100% 50%);
+  animation: heartButton 1s;
+}
+
+@keyframes heartButton {
+  0% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(1.3);
+  }
+
+  50% {
+    transform: scale(1);
+  }
+
+  75% {
+    transform: scale(1.3);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.follow-container .follow-action {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+}
+
+.follow-container .follow-action span {
+  grid-column-start: 1;
+  grid-column-end: 1;
+  grid-row-start: 1;
+  grid-row-end: 1;
+  transition: all 0.5s;
+}
+
+.follow-container .follow-action span.option-1 {
+  transform: translate(0px, 0%);
+  opacity: 1;
+}
+
+.follow-container .follow-action span.option-2 {
+  transform: translate(0px, -100%);
+  opacity: 0;
+}
+
+#favorite:checked + .follow-container .follow-action span.option-1 {
+  transform: translate(0px, -100%);
+  opacity: 0;
+}
+
+#favorite:checked + .follow-container .follow-action span.option-2 {
+  transform: translate(0px, 0%);
+  opacity: 1;
 }
 </style>
