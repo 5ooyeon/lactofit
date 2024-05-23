@@ -5,7 +5,7 @@
 		INSERT INTO User (user_tag, user_nickname, user_birth,
 		user_profileImage, user_regDate, user_streakColor, user_streakPrice)
 		VALUES (#{userTag}, #{userNickname}, #{userBirth}, #{userProfileImage},
-		CURRENT_TIMESTAMP, 'PINK', 15)
+		CURRENT_TIMESTAMP, 'pink', 15)
 	</insert>
 
 	<select id="getUserById" parameterType="int"

@@ -78,7 +78,8 @@
               <img :src="selectedBoard?.writer.userProfileImage" alt="" class="writer-profile-image">
               <p class="board-detail-writer-name">{{selectedBoard?.writer.userNickname}}</p>
             </div>
-            <div class="follow-container" @click="followUnfollow(selectedBoard?.writer.userId)">
+
+            <div v-if="authStore.user.userId !== selectedBoard?.writer.userId" class="follow-container" @click="followUnfollow(selectedBoard?.writer.userId)">
               <svg class="feather feather-heart" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
               </svg>
@@ -87,6 +88,8 @@
                 <span class="option-2" v-else>언팔로우</span>
               </div>
             </div>
+
+
             <div class="routine-section">
               <p class="board-detail-routine-label">{{ selectedBoard?.writer.userNickname }} 님의 운동 루틴</p>
               <div class="board-detail-routine" v-for="routine in selectedBoard?.RoutineComponents" :key="routine.exercise_name">

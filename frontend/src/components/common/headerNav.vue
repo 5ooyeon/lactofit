@@ -86,7 +86,6 @@
               <img :src="authStore.user.userProfileImage" class="user-profile-img object-fit-cover dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
               <ul class="dropdown-menu dropdown-menu-end p-3">
                 <li><RouterLink :to="{ name: 'MyPageView', params: { id: authStore.user.userId } }" class="dropdown-item">나의 프로필</RouterLink></li>
-                <li><button @click="logout()" class="dropdown-item">내 정보 수정</button></li>
                 <li><button @click="logout()" class="dropdown-item">로그아웃</button></li>
               </ul>
             </div>
@@ -205,7 +204,9 @@ const formatNotificationDate = (date) => {
   const diffInMinutes = now.diff(notificationDate, 'minute');
   const diffInHours = now.diff(notificationDate, 'hour');
 
-  if (diffInMinutes < 60) {
+  if(diffInMinutes < 5) {
+    return `방금 전`;
+  } else if (diffInMinutes < 60) {
     return `${diffInMinutes}분 전`;
   } else if (diffInHours < 12) {
     return `${diffInHours}시간 전`;

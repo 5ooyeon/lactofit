@@ -18,7 +18,7 @@
     </div>
 </template>
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useYoutubeStore } from '@/stores/youtube';
 import CommentList from './CommentList.vue';
 
@@ -40,6 +40,11 @@ const writeComment = () => {
   store.writeComment(myComment.value, lastVideo.value.id.videoId)
   myComment.value = '';
 }
+
+onMounted(() => {
+    // window.reload()
+    window.scrollTo(0, 0);
+})
 </script>
 <style scoped>
 .container {

@@ -16,24 +16,26 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, nextTick, watchEffect } from 'vue';
 import { getYearWeeks, getDayOfYear, formatDate } from '../../utils/date';
-import { useAuthStore } from '@/stores/auth';
 import axios from 'axios';
+
+// Accept user_id as a prop
+const props = defineProps({
+  user_id: {
+    type: Number,
+    required: true
+  }
+});
 
 const year = ref(new Date().getFullYear());
 const records = ref([]);
-const userColors = ref([]);
 
 const myRoutines = () => {
-  const userId = useAuthStore().user.userId;
-
-  axios.get('http://localhost:8080/boards/user/private/'+userId)
-  .then((response) => {
-    records.value = response.data;
-    userColors.value = useAuthStore().user.userStreakColor || [];
-    // console.log(records.value)
-  })
+  axios.get(`http://localhost:8080/boards/user/private/${props.user_id}`)
+    .then((response) => {
+      records.value = response.data;
+    });
 }
 
 const weeks = ref(getYearWeeks(year.value));
@@ -53,13 +55,20 @@ const contributions = computed(() => {
   return contributionsMap;
 });
 
+const streakColor = ref('');
+
+axios.get(`http://localhost:8080/users/${props.user_id}`)
+  .then((response) => {
+    streakColor.value = response.data.userStreakColor;
+    console.log(streakColor)
+  });
+
 function getColor(date) {
   if (!date) return 'color-0';
   const dayOfYear = getDayOfYear(date);
   const contributionCount = contributions.value[dayOfYear]?.length || 0;
   if (contributionCount >= 1) {
-    const colorIndex = (dayOfYear - 1) % userColors.value.length;
-    return userColors.value[colorIndex];
+    return streakColor.value;
   }
   return 'color-0';
 }
@@ -67,8 +76,6 @@ function getColor(date) {
 function getTitle(date) {
   if (!date) return '';
   const dayOfYear = getDayOfYear(date);
-  // console.log(dayOfYear)
-  const contributionCount = contributions.value[dayOfYear]?.length || 0;
   return `${formatDate(date)}`;
 }
 
@@ -83,19 +90,28 @@ function isToday(date) {
   );
 }
 
-function isYear(date) {
-  if(!date) return false;
-  // console.log(date.getFullYear())
-  return (
-    date.getFullYear() === '2024'
-  )
+function setRandomColors() {
+  const colors = ['pink', 'rgba(131, 202, 117, 0.719)', 'rgba(13, 146, 255, 0.616)', 'rgba(0, 0, 0, 0.452)', 'rgb(255, 221, 70)'];
+  const jokerElements = document.querySelectorAll('.joker');
+  jokerElements.forEach(element => {
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    element.style.backgroundColor = randomColor;
+  });
 }
 
-onMounted(() => {
+onMounted(async () => {
   myRoutines();
+  await nextTick();
+  setRandomColors();
+});
+
+watchEffect(async () => {
+  if (records.value.length > 0) {
+    await nextTick();
+    setRandomColors();
+  }
 });
 </script>
-
 
 <style scoped>
 .activity-calendar {
@@ -147,19 +163,19 @@ onMounted(() => {
 }
 
 .green {
-  background-color: green;
+  background-color: rgba(131, 202, 117, 0.719);
 }
 
 .blue {
-  background-color: blue;
+  background-color: rgba(13, 146, 255, 0.616);
 }
 
 .black {
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.452);
 }
 
 .gold {
-  background-color: gold;
+  background-color: rgb(255, 221, 70);
   color: black;
 }
 

@@ -27,7 +27,7 @@
               </div>
               <SlotMachineView v-if="isSlotMachineVisible"/>
               <h3>{{ userInfo.user?.userNickname }} 님은 올해 {{ userInfo.myAllPost?.length }} 일 째 운동중!</h3>
-              <UserStreakComponent />
+              <UserStreakComponent :user_id="userId" />
             </div>
             <div class="my-routine">
               <h3>운동 루틴</h3>
@@ -59,6 +59,8 @@
               </div>
             </div>
           </div>
+
+
           <div v-if="selectedTab === 'analysis'" class="analysis">
             <p>보유 스트릭 변경권: {{ userInfo.user?.userStreakPrice }}</p>
             <div class="slot-machine-container">
@@ -68,12 +70,19 @@
 
               <div v-if="drawnColor" class="result">
                 <div :class="['color-box', drawnColor]">
-                  <span class="color-name">{{ drawnColor }}</span>
+                  <template v-if="drawnColor === 'joker'">
+                    <img src="/src/assets/img/thing.png" alt="Joker Image" class="joker-image" />
+                  </template>
+                  <span v-else class="color-name">{{ drawnColor }}</span>
                 </div>
-                <p v-if="drawnColor === 'joker'">Congratulations! You drew the Joker!</p>
+                <p v-if="drawnColor === 'joker'">앗! 야생의 띵균쌤(이)가 나타났다!</p>
               </div>
             </div>
           </div>
+
+
+
+
           <div v-if="selectedTab === 'setting'" class="setting">
             <div class="row">
               <div class="col-auto">
@@ -167,7 +176,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, reactive } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { Modal } from 'bootstrap';
 import { useSocialStore } from '@/stores/social';
 import { useAuthStore } from '@/stores/auth';
@@ -213,7 +222,6 @@ const isCurrentUser = computed(() => authStore.user.userId == userId);
 const getUserInfo = () => {
   axios.get(`http://localhost:8080/users/${userId}`).then((response) => {
     userInfo.value.user = response.data;
-    console.log(userInfo.value)
   });
 };
 
@@ -248,7 +256,7 @@ const getUserPost = () => {
 const getAllPost = () => {
   axios.get(`http://localhost:8080/boards/user/private/${userId}`)
   .then((response) => {
-    userInfo.value.myAllPost = response.data
+    userInfo.value.myAllPost = response.data;
   })
 }
 
@@ -256,7 +264,6 @@ const getAllPost = () => {
 const hasTodayPost = computed(() => {
   const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Seoul' });
   return userInfo.value.myAllPost?.some((post) => {
-    
     const postDate = new Date(post.boardRegDate).toISOString().split('T')[0];
     return postDate === today;
   });
@@ -464,6 +471,7 @@ onMounted(() => {
   console.log(userInfo.value.canSlot)
 });
 </script>
+
 
 <style scoped>
 /* General Styles */
@@ -780,11 +788,11 @@ onMounted(() => {
 }
 
 .blue {
-  background-color: blue;
+  background-color: rgba(37, 132, 255, 0.644);
 }
 
 .gold {
-  background-color: gold;
+  background-color: rgb(255, 229, 80);
   color: black;
 }
 
