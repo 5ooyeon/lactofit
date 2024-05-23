@@ -24,21 +24,17 @@
 	</select>
 
 	<select id="getFollowersByUserId"
-		resultType="com.ssafit.model.dto.Follow">
-		SELECT follow_id AS followId, user_id AS userId,
-		following_user_id AS
-		followingUserId, follow_regDate AS followRegDate
-		FROM Follow
-		WHERE following_user_id = #{userId}
+		resultType="map">
+		SELECT * 
+		FROM Follow f inner join user u on f.user_id = u.user_id
+		WHERE f.following_user_id = #{userId}
 	</select>
 
 	<select id="getFollowingByUserId"
-		resultType="com.ssafit.model.dto.Follow">
-		SELECT follow_id AS followId, user_id AS userId,
-		following_user_id AS
-		followingUserId, follow_regDate AS followRegDate
-		FROM Follow
-		WHERE user_id = #{followingUserId}
+		resultType="map">
+		SELECT *
+		FROM Follow f inner join user u on f.following_user_id = u.user_id
+		WHERE f.user_id = #{followingUserId}
 	</select>
 
 	<select id="countFollowers" parameterType="int" resultType="int">

@@ -6,7 +6,7 @@
         </div>
 
         <div class="comment-section">
-            <p class="comment-title">Comments ( {{ store.commentList.length }} )</p>
+            <p class="comment-title">댓글</p>
             <div class="comment-write-form">
                 <textarea class="form-control" rows="3" v-model="myComment" placeholder="Leave a comment..."></textarea>
                 <button class="write-comment" @click="writeComment()">입력</button>

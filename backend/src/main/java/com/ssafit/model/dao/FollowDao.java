@@ -1,6 +1,7 @@
 package com.ssafit.model.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -14,9 +15,9 @@ public interface FollowDao {
 
 	Follow getFollowByUsers(@Param("userId") int userId, @Param("followingUserId") int followingUserId);
 
-	List<Follow> getFollowersByUserId(int userId);
+	List<Map<String, Object>> getFollowersByUserId(int userId);
 
-	List<Follow> getFollowingByUserId(int followingUserId);
+	List<Map<String, Object>> getFollowingByUserId(int followingUserId);
 
 	int countFollowers(int userId);
 

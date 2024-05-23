@@ -1,6 +1,7 @@
 package com.ssafit.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,12 +46,12 @@ public class FollowServiceImpl implements FollowService {
 	}
 
 	@Override
-	public List<Follow> getFollowers(int userId) {
+	public List<Map<String, Object>> getFollowers(int userId) {
 		return followDao.getFollowersByUserId(userId);
 	}
 
 	@Override
-	public List<Follow> getFollowing(int followingUserId) {
+	public List<Map<String, Object>> getFollowing(int followingUserId) {
 		return followDao.getFollowingByUserId(followingUserId);
 	}
 

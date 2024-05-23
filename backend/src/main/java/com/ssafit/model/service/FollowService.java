@@ -1,6 +1,7 @@
 package com.ssafit.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -12,9 +13,9 @@ public interface FollowService {
 
 	void deleteFollow(@Param("followId") int followId, @Param("userId") int userId);
 
-	List<Follow> getFollowers(int userId);
+	List<Map<String, Object>> getFollowers(int userId);
 
-	List<Follow> getFollowing(int followingUserId);
+	List<Map<String, Object>> getFollowing(int followingUserId);
 
 	public int countFollowers(int userId);
 

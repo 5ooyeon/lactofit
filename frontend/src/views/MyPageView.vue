@@ -9,23 +9,37 @@
       <aside class="profile">
         <img :src="userInfo.user?.userProfileImage" alt="Profile Picture" class="profile-picture object-fit-cover" />
         <h2 class="nickname">{{ userInfo.user?.userNickname }}</h2>
-        <p>팔로잉 {{ userInfo.following.length }} | 팔로워 {{ userInfo.follower.length }}</p>
+        <span @click="showFollowingModal">팔로잉 {{ userInfo.following.length }}</span><span @click="showFollowersModal">팔로워 {{ userInfo.follower.length }} </span>
+        
+
+        <div v-if="authStore.user.userId !== userInfo.user?.userId" class="follow-container" @click="followUnfollow">
+          <svg class="feather feather-heart" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+          <div class="follow-action">
+            <span class="option-1" v-if="!isFollower">팔로우</span>
+            <span class="option-2" v-else>언팔로우</span>
+          </div>
+        </div>
       </aside>
       <div class="content-area">
         <div class="content">
           <div v-if="selectedTab === 'feed'" class="feed">
             <div class="workout-streak">
-              <div v-if="!hasTodayPost" class="no-post-message">
+              <div v-if="authStore.user.userId == userInfo.user?.userId">
+                <div v-if="!hasTodayPost" class="no-post-message">
                 <p>아직 운동 인증을 하지 않았어요!</p>
-                <button class="btn" @click="showUploadModal">#오운완 하러가기</button>
+                  <button class="btn" @click="showUploadModal">#오운완 하러가기</button>
+                </div>
+                <div v-else class="post-completed">
+                  <p>오늘도 운동을 완료했어요.</p>
+                  <button v-if="userInfo.canSlot" role="button" class="golden-button" @click="showSlotMachine">
+                    <span class="golden-text">I'm feeling Lucky</span>
+                  </button>
+                </div>
+                <SlotMachineView v-if="isSlotMachineVisible"/>
               </div>
-              <div v-else class="post-completed">
-                <p>오늘도 운동을 완료했어요.</p>
-                <button v-if="userInfo.canSlot" role="button" class="golden-button" @click="showSlotMachine">
-                  <span class="golden-text">I'm feeling Lucky</span>
-                </button>
-              </div>
-              <SlotMachineView v-if="isSlotMachineVisible"/>
+
               <h3>{{ userInfo.user?.userNickname }} 님은 올해 {{ userInfo.myAllPost?.length }} 일 째 운동중!</h3>
               <UserStreakComponent :user_id="userId" />
             </div>
@@ -51,12 +65,18 @@
                   </div>
                 </div>
               </div>
+              <div v-if="userInfo.routines.length === 0">
+                등록된 루틴이 없습니다.
+              </div>
             </div>
             <h3>#오운완</h3>
             <div class="social-mypost">
               <div class="post-image" v-for="post in userInfo.myPost" :key="post.board.boardId">
-                <img :src=" post.board.boardImgUrl" class="post-image" />
+                <img :src=" `/`+post.board.boardImgUrl" class="post-image" />
               </div>
+            </div>
+            <div v-if="userInfo.myPost?.length === 0">
+              등록된 오운완이 없습니다.
             </div>
           </div>
 
@@ -173,6 +193,48 @@
       </div>
     </div>
   </div>
+
+
+
+      <!-- Followers Modal -->
+      <div class="modal fade" id="followersModal" tabindex="-1" aria-labelledby="followersModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="followersModalLabel">팔로워 목록</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <ul class="list-group">
+              <li class="list-group-item" v-for="f in userInfo.follower" :key="f.user_id" @click="goProfile(f.user_id)">
+                <img :src="f.user_profileImage" alt="Profile Image" class="follower-img">
+                <span>{{ f.user_nickname }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Following Modal -->
+    <div class="modal fade" id="followingModal" tabindex="-1" aria-labelledby="followingModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="followingModalLabel">팔로잉 목록</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <ul class="list-group">
+              <li class="list-group-item" v-for="following in userInfo.following" :key="following.userId" @click="goProfile(following.following_user_id)">
+                <img :src="following.userProfileImage" alt="Profile Image" class="following-img">
+                <span>{{ following.userNickname }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
 </template>
 
 <script setup>
@@ -184,10 +246,12 @@ import { useRoute } from 'vue-router';
 import axios from 'axios';
 import UserStreakComponent from '@/components/user/UserStreakComponent.vue';
 import SlotMachineView from './SlotMachineView.vue';
+import router from '@/router';
 
 const socialStore = useSocialStore();
 const authStore = useAuthStore();
 const route = useRoute();
+const isFollower = ref(false);
 
 const selectedTab = ref('feed');
 const selectTab = (tab) => {
@@ -230,10 +294,47 @@ const getFollowingFollowers = () => {
   axios.get(`http://localhost:8080/follows/following/${userId}`).then((response) => {
     userInfo.value.following = response.data;
   });
+
   axios.get(`http://localhost:8080/follows/followers/${userId}`).then((response) => {
     userInfo.value.follower = response.data;
+    for(var i =0;i< userInfo.value.follower.length ;i++) {
+      // if(userInfo.value.follower[i].user_id =)
+    }
+    isFollower.value = userInfo.value.follower.some(f => f.user_id === authStore.user.userId);
+    console.log(userInfo.value.follower)
   });
 };
+
+//팔로우, 언팔로우 하기
+const followUnfollow = () => {
+  const myId = authStore.user.userId;
+  axios.post('http://localhost:8080/follows/', { followingUserId: userId, userId: myId })
+    .then((response) => {
+      isFollower.value = !isFollower.value;
+      if (isFollower.value) {
+        userInfo.value.follower.push({ userId: myId });
+      } else {
+        userInfo.value.follower = userInfo.value.follower.filter(f => f.userId !== myId);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+//팔로우, 팔로워 리스트 보기
+const showFollowersModal = () => {
+  const modalElement = document.getElementById('followersModal');
+  const followersModal = new Modal(modalElement);
+  followersModal.show();
+};
+
+const showFollowingModal = () => {
+  const modalElement = document.getElementById('followingModal');
+  const followingModal = new Modal(modalElement);
+  followingModal.show();
+};
+
 
 // 루틴보기
 const getRoutines = () => {
@@ -460,6 +561,12 @@ const getMyCoupon = () => {
     });
 }
 
+//프로필 이동
+const goProfile = (user_id) => {
+  window.location.href('http://localhost:5173/user/'+user_id)
+  router.push({ name: 'MyPageView', params: { id: user_id } });
+}
+
 
 onMounted(() => {
   getUserPost();
@@ -532,6 +639,40 @@ onMounted(() => {
 .content {
   padding: 1rem;
 }
+
+.modal-body ul {
+  padding: 0;
+  list-style: none;
+}
+.list-group-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid #ddd;
+  margin-bottom: 0.5rem;
+  border-radius: 5px;
+}
+.follower-img, .following-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 1rem;
+}
+.follow-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.follow-container:hover {
+  background-color: #0056b3;
+}
+
 .workout-streak h3 {
   margin-top: 10px;
 }
@@ -810,5 +951,108 @@ onMounted(() => {
 
 .color-name {
   text-transform: capitalize;
+}
+
+
+.follow-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.follow-container:hover {
+  background-color: #0056b3;
+}
+
+.heart-container {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  transition: 0.3s;
+  display: flex;
+}
+
+.heart-container .checkbox {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 20;
+  cursor: pointer;
+}
+
+.heart-container .svg-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.heart-container .svg-outline,
+.heart-container .svg-filled {
+  fill: #007bff;
+  position: absolute;
+}
+
+.heart-container .svg-filled {
+  animation: keyframes-svg-filled 1s;
+  display: none;
+}
+
+.heart-container .svg-celebrate {
+  position: absolute;
+  animation: keyframes-svg-celebrate 0.5s;
+  animation-fill-mode: forwards;
+  display: none;
+  stroke: #007bff;
+  fill: #007bff;
+  stroke-width: 2px;
+}
+
+.heart-container .checkbox:checked ~ .svg-container .svg-filled {
+  display: block;
+}
+
+.heart-container .checkbox:checked ~ .svg-container .svg-celebrate {
+  display: block;
+}
+
+@keyframes keyframes-svg-filled {
+  0% {
+    transform: scale(0);
+  }
+
+  25% {
+    transform: scale(1.2);
+  }
+
+  50% {
+    transform: scale(1);
+    filter: brightness(1.5);
+  }
+}
+
+@keyframes keyframes-svg-celebrate {
+  0% {
+    transform: scale(0);
+  }
+
+  50% {
+    opacity: 1;
+    filter: brightness(1.5);
+  }
+
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+    display: none;
+  }
 }
 </style>

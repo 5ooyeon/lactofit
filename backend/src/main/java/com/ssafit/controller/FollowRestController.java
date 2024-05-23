@@ -31,6 +31,7 @@ public class FollowRestController {
 	@PostMapping("/")
 	@Operation(summary = "사용자를 팔로우 또는 언팔로우합니다.")
 	public ResponseEntity<?> toggleFollow(@RequestBody Follow follow) {
+		System.out.println(follow.toString());
 		boolean isfollowed = followService.toggleFollow(follow);
 		Map<String, Boolean> response = new HashMap<>();
 		response.put("followed", isfollowed);
@@ -40,15 +41,15 @@ public class FollowRestController {
 
 	@GetMapping("/followers/{user_id}")
 	@Operation(summary = "특정 사용자의 팔로워 목록을 조회합니다.")
-	public ResponseEntity<List<Follow>> getFollowers(@PathVariable("user_id") int userId) {
-		List<Follow> followers = followService.getFollowers(userId);
+	public ResponseEntity<?> getFollowers(@PathVariable("user_id") int userId) {
+		List<Map<String, Object>> followers = followService.getFollowers(userId);
 		return new ResponseEntity<>(followers, HttpStatus.OK);
 	}
 
 	@GetMapping("/following/{user_id}")
 	@Operation(summary = "특정 사용자가 팔로우하는 사용자 목록을 조회합니다.")
-	public ResponseEntity<List<Follow>> getFollowing(@PathVariable("user_Id") int userId) {
-		List<Follow> following = followService.getFollowing(userId);
+	public ResponseEntity<?> getFollowing(@PathVariable("user_Id") int userId) {
+		List<Map<String, Object>> following = followService.getFollowing(userId);
 		return new ResponseEntity<>(following, HttpStatus.OK);
 	}
 
