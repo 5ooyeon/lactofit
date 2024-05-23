@@ -55,7 +55,7 @@
             <h3>#오운완</h3>
             <div class="social-mypost">
               <div class="post-image" v-for="post in userInfo.myPost" :key="post.board.boardId">
-                <img :src="`/` + post.board.boardImgUrl" class="post-image" />
+                <img :src=" post.board.boardImgUrl" class="post-image" />
               </div>
             </div>
           </div>

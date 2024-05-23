@@ -75,6 +75,7 @@ const getAllExercises = () => {
   axios.get(`http://localhost:8080/exercises/`)
     .then((response) => {
       exerciseList.value = response.data;
+      console.log(exerciseList.value)
     })
     .catch((err) => {
       console.log(err);
