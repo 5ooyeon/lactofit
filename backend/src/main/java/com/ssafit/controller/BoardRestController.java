@@ -167,6 +167,13 @@ public class BoardRestController {
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 
+
+	@GetMapping("/user/private/{user_id}")
+	@Operation(summary = "UserId로 삭제된 게시물 포함 조회.")
+	public ResponseEntity<?> getAllBoardByUserId(@PathVariable("user_id") int userId) {
+		return new ResponseEntity<>(boardService.getAllBoardByUserId(userId), HttpStatus.OK);
+	}
+	
 	@GetMapping("/following/{user_id}")
 	@Operation(summary = "팔로잉 유저 게시물 조회.")
 	public ResponseEntity<?> getFollowingBoardByUserId(@PathVariable("user_id") int userId) {

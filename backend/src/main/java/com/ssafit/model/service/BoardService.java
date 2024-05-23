@@ -20,4 +20,6 @@ public interface BoardService {
 	public void updateBoard(Board board);
 
 	public void deleteBoard(int boardId);
+
+	public List<Board> getAllBoardByUserId(int userId);
 }

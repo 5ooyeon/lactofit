@@ -130,10 +130,10 @@ public class UserRestController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@PutMapping("/streakColor/{user_id}")
+	@GetMapping("/streakColor/{user_id}")
 	@Operation(summary = "유저의 스트릭 색상을 변경합니다.")
 	public ResponseEntity<User> updateStreakColor(@PathVariable("user_id") int userId,
-			@RequestBody String userStreakColor) {
+			@RequestParam String userStreakColor) {
 		userService.updateStreakColor(userId, userStreakColor);
 		User updatedUser = userService.getUserById(userId);
 		if (updatedUser != null) {
@@ -142,15 +142,17 @@ public class UserRestController {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
-	@PutMapping("/streakPrice/{user_id}")
+	@GetMapping("/streakprice/{user_id}")
 	@Operation(summary = "유저의 스트릭 뽑기 가격을 변경합니다.")
-	public ResponseEntity<User> updateStreakPrice(@PathVariable("user_id") int userId,
-			@RequestBody int userStreakPrice) {
-		userService.updateStreakPrice(userId, userStreakPrice);
-		User updatedUser = userService.getUserById(userId);
-		if (updatedUser != null) {
-			return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+	public ResponseEntity<?> updateStreakPrice(@PathVariable("user_id") int userId,
+			@RequestParam int userStreakPrice) {
+		try {
+			userService.updateStreakPrice(userId, userStreakPrice);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		
 	}
+	
 }

@@ -14,7 +14,7 @@
             <span class="circle" aria-hidden="true">
               <span class="icon arrow"></span>
             </span>
-            <RouterLink class="button-text" :to="{name: 'RoutineInfoComponent'}" style="text-decoration: none;">더 알아보기</RouterLink>
+            <RouterLink class="button-text" :to="{name: 'RoutineInfoComponent'}" style="text-decoration: none;">나의 루틴 등록하기</RouterLink>
           </button>
         </div>
       </section>
@@ -32,7 +32,7 @@
                 운동명으로 검색하여 원하는 운동에 대한 정보를 확인하고, 맞춤형 루틴을 만들어보세요. 다양한 운동 정보를 통해 더욱 효과적인 운동을 경험할 수 있습니다.
               </p>
               <button class="goto">
-                <RouterLink :to="{name: 'ExerciseView'}" style="text-decoration: none; color: black;">Learn More</RouterLink>
+                <RouterLink :to="{name: 'ExerciseView'}" style="text-decoration: none; color: black;">운동 검색하기</RouterLink>
               </button>
             </div>
           </div>
@@ -80,7 +80,7 @@
 
         <div class="social__button-container container">
           <button class="goto">
-            <RouterLink :to="{name: 'SocialMainComponent'}" style="text-decoration: none;">바로가기</RouterLink>
+            <RouterLink :to="{name: 'SocialMainComponent'}" style="text-decoration: none;">#오운완 인증하기</RouterLink>
           </button>
         </div>
       </section>
@@ -153,15 +153,30 @@ const handleScroll = () => {
   }
 };
 
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('animated');
+    } else {
+      entry.target.classList.remove('animated');
+    }
+  });
+});
+
 onMounted(() => {
   getPopularBoardList();
   const scrollToTopBtn = document.getElementById('scrollToTopBtn');
   scrollToTopBtn.addEventListener('click', scrollToTop);
   window.addEventListener('scroll', handleScroll);
+
+  document.querySelectorAll('.section').forEach(section => {
+    observer.observe(section);
+  });
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll);
+  observer.disconnect();
 });
 </script>
 
@@ -196,6 +211,10 @@ video {
   z-index: 0;
 }
 
+.home_title {
+  font-weight: 500;
+}
+
 .home__content {
   position: absolute;
   z-index: 1;
@@ -225,6 +244,11 @@ video {
 .youtube__image {
   flex: 1;
   padding-right: 2rem;
+}
+
+.youtube__image {
+  justify-content: flex-end;
+  padding-right: 0;
 }
 
 .routine__image img,
@@ -562,5 +586,17 @@ button.animate .button-text {
 .scroll-top-button:focus .top-button-box {
   transition: 0.4s;
   transform: translateY(-56px);
+}
+
+/* Section animation */
+.section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.section.animated {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>

@@ -8,18 +8,18 @@
 		board_visibility)
 		VALUES(#{userId}, #{routineId}, #{boardContent},
 		#{boardImgUrl},
-		#{boardViewCnt}, NOW(), #{boardVisibility})
+		#{boardViewCnt}, NOW(), 1)
 	</insert>
 
 	<select id="getBoardById"
 		resultType="com.ssafit.model.dto.Board">
 		SELECT * FROM Board WHERE
-		board_id = #{boardId}
+		board_id = #{boardId} and board_visibility = 1
 	</select>
 
 	<select id="getBoardByUserId"
 		resultType="com.ssafit.model.dto.Board">
-		SELECT * FROM Board WHERE User_Id = #{userId} ORDER BY
+		SELECT * FROM Board WHERE User_Id = #{userId} and board_visibility = 1 ORDER BY
 		board_RegDate DESC
 	</select>
 
@@ -27,14 +27,14 @@
 		resultType="com.ssafit.model.dto.Board">
 		SELECT * FROM Board WHERE User_Id IN
 		(SELECT
-		Following_User_Id From Follow WHERE User_Id = #{userId})
+		Following_User_Id From Follow WHERE User_Id = #{userId}) and board_visibility = 1
 		ORDER BY
 		board_RegDate DESC
 	</select>
 
 	<select id="getAllBoards"
 		resultType="com.ssafit.model.dto.Board">
-		SELECT * FROM Board ORDER BY
+		SELECT * FROM Board where board_visibility = 1 ORDER BY
 		board_RegDate DESC
 	</select>
 
@@ -43,7 +43,7 @@
 		SELECT b.*, COUNT(bl.boardLikes_id) AS likeCount
 		FROM Board b
 		LEFT JOIN BoardLikes bl ON b.board_id = bl.board_id
-		GROUP BY b.board_id
+		GROUP BY b.board_id having b.board_visibility = 1
 		ORDER BY likeCount DESC, b.board_regDate DESC
 	</select>
 
@@ -53,12 +53,15 @@
 		board_content = #{boardContent}, board_imgUrl =
 		#{boardImgUrl},
 		board_viewCnt = #{boardViewCnt}, board_updateDate =
-		NOW(),
-		board_visibility = #{boardVisibility} WHERE board_id =
+		NOW() WHERE board_id =
 		#{boardId}
 	</update>
 
 	<delete id="deleteBoard">
-		DELETE FROM Board WHERE board_id = #{boardId}
+		update board set board_visibility = 0 where board_id = #{boardId}
 	</delete>
+	
+	<select id="getAllBoardByUserId" resultType="com.ssafit.model.dto.Board">
+		select * from board where user_id = #{userId}
+	</select>
 </mapper>

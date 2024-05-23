@@ -2,26 +2,22 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { useRoute } from 'vue-router';
 import headerNav from "@/components/common/headerNav.vue";
-import headerNav_main from './components/common/headerNav_main.vue';
 
 const route = useRoute()
 </script>
 
 <template>
-  <component :is="route.name === 'Main' ? headerNav_main : headerNav" />
+  <headerNav></headerNav>
 
   <RouterView></RouterView>
 
 </template>
 
 <style>
-/* * {
-  margin: 0;
-  padding: 0;
-  text-decoration: none;
+* {
   font-family: 'Pretendard';
   font-weight: 400;
-} */
+}
 
 ::-webkit-scrollbar-button {
   display: none;
@@ -70,7 +66,7 @@ const route = useRoute()
 
   /*========== Font and typography ==========*/
   /*.5rem = 8px | 1rem = 16px ...*/
-  --body-font: 'Lora', serif;
+  --body-font: 'jua'; /* 기본 폰트 설정 */
 
   --biggest-font-size: 2.25rem;
   --h1-font-size: 1.5rem;
@@ -99,6 +95,7 @@ const route = useRoute()
       --normal-font-size: 1rem;
       --small-font-size: .875rem;
       --smaller-font-size: .813rem;
+      
     }
 }
 
@@ -111,10 +108,11 @@ const route = useRoute()
 
 html {
     scroll-behavior: smooth;
+    /* font-family: var(--body-font); */
 }
 
 body {
-    /* font-family: var(--body-font); */
+    /* font-family: 'jua'; */
     font-size: var(--normal-font-size);
     background-color: var(--body-color);
     color: var(--text-color);
@@ -166,7 +164,7 @@ img {
     overflow: hidden; /* For animation ScrollReveal */
 }
 
-.navbar {
+/* .navbar {
     position:fixed;
     top: 0;
     left: 0;
@@ -177,12 +175,12 @@ img {
 }
 
 .navbar-brand, .nav-link {
-    color: #333; /* 네비게이션 링크 색상 변경 */
+    color: #333;
 }
 
 .navbar-brand:hover, .nav-link:hover {
-    color: #000; /* 호버 상태에서 색상 강조 */
-}
+    color: #000;
+} */
 
 html {
     scroll-behavior: smooth; /* 부드러운 스크롤 */

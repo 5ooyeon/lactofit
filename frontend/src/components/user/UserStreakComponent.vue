@@ -23,13 +23,15 @@ import axios from 'axios';
 
 const year = ref(new Date().getFullYear());
 const records = ref([]);
+const userColors = ref([]);
 
 const myRoutines = () => {
   const userId = useAuthStore().user.userId;
 
-  axios.get('http://localhost:8080/boards/user/'+userId)
+  axios.get('http://localhost:8080/boards/user/private/'+userId)
   .then((response) => {
-    records.value = response.data
+    records.value = response.data;
+    userColors.value = useAuthStore().user.userStreakColor || [];
     // console.log(records.value)
   })
 }
@@ -40,7 +42,7 @@ const contributions = computed(() => {
   const contributionsMap = {};
 
   records.value.forEach(record => {
-    const date = new Date(record.board.boardRegDate);
+    const date = new Date(record.boardRegDate);
     const dayOfYear = getDayOfYear(date);
     if (!contributionsMap[dayOfYear]) {
       contributionsMap[dayOfYear] = [];
@@ -55,7 +57,10 @@ function getColor(date) {
   if (!date) return 'color-0';
   const dayOfYear = getDayOfYear(date);
   const contributionCount = contributions.value[dayOfYear]?.length || 0;
-  if (contributionCount >= 1) return 'color-1';
+  if (contributionCount >= 1) {
+    const colorIndex = (dayOfYear - 1) % userColors.value.length;
+    return userColors.value[colorIndex];
+  }
   return 'color-0';
 }
 
@@ -90,6 +95,7 @@ onMounted(() => {
   myRoutines();
 });
 </script>
+
 
 <style scoped>
 .activity-calendar {
@@ -136,8 +142,25 @@ onMounted(() => {
   background-color: #ebedf0;
 }
 
-.color-1 {
+.pink {
   background-color: pink;
+}
+
+.green {
+  background-color: green;
+}
+
+.blue {
+  background-color: blue;
+}
+
+.black {
+  background-color: black;
+}
+
+.gold {
+  background-color: gold;
+  color: black;
 }
 
 .today {

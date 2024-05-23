@@ -19,7 +19,14 @@
                 <p>아직 운동 인증을 하지 않았어요!</p>
                 <button class="btn" @click="showUploadModal">#오운완 하러가기</button>
               </div>
-              <h3>{{ userInfo.user?.userNickname }} 님은 올해 {{ userInfo.myPost?.length }} 일 째 운동중!</h3>
+              <div v-else class="post-completed">
+                <p>오늘도 운동을 완료했어요.</p>
+                <button v-if="userInfo.canSlot" role="button" class="golden-button" @click="showSlotMachine">
+                  <span class="golden-text">I'm feeling Lucky</span>
+                </button>
+              </div>
+              <SlotMachineView v-if="isSlotMachineVisible"/>
+              <h3>{{ userInfo.user?.userNickname }} 님은 올해 {{ userInfo.myAllPost?.length }} 일 째 운동중!</h3>
               <UserStreakComponent />
             </div>
             <div class="my-routine">
@@ -53,10 +60,10 @@
             </div>
           </div>
           <div v-if="selectedTab === 'analysis'" class="analysis">
-
+            <p>보유 스트릭 변경권: {{ userInfo.user?.userStreakPrice }}</p>
             <div class="slot-machine-container">
-              <button role="button" class="press" @click="drawStreakColor">
-                <span class="press-text">I'm feeling Lucky</span>
+              <button role="button" class="press" @click="drawStreakColor" :disabled="userInfo.user?.userStreakPrice <= 0">
+                <span class="press-text">{{ buttonText }}</span>
               </button>
 
               <div v-if="drawnColor" class="result">
@@ -66,14 +73,6 @@
                 <p v-if="drawnColor === 'joker'">Congratulations! You drew the Joker!</p>
               </div>
             </div>
-
-
-            <!-- Analysis content here -->
-            <button role="button" class="golden-button" @click="showSlotMachine">
-              <span class="golden-text">I'm feeling Lucky</span>
-            </button>
-
-            <SlotMachineView v-if="isSlotMachineVisible"/>
           </div>
           <div v-if="selectedTab === 'setting'" class="setting">
             <div class="row">
@@ -116,7 +115,7 @@
                 <path d="M352 144c0-44.2 35.8-80 80-80s80 35.8 80 80v48c0 17.7 14.3 32 32 32s32-14.3 32-32V144C576 64.5 511.5 0 432 0S288 64.5 288 144v48H64c-35.3 0-64 28.7-64 64V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V256c0-35.3-28.7-64-64-64H352V144z"></path>
               </svg>
               <svg viewBox="0 0 448 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="lock">
-                <path d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z"></path>
+                <path d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64 64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z"></path>
               </svg>
             </label>
             <div class="routine-list-container">
@@ -137,7 +136,7 @@
             <div class="mb-3">
               <label for="file" class="labelFile">
                 <span>
-                  <svg xml:space="preserve" viewBox="0 0 184.69 184.69" xmlns:xlink="http://www.w3.org/2000/xlink" xmlns="http://www.w3.org/2000/svg" id="Capa_1" version="1.1" width="60px" height="60px">
+                  <svg xml:space="preserve" viewBox="0 0 184.69 184.69" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" id="Capa_1" version="1.1" width="60px" height="60px">
                     <g>
                       <g>
                         <g>
@@ -168,7 +167,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, reactive } from 'vue';
 import { Modal } from 'bootstrap';
 import { useSocialStore } from '@/stores/social';
 import { useAuthStore } from '@/stores/auth';
@@ -193,6 +192,8 @@ const userInfo = ref({
   follower: [],
   routines: [],
   myPost: null,
+  myAllPost: null,
+  canSlot: true
 });
 const writeBoard = ref({
   userId: authStore.user.userId,
@@ -212,6 +213,7 @@ const isCurrentUser = computed(() => authStore.user.userId == userId);
 const getUserInfo = () => {
   axios.get(`http://localhost:8080/users/${userId}`).then((response) => {
     userInfo.value.user = response.data;
+    console.log(userInfo.value)
   });
 };
 
@@ -242,11 +244,20 @@ const getUserPost = () => {
   });
 };
 
+//스트릭 기록 용 글 정보 보기 
+const getAllPost = () => {
+  axios.get(`http://localhost:8080/boards/user/private/${userId}`)
+  .then((response) => {
+    userInfo.value.myAllPost = response.data
+  })
+}
+
 // 오늘 운동 했는지 안했는지 확인
 const hasTodayPost = computed(() => {
   const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Seoul' });
-  return userInfo.value.myPost?.some((post) => {
-    const postDate = new Date(post.board.boardRegDate).toISOString().split('T')[0];
+  return userInfo.value.myAllPost?.some((post) => {
+    
+    const postDate = new Date(post.boardRegDate).toISOString().split('T')[0];
     return postDate === today;
   });
 });
@@ -375,12 +386,22 @@ const streakColors = [
 ];
 
 const drawnColor = ref(null);
+const buttonText = ref('사용하기');
 
 //스트릭 뽑는 로직
-const drawStreakColor = () => {
+const drawStreakColor = async () => {
+  if (userInfo.value.user.userStreakPrice <= 0) {
+    alert("변경권이 부족합니다.");
+    return;
+  }
+
+  // 스트릭 변경권 사용
+  userInfo.value.user.userStreakPrice -= 1;
+  buttonText.value = '다시 뽑기';
+
   const random = Math.random() * 100;
   let cumulativeProbability = 0;
-  
+
   for (let streak of streakColors) {
     cumulativeProbability += streak.probability;
     if (random < cumulativeProbability) {
@@ -388,13 +409,59 @@ const drawStreakColor = () => {
       break;
     }
   }
+
+  try {
+    // 서버에 변경권 사용을 알림
+    axios.get(`http://localhost:8080/users/streakColor/${userId}?userStreakColor=${drawnColor.value}`)
+    .then((response) => {
+      axios.get(`http://localhost:8080/users/streakprice/${userId}?userStreakPrice=-1`)
+      .then((response) => {
+        console.log("ddd")
+      })
+    })
+  } catch (error) {
+    console.error("An error occurred while using the streak price:", error);
+    // 에러 발생 시 보유 변경권 개수를 원상복구
+    userInfo.user.userStreakPrice += 1;
+  }
 };
+
+const getMyCoupon = () => {
+  axios.get(`http://localhost:8080/points/desc/${userId}`)
+    .then((response) => {
+      const data = response.data;
+      const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+
+      let hasTodayEntry = false;
+
+      for (let i = 0; i < data.length; i++) {
+        const entryDate = data[i].pointRegDate.split('T')[0]; // Extract the date part
+        if (entryDate === today) {
+          console.log(data[i].pointRegDate)
+          hasTodayEntry = true;
+          break;
+        }
+      }
+
+      if (hasTodayEntry) {
+        console.log('asfdsfa')
+        userInfo.value.canSlot = false
+      }
+    })
+    .catch((error) => {
+      console.error("An error occurred while fetching the data:", error);
+    });
+}
+
 
 onMounted(() => {
   getUserPost();
+  getAllPost();
   getFollowingFollowers();
   getUserInfo();
   getRoutines();
+  getMyCoupon()
+  console.log(userInfo.value.canSlot)
 });
 </script>
 
@@ -481,6 +548,16 @@ onMounted(() => {
 }
 .no-post-message button:hover {
   background-color: #e55e5e;
+}
+.post-completed {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff2c6;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  color: #947100;
 }
 .my-routine {
   margin-top: 2rem;

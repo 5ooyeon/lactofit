@@ -64,7 +64,7 @@ const getExerciseParts = (routine) => {
 }
 
 const getTotalWeight = (routine) => {
-  return routine.exercises.reduce((total, exercise) => total + (exercise.routineComponentsWeight || 0), 0);
+  return routine.exercises.reduce((total, exercise) => total + (exercise.routineComponentsWeight * exercise.routineComponentsReps || 0), 0);
 }
 
 const toggleDetails = (routineId) => {

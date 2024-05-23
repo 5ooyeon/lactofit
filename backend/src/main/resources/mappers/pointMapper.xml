@@ -4,7 +4,7 @@
 		parameterType="com.ssafit.model.dto.Point">
 		INSERT INTO Point (user_id, point_amount, point_desc,
 		point_regDate)
-		VALUES (#{user_id}, #{point_amount}, #{point_desc},
+		VALUES (#{userId}, #{pointAmount}, 'sdf',
 		NOW())
 	</insert>
 

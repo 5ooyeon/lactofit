@@ -318,6 +318,7 @@ const selectMenu = (menu) => {
   }
   selectedMenu.value = menu;
 };
+
 </script>
 <style scoped>
 .container {

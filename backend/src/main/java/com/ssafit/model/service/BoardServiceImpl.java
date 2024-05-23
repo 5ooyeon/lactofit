@@ -53,4 +53,10 @@ public class BoardServiceImpl implements BoardService {
 		boardDao.deleteBoard(boardId);
 	}
 
+	@Override
+	public List<Board> getAllBoardByUserId(int userId) {
+		// TODO Auto-generated method stub
+		return boardDao.getAllBoardByUserId(userId);
+	}
+
 }

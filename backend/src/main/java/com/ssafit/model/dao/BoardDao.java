@@ -20,4 +20,6 @@ public interface BoardDao {
 	void updateBoard(Board board);
 
 	void deleteBoard(int boardId);
+
+	List<Board> getAllBoardByUserId(int userId);
 }

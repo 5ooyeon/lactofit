@@ -2,18 +2,42 @@
   <header class="navbar navbar-expand-lg">
     <nav class="container">
       <div class="navbar-collapse d-lg-flex" id="navbarsExample11">
-        <RouterLink :to="{ name: 'Main' }" class="navbar-brand col-lg-3 me-0">
-          <img src="../../assets/img/LACTOFIT_HEADER.png" class="logo-img" />
-        </RouterLink>
+        <!-- 조건부 렌더링을 위한 템플릿 -->
+        <template v-if="route.name === 'Main'">
+          <a href="#" class="navbar-brand col-lg-3 me-0">
+            <img src="../../assets/img/LACTOFIT_HEADER.png" class="logo-img" />
+          </a>
+        </template>
+        <template v-else>
+          <RouterLink :to="{ name: 'Main' }" class="navbar-brand col-lg-3 me-0">
+            <img src="../../assets/img/LACTOFIT_HEADER.png" class="logo-img" />
+          </RouterLink>
+        </template>
+        
         <ul class="navbar-nav col-lg-6 justify-content-lg-center">
           <li class="nav-item">
-            <RouterLink class="nav-link" :to="{name: 'ExerciseView'}">운동백과</RouterLink>
+            <template v-if="route.name === 'Main'">
+              <a class="nav-link" href="#routine">운동백과</a>
+            </template>
+            <template v-else>
+              <RouterLink class="nav-link" :to="{name: 'ExerciseView'}">운동백과</RouterLink>
+            </template>
           </li>
           <li class="nav-item">
-            <RouterLink class="nav-link" :to="{name: 'YoutubeMainComponent'}">영상PICK</RouterLink>
+            <template v-if="route.name === 'Main'">
+              <a class="nav-link" href="#youtube">영상PICK</a>
+            </template>
+            <template v-else>
+              <RouterLink class="nav-link" :to="{name: 'YoutubeMainComponent'}">영상PICK</RouterLink>
+            </template>
           </li>
           <li class="nav-item">
-            <RouterLink class="nav-link" :to="{name: 'SocialMainComponent'}">#오운완</RouterLink>
+            <template v-if="route.name === 'Main'">
+              <a class="nav-link" href="#social">#오운완</a>
+            </template>
+            <template v-else>
+              <RouterLink class="nav-link" :to="{name: 'SocialMainComponent'}">#오운완</RouterLink>
+            </template>
           </li>
         </ul>
         <div class="d-lg-flex col-lg-3 justify-content-lg-end align-items-center">
@@ -238,6 +262,11 @@ onMounted(() => {
 
 .navbar-brand:hover, .nav-link:hover {
   color: #000;
+}
+
+/* 추가된 부분 */
+.navbar-nav .nav-item + .nav-item {
+  margin-left: 1rem; /* 간격을 원하는 대로 조정 */
 }
 
 .signin {
