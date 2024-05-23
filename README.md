@@ -8,9 +8,10 @@
   - [기술 스택](#기술-스택)
   - [구조](#구조)
   - [기능](#기능)
-    - [NAV바](#nav바)
     - [메인페이지](#메인페이지)
+    - [상세페이지](#상세페이지)
     - [마이페이지](#마이페이지)
+    - [알림](#알림)
 - [후기](#후기)
 
 # 개요
@@ -18,10 +19,6 @@
 - **프로젝트 기간**: 2024.05.01~2024.05.23
 - **개발 언어**: JAVA, JAVASCRIPT
 - **멤버**: 조수연(팀장, 프론트엔드), 이동엽(팀원, 백엔드)
-
-
-  
-
 
 # 프로젝트 설명
 
@@ -41,8 +38,21 @@
 
 
 ## 구조
-파일구조 트리 넣기
+<details>
+<summary>트리 보기</summary>
+![트리1.jpg](./readmeimg/트리1.jpg)
 
+![트리2.jpg](./readmeimg/트리2.jpg)
+
+![트리3.jpg](./readmeimg/트리3.jpg)
+
+![트리4.jpg](./readmeimg/트리4.jpg)
+
+![트리5.jpg](./readmeimg/트리5.jpg)
+
+![트리6.jpg](./readmeimg/트리6.jpg)
+
+</details>
 
 ## 기능
 
@@ -54,18 +64,22 @@
 ![메인_운동영상.jpg](./readmeimg/메인_운동영상.jpg)
 ![메인-오운완.jpg](./readmeimg/메인-오운완.jpg)
 
-1. OPENAI API를 활용한 운동 검색
+### 상세페이지
+<hr>
+
+### 1. OPENAI API를 활용한 운동 검색
+
 ![gpt_운동검색.jpg](./readmeimg/gpt_운동검색.jpg)
 ![gpt_운동검색2.png](./readmeimg/gpt_운동검색2.png)
 
-2. YOUTUBE API를 활용한 영상 검색, 댓글 달기
+### 2. YOUTUBE API를 활용한 영상 검색, 댓글 달기
 ![운동영상1.jpg](./readmeimg/운동영상1.jpg)
 ![운동영상2.jpg](./readmeimg/운동영상2.jpg)
 ![운동영상3.jpg](./readmeimg/운동영상3.jpg)
 ![운동영상4_댓글.jpg](./readmeimg/운동영상4_댓글.jpg)
 ![운동영상5_검색.jpg](./readmeimg/운동영상5_검색.jpg)
 
-3. 루틴 만들기
+### 3. 루틴 만들기
 ![루틴1.jpg](./readmeimg/루틴1.jpg)
 ![루틴2.jpg](./readmeimg/루틴2.jpg)
 ![루틴3.jpg](./readmeimg/루틴3.jpg)
@@ -73,13 +87,8 @@
 ![루틴5.jpg](./readmeimg/루틴5.jpg)
 ![루틴6.jpg](./readmeimg/루틴6.jpg)
 
-4. 오운완 커뮤니티 > 팔로우, 좋아요
+### 4. 오운완 커뮤니티 > 팔로우, 좋아요
 ![루틴7.jpg](./readmeimg/루틴7.jpg)
-
-### NAV바
-
-<hr>
-: 각 항목으로 이동, 구글API 활용한 로그인, 팔로우/좋아요 시 오는 알림 기능 
 
 ### 마이페이지 
 <hr>
@@ -108,4 +117,4 @@
   ![E](https://img.shields.io/badge/-%230B1E5A?style=flat-square&logo=erlang&logoColor=white)
   ![O](https://img.shields.io/badge/-%23000080?style=flat-square&logo=operagx&logoColor=white)
   ![P](https://img.shields.io/badge/-%23000040?style=flat-square&logo=planet&logoColor=white)
->
+> 길다면 길고 짧다면 짧을 수 있는 5개월의 과정이 마무리 되어서 시원섭섭합니다. 그 동안 같이 프로젝트하며 고생한 페어들 고생 많았고 마지막 프로젝트를 함께한 조수연 페어님 특히 더 감사하고 고생 많이하셨습니다. 5반 여러분들 짱 모두 고생 많았고 2학기도 화이팅합니다.
