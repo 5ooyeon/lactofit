@@ -46,25 +46,49 @@
 
 ## 기능
 
+### 메인페이지
+<hr>
+
+![메인메인.png](./readmeimg/메인메인.png)
+![메인_운동검색.jpg](./readmeimg/메인_운동검색.jpg)
+![메인_운동영상.jpg](./readmeimg/메인_운동영상.jpg)
+![메인-오운완.jpg](./readmeimg/메인-오운완.jpg)
+
+1. OPENAI API를 활용한 운동 검색
+![gpt_운동검색.jpg](./readmeimg/gpt_운동검색.jpg)
+![gpt_운동검색2.png](./readmeimg/gpt_운동검색2.png)
+
+2. YOUTUBE API를 활용한 영상 검색, 댓글 달기
+![운동영상1.jpg](./readmeimg/운동영상1.jpg)
+![운동영상2.jpg](./readmeimg/운동영상2.jpg)
+![운동영상3.jpg](./readmeimg/운동영상3.jpg)
+![운동영상4_댓글.jpg](./readmeimg/운동영상4_댓글.jpg)
+![운동영상5_검색.jpg](./readmeimg/운동영상5_검색.jpg)
+
+3. 루틴 만들기
+![루틴1.jpg](./readmeimg/루틴1.jpg)
+![루틴2.jpg](./readmeimg/루틴2.jpg)
+![루틴3.jpg](./readmeimg/루틴3.jpg)
+![루틴4.jpg](./readmeimg/루틴4.jpg)
+![루틴5.jpg](./readmeimg/루틴5.jpg)
+![루틴6.jpg](./readmeimg/루틴6.jpg)
+
+4. 오운완 커뮤니티 > 팔로우, 좋아요
+![루틴7.jpg](./readmeimg/루틴7.jpg)
+
 ### NAV바
 
 <hr>
 : 각 항목으로 이동, 구글API 활용한 로그인, 팔로우/좋아요 시 오는 알림 기능 
 
-### 메인페이지
-<hr>
-
-1. OPENAI API를 활용한 운동 검색
-
-2. YOUTUBE API를 활용한 영상 검색, 댓글 달기
-
-3. 오운완 커뮤니티 > 팔로우, 좋아요
-
-4. 루틴 만들기
-
 ### 마이페이지 
 <hr>
-: 오운완을 통한 스트릭, 스트릭 변경, 스트릭 변경 가격 뽑기, 프로필사진 수정, 회원 탈퇴 기능 
+
+![마이페이지.jpg](./readmeimg/마이페이지.jpg)
+
+### 알림
+<hr>
+![알림창.png](./readmeimg/알림창.png)
 
 # 후기
   ![S](https://img.shields.io/badge/-%23FFC0CB?style=flat-square&logo=sega&logoColor=white)
