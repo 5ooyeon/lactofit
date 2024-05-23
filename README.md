@@ -117,4 +117,4 @@
   ![E](https://img.shields.io/badge/-%230B1E5A?style=flat-square&logo=erlang&logoColor=white)
   ![O](https://img.shields.io/badge/-%23000080?style=flat-square&logo=operagx&logoColor=white)
   ![P](https://img.shields.io/badge/-%23000040?style=flat-square&logo=planet&logoColor=white)
-> 길다면 길고 짧다면 짧을 수 있는 5개월의 과정이 마무리 되어서 시원섭섭합니다. 그 동안 같이 프로젝트하며 고생한 페어들 고생 많았고 마지막 프로젝트를 함께한 조수연 페어님 특히 더 감사하고 고생 많이하셨습니다. 5반 여러분들 짱 모두 고생 많았고 2학기도 화이팅합니다.
+> 길다면 길고 짧다면 짧을 수 있는 5개월의 과정이 마무리 되어서 시원섭섭합니다. 그 동안 같이 프로젝트하며 고생한 페어들 고생 많았고 마지막 프로젝트를 함께한 조수연 페어님 특히 더 감사하고 고생 많이하셨습니다. 5반 여러분들 짱 모두 고생 많았고 2학기도 화이팅!!
