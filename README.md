@@ -108,7 +108,8 @@
   ![O](https://img.shields.io/badge/-%23FFB6C1?style=flat-square&logo=osano&logoColor=white)
   ![N](https://img.shields.io/badge/-%23FF00FF?style=flat-square&logo=netflix&logoColor=white)
 👑
->
+> 기간이 짧을수록 목업, 명세서 등의 기획을 더 정확하고 세세히 해야된다는 점을 깨달았습니다. 또한 발표 전 사이트를 유저로서 이용해보면서 기능적으로 부족하거나 아쉬운 점들을 많이 발견했습니다. 이러한 것들을 바탕으로 Lactofit도 디밸롭 시켜가며 2학기 프로젝트는 좀 더 짜임새 있게 진행하고 싶습니다. 팀장 및 기획을 주도한 역할은 이번이 처음이라 부족한 점이 많았는데 일주일이라는 시간동안 같이 열심히 해준 페어 동엽님께 감사드립니다. 약 5개월 간 많은 것을 알려주시고 도움주신 강사님께도 감사하다는 말씀 드리고 싶습니다!
+
   ![D](https://img.shields.io/badge/-%231E90FF?style=flat-square&logo=d&logoColor=white)
   ![O](https://img.shields.io/badge/-%231A74D3?style=flat-square&logo=opera&logoColor=white)
   ![N](https://img.shields.io/badge/-%231563A9?style=flat-square&logo=naver&logoColor=white)
